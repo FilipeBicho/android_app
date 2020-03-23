@@ -45,6 +45,22 @@ public class Cards {
     }
 
     /**
+     *
+     * @return card rank
+     */
+    private int getRank() {
+        return cardRank;
+    }
+
+    /**
+     *
+     * @return card suit
+     */
+    private int getSuit() {
+        return cardSuit;
+    }
+
+    /**
      * overrides toString method
      *
      * @return card in string format
@@ -54,19 +70,13 @@ public class Cards {
         return ranks[cardRank] + suits[cardSuit];
     }
 
-    /**
-     *
-     * @return card rank
-     */
-    public int getRank() {
-        return cardRank;
-    }
 
     /**
      *
-     * @return card suit
+     * @param card given card
+     * @return card image name
      */
-    public int getSuit() {
-        return cardSuit;
+    static String getCardDrawableName(Cards card) {
+        return "_" + card.getRank() + card.getSuit();
     }
 }

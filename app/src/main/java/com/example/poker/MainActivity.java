@@ -3,10 +3,8 @@ package com.example.poker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,11 +13,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Cards card = new Cards(5,0);
+        final Cards card = new Cards(0,1);
 
-        final TextView cardView = findViewById(R.id.cards);
+        final ImageView cardView = findViewById(R.id.card);
 
-        cardView.setText(card.toString());
+        int id = getResources().getIdentifier(Cards.getCardDrawableName(card), "drawable", getPackageName());
+
+
+        cardView.setImageResource(id);
 
 
     }

@@ -8,7 +8,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Filipe Bicho 23.03.2020 improved
  *
  */
-public class Cards {
+public class Card {
+
+    static int RANK_CARDS_SIZE = 13;
+    static int SUIT_CARDS_SIZE = 4;
+
+    //----- private instance variables
 
     /**
      * card rank
@@ -25,7 +30,6 @@ public class Cards {
      */
     private final String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
 
-
     /**
      *
      * card suits
@@ -33,16 +37,20 @@ public class Cards {
      */
     private final String[] suits = {"\u2665", "\u2666", "\u2663", "\u2660"};
 
+    //----- public constructor
+
     /**
      * initialize cards
      *
      * @param rank given rank
      * @param suit given suit
      */
-    Cards(int rank, int suit) {
+    Card(int rank, int suit) {
         this.cardRank = rank;
         this.cardSuit = suit;
     }
+
+    //----- private instance methods
 
     /**
      *
@@ -60,6 +68,8 @@ public class Cards {
         return cardSuit;
     }
 
+    //----- public instance methods
+
     /**
      * overrides toString method
      *
@@ -70,13 +80,11 @@ public class Cards {
         return ranks[cardRank] + suits[cardSuit];
     }
 
-
     /**
      *
-     * @param card given card
      * @return card image name
      */
-    static String getCardDrawableName(Cards card) {
-        return "_" + card.getRank() + card.getSuit();
+    String getCardDrawableName() {
+        return "_" + this.getRank() + this.getSuit();
     }
 }

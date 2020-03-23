@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,14 +12,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Cards card = new Cards(0,1);
+        Deck deck = new Deck();
 
-        final ImageView cardView = findViewById(R.id.card);
+        for (int i = 0; i < Deck.DECK_SIZE; i++)
+        {
+            Card card = deck.getCard();
 
-        int id = getResources().getIdentifier(Cards.getCardDrawableName(card), "drawable", getPackageName());
+            int id = getResources().getIdentifier(card.getCardDrawableName(), "drawable", getPackageName());
+
+            final ImageView cardView = findViewById(R.id.card);
+            cardView.setImageResource(id);
+        }
 
 
-        cardView.setImageResource(id);
+
 
 
     }

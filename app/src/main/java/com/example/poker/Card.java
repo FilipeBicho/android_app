@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  *
  * Define a data structure to save and get the 52 cards of the deck
- * @author Filipe Bicho 23.03.2020 improved
+ * @author filipe bicho created 27.10.2017 improved 23.03.2020
  *
  */
 public class Card {

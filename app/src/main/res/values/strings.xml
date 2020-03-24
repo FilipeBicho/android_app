@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">poker</string>
     <string name="background_description">background</string>
+    <string name="player1_card1">player1_card1</string>
+    <string name="player1_card2">player1_card2</string>
+    <string name="player2_card1">player2_card1</string>
+    <string name="player2_card2">player2_card2</string>
+    <string name="flop_card1">flop_card1</string>
+    <string name="flop_card2">flop_card2</string>
+    <string name="flop_card3">flop_card3</string>
+    <string name="turn_card">turn_card</string>
+    <string name="river_card">river_card</string>
 </resources>

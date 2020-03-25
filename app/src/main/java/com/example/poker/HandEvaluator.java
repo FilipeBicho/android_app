@@ -158,6 +158,65 @@ public class HandEvaluator {
 
     /**
      *
+     * @return if has 2 pairs and set best hand
+     */
+    private Boolean isTwoPair()
+    {
+        // Store all the keys that contains a pair
+        ArrayList<Integer> keys = getHashMapKeysFromValue(2, rankCount);
+
+        // Check if has more than a pair
+        if(keys.size() > 1)
+        {
+            // Hand gets all the pairs
+            for(Integer key : keys)
+                setHand(key, RANK_CARD_TYPE);
+
+            // If it has 2 pairs just add a kicker
+            if(Integer.valueOf(keys.size()).equals(2))
+            {
+
+                //TODO check if it's really needed
+//                if(hand.get(2).getRank() == 0)
+//                {
+//                    ArrayList<Card> temp = new ArrayList<>(hand);
+//                    hand.clear();
+//                    hand.add(temp.get(2));
+//                    hand.add(temp.get(3));
+//                    hand.add(temp.get(0));
+//                    hand.add(temp.get(1));
+//                }
+
+                setHandKicker();
+            }
+            // If it has 3 pairs then have to delete 2 and check if one pair is an Ace
+            else
+            {
+                // Check if has a pair of Aces
+                if(Integer.valueOf(hand.get(0).getRank()).equals(0))
+                {
+                    // Remove the lowest pair
+                    hand.remove(2);
+                    hand.remove(2);
+                    setHandKicker();
+                }
+                else
+                {
+                    // Remove the lowest pair
+                    hand.remove(0);
+                    hand.remove(0);
+                    setHandKicker();
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
      * @return true if has a pair and set best hand
      */
     private Boolean isPair()
@@ -215,7 +274,10 @@ public class HandEvaluator {
         Collections.sort(allCards, Card.sortRank);
 
         // count rank and suit count
-        setRankAndSuitCardsCount();;
+        setRankAndSuitCardsCount();
+
+        if (isTwoPair())
+            return IS_TWO_PAIR;
 
         if (isPair())
             return IS_PAIR;
@@ -230,7 +292,7 @@ public class HandEvaluator {
      *
      * @return final hand
      */
-    public ArrayList<Card> getHand()
+    ArrayList<Card> getHand()
     {
         return hand;
     }

@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
         player1.add(new Card(11,0));
         player1.add(new Card(11,1));
 
-        table.add(new Card(4,0));
-        table.add(new Card(7,1));
-        table.add(new Card(8,3));
-        table.add(new Card(0,2));
+        table.add(new Card(11,2));
         table.add(new Card(0,1));
+        table.add(new Card(3,3));
+        table.add(new Card(4,2));
+        table.add(new Card(1,1));
         handEvaluator.evaluate(player1, table);
         ArrayList<Card> hand = handEvaluator.getHand();
 

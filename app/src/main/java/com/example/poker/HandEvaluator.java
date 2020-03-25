@@ -16,7 +16,7 @@ public class HandEvaluator {
     static int IS_HIGH_CARD= 1;
     static int IS_PAIR = 2;
     static int IS_TWO_PAIR = 3;
-    static int IS_THREE_OF_A_KING = 4;
+    static int IS_THREE_OF_A_KIND = 4;
     static int IS_STRAIGHT = 5;
     static int IS_FLUSH = 6;
     static int IS_FULL_HOUSE = 7;
@@ -158,7 +158,59 @@ public class HandEvaluator {
 
     /**
      *
-     * @return if has 2 pairs and set best hand
+     * @return if has 3 of a kkind and set best hand
+     */
+    private Boolean isThreeOfAKind()
+    {
+        if (rankCount.containsValue(3))
+        {
+            // Store all the keys that contains a three of a kind
+            ArrayList<Integer> keys = getHashMapKeysFromValue(3, rankCount);
+
+            // has more than 1 three of a kind
+            if (keys.size() > 1)
+            {
+                // set hand with all three of a kinds
+                for(Integer key : keys)
+                    setHand(key, RANK_CARD_TYPE);
+
+                // has a Three of a kind of Aces
+                if(Integer.valueOf(hand.get(0).getRank()).equals(0))
+                {
+                    // Remove the lowest three of a kind
+                    hand.remove(3);
+                    hand.remove(3);
+                    hand.remove(3);
+                    setHandKicker();
+                    setHandKicker();
+                }
+                else
+                {
+                    // Remove the lowest three of a kind
+                    hand.remove(0);
+                    hand.remove(0);
+                    hand.remove(0);
+                    setHandKicker();
+                    setHandKicker();
+                }
+            }
+            else
+            {
+                int key = getHashMapKeysFromValue(3, rankCount).get(0);
+                setHand(key, RANK_CARD_TYPE);
+                setHandKicker();
+                setHandKicker();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @return true if has 2 pairs and set best hand
      */
     private Boolean isTwoPair()
     {
@@ -217,7 +269,7 @@ public class HandEvaluator {
 
     /**
      *
-     * @return true if has a pair and set best hand
+     * @return true true if has a pair and set best hand
      */
     private Boolean isPair()
     {
@@ -275,6 +327,9 @@ public class HandEvaluator {
 
         // count rank and suit count
         setRankAndSuitCardsCount();
+
+        if (isThreeOfAKind())
+            return IS_THREE_OF_A_KIND;
 
         if (isTwoPair())
             return IS_TWO_PAIR;

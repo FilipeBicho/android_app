@@ -3,12 +3,29 @@ package com.example.poker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Evaluator player poker hand on flop, turn and river
  * @author filipe bicho created 27.10.2017 improved 25.03.2020
  */
 public class HandEvaluator {
+
+    //----- private static variables
+
+    static int IS_HIGH_CARD= 1;
+    static int IS_PAIR = 2;
+    static int IS_TWO_PAIR = 3;
+    static int IS_THREE_OF_A_KING = 4;
+    static int IS_STRAIGHT = 5;
+    static int IS_FLUSH = 6;
+    static int IS_FULL_HOUSE = 7;
+    static int IS_FOUR_OF_A_KIND = 8;
+    static int IS_STRAIGHT_FLUSH = 9;
+    static int IS_ROYAL_STRAIGHT_FLUSH = 10;
+
+    static String RANK_CARD_TYPE = "rank";
+    static String SUIT_CARD_TYPE = "suit";
 
     //----- private instance variables
 
@@ -71,6 +88,90 @@ public class HandEvaluator {
             suitCount.put(count, Collections.frequency(cardsSuit, count));
     }
 
+    /**
+     *
+     * @param value used to search a key
+     * @param cardsTypeCount HashMap card type
+     * @return keys that contain the given value
+     */
+    private ArrayList<Integer> getHashMapKeysFromValue(int value, HashMap<Integer, Integer> cardsTypeCount)
+    {
+        ArrayList<Integer> keys = new ArrayList<>();
+        for (Map.Entry entry : cardsTypeCount.entrySet())
+        {
+            if (Integer.valueOf(value).equals(entry.getValue()))
+                keys.add((Integer) entry.getKey());
+        }
+
+        return keys;
+    }
+
+
+    /**
+     * set hand cards by cards type
+     *
+     * @param key of card to add to hand
+     * @param cardType to add to hand
+     */
+    private void setHand(Integer key, String cardType)
+    {
+        if (cardType.equals(RANK_CARD_TYPE))
+        {
+            for (Card card : allCards)
+            {
+                if (key.equals(card.getRank()))
+                    hand.add(card);
+            }
+        }
+        else if (cardType.equals(SUIT_CARD_TYPE))
+        {
+            for (Card card : allCards)
+            {
+                if (key.equals(card.getSuit()))
+                    hand.add(card);
+            }
+        }
+        else
+            throw new java.lang.Error("Error defining hand cards - setHandCards()");
+    }
+
+    /**
+     * set hand kicker
+     */
+    private void setHandKicker()
+    {
+        ArrayList<Card> kicker = new ArrayList<>();
+
+        for(Card card : allCards)
+        {
+            if(!hand.contains(card))
+                kicker.add(card);
+        }
+
+        // Check if has an Ace
+        // If not gets the card with highest value
+        if(Integer.valueOf(kicker.get(0).getRank()).equals(0))
+            hand.add(kicker.get(0));
+        else
+            hand.add(kicker.get(kicker.size()-1));
+    }
+
+    private Boolean isPair()
+    {
+        if (rankCount.containsValue(2))
+        {
+            Integer key = getHashMapKeysFromValue(2, rankCount).get(0);
+            setHand(key, RANK_CARD_TYPE);
+            setHandKicker();
+            setHandKicker();
+            setHandKicker();
+
+            return true;
+        }
+
+        return false;
+    }
+
 
     //----- public instance methods
 
@@ -79,8 +180,15 @@ public class HandEvaluator {
         // merge player and table cards
         initAllCards(playerCards, tableCards);
 
+        // Sort card by rank
+        Collections.sort(allCards, Card.sortRank);
+
         // count rank and suit count
         setRankAndSuitCardsCount();;
+
+        if (isPair())
+            return IS_PAIR;
+
 
         return 0;
     }

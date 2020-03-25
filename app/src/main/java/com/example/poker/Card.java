@@ -2,6 +2,8 @@ package com.example.poker;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
+
 /**
  *
  * Define a data structure to save and get the 52 cards of the deck
@@ -45,7 +47,8 @@ public class Card {
      * @param rank given rank
      * @param suit given suit
      */
-    Card(int rank, int suit) {
+    Card(int rank, int suit)
+    {
         this.cardRank = rank;
         this.cardSuit = suit;
     }
@@ -56,7 +59,8 @@ public class Card {
      *
      * @return card rank
      */
-    public int getRank() {
+    public int getRank()
+    {
         return cardRank;
     }
 
@@ -64,7 +68,8 @@ public class Card {
      *
      * @return card suit
      */
-    public int getSuit() {
+    public int getSuit()
+    {
         return cardSuit;
     }
 
@@ -74,7 +79,8 @@ public class Card {
      * @return card in string format
      */
     @NotNull
-    public String toString() {
+    public String toString()
+    {
         return ranks[cardRank] + suits[cardSuit];
     }
 
@@ -82,7 +88,23 @@ public class Card {
      *
      * @return card image name
      */
-    String getCardDrawableName() {
+    String getCardDrawableName()
+    {
         return "_" + this.getRank() + this.getSuit();
     }
+
+    static final Comparator<Card> sortRank = new Comparator<Card>() {
+
+        public int compare(Card card1, Card card2) {
+
+            int rank1 = card1.getRank();
+            int rank2 = card2.getRank();
+
+            // sort asc
+            return rank1 - rank2;
+
+            // sort desc
+            //rank2-rank1;
+        }
+    };
 }

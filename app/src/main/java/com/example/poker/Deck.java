@@ -11,13 +11,6 @@ import java.util.Random;
  */
 public class Deck {
 
-    //----- public static variable
-
-    /**
-     * deck size
-     */
-    static int DECK_SIZE = 52;
-
     //----- private instance variable
 
     /**
@@ -27,7 +20,8 @@ public class Deck {
 
     //----- public constructor
 
-    Deck() {
+    Deck()
+    {
 
         Random random = new Random();
 
@@ -61,7 +55,8 @@ public class Deck {
      *
      * @return a card from the top of the deck and delete it
      */
-    public Card getCard() {
+    public Card getCard()
+    {
         return deck.remove(deck.size()-1);
     }
 }

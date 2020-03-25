@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         Deck deck = new Deck();
         Dealer dealer = new Dealer();
+        HandEvaluator handEvaluator = new HandEvaluator();
 
         ArrayList<Card> table = new ArrayList<>();
         ArrayList<Card> player1 = new ArrayList<>();
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         tableImg.get(3).setImageResource(turn);
         tableImg.get(4).setImageResource(river);
 
-
+        handEvaluator.evaluate(player1, table);
 
     }
 }

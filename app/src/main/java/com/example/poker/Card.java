@@ -50,13 +50,13 @@ public class Card {
         this.cardSuit = suit;
     }
 
-    //----- private instance methods
+    //----- public instance methods
 
     /**
      *
      * @return card rank
      */
-    private int getRank() {
+    public int getRank() {
         return cardRank;
     }
 
@@ -64,11 +64,9 @@ public class Card {
      *
      * @return card suit
      */
-    private int getSuit() {
+    public int getSuit() {
         return cardSuit;
     }
-
-    //----- public instance methods
 
     /**
      * overrides toString method

@@ -15,6 +15,26 @@ public class Card {
     static int RANK_CARDS_SIZE = 13;
     static int SUIT_CARDS_SIZE = 4;
 
+    static int ACE = 0;
+    static int TWO = 1;
+    static int THREE = 2;
+    static int FOUR = 3;
+    static int FIVE = 4;
+    static int SIX = 5;
+    static int SEVEN = 6;
+    static int EIGHT = 7;
+    static int NINE = 8;
+    static int TEN = 9;
+    static int JACK = 10;
+    static int QUEEN = 11;
+    static int KING = 12;
+
+    static int SUIT_HEARTS = 0;
+    static int SUIT_DIAMONDS = 1;
+    static int SUIT_CLUBS = 2;
+    static int SUITSPADES = 3;
+
+
     //----- private instance variables
 
     /**

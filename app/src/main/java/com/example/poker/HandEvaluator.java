@@ -156,6 +156,58 @@ public class HandEvaluator {
             hand.add(kicker.get(kicker.size()-1));
     }
 
+    private Boolean isStraight()
+    {
+        int straightCount = 0;
+        int straight = 0;
+        int straightStartIndex = 0;
+        for(int i = 0; i < allCards.size() - 1; i++)
+        {
+            // If next card is the same as the actual card goes to the next iteration
+            if(Integer.valueOf(allCards.get(i).getRank()).equals(allCards.get(i+1).getRank()))
+                continue;
+
+            if(Integer.valueOf(allCards.get(i).getRank()).equals(allCards.get(i+1).getRank()-1))
+            {
+                straightCount++;
+                if(straight < straightCount)
+                {
+                    straight = straightCount;
+                    straightStartIndex = i+1;
+                }
+            }
+            else
+            {
+                straightCount = 0;
+            }
+        }
+
+        if (straight >= 3 &&
+                Integer.valueOf(allCards.get(straightStartIndex).getRank()).equals(Card.KING) &&
+                Integer.valueOf(allCards.get(0).getRank()).equals(Card.ACE))
+        {
+            hand.add(allCards.get(0));
+            hand.add(allCards.get(straightStartIndex));
+            hand.add(allCards.get(straightStartIndex-1));
+            hand.add(allCards.get(straightStartIndex-2));
+            hand.add(allCards.get(straightStartIndex-3));
+        }
+        else if (straight >= 4)
+        {
+            hand.add(allCards.get(straightStartIndex));
+            hand.add(allCards.get(straightStartIndex-1));
+            hand.add(allCards.get(straightStartIndex-2));
+            hand.add(allCards.get(straightStartIndex-3));
+            hand.add(allCards.get(straightStartIndex-4));
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      *
      * @return if has 3 of a kkind and set best hand
@@ -175,7 +227,7 @@ public class HandEvaluator {
                     setHand(key, RANK_CARD_TYPE);
 
                 // has a Three of a kind of Aces
-                if(Integer.valueOf(hand.get(0).getRank()).equals(0))
+                if(Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
                 {
                     // Remove the lowest three of a kind
                     hand.remove(3);
@@ -245,7 +297,7 @@ public class HandEvaluator {
             else
             {
                 // Check if has a pair of Aces
-                if(Integer.valueOf(hand.get(0).getRank()).equals(0))
+                if(Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
                 {
                     // Remove the lowest pair
                     hand.remove(2);
@@ -294,7 +346,7 @@ public class HandEvaluator {
     private Boolean isHighCard()
     {
         // Check if cards has an Ace
-        if(Integer.valueOf(allCards.get(0).getRank()).equals(0))
+        if(Integer.valueOf(allCards.get(0).getRank()).equals(Card.ACE))
         {
             hand.add(allCards.get(0));
             hand.add(allCards.get(allCards.size()-1));
@@ -327,6 +379,9 @@ public class HandEvaluator {
 
         // count rank and suit count
         setRankAndSuitCardsCount();
+
+        if (isStraight())
+            return IS_STRAIGHT;
 
         if (isThreeOfAKind())
             return IS_THREE_OF_A_KIND;

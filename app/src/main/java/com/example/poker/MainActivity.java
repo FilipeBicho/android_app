@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        player1.add(new Card(11,0));
-        player1.add(new Card(11,1));
+        player1.add(new Card(Card.TEN,Card.SUIT_CLUBS));
+        player1.add(new Card(Card.KING,Card.SUIT_DIAMONDS));
 
-        table.add(new Card(11,2));
-        table.add(new Card(0,1));
-        table.add(new Card(3,3));
-        table.add(new Card(4,2));
-        table.add(new Card(1,1));
+        table.add(new Card(Card.ACE,Card.SUIT_HEARTS));
+        table.add(new Card(Card.NINE,Card.SUIT_DIAMONDS));
+        table.add(new Card(Card.QUEEN,Card.SUIT_CLUBS));
+        table.add(new Card(Card.THREE,Card.SUIT_HEARTS));
+        table.add(new Card(Card.JACK,Card.SUIT_HEARTS));
         handEvaluator.evaluate(player1, table);
         ArrayList<Card> hand = handEvaluator.getHand();
 

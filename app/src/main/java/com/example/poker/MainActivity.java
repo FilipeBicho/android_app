@@ -26,19 +26,31 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ImageView> player1Img = new ArrayList<>();
         ArrayList<ImageView> player2Img = new ArrayList<>();
 
-        // set player cards
-        dealer.setPlayersCards(deck, player1, player2);
 
-        // set flop
-        dealer.setFlop(deck, table);
 
-        // set turn
-        dealer.setOneCard(deck, table);
+        player1.add(new Card(0,0));
+        player1.add(new Card(0,1));
 
-        // set river
-        dealer.setOneCard(deck, table);
-
+        table.add(new Card(1,0));
+        table.add(new Card(2,1));
+        table.add(new Card(8,3));
+        table.add(new Card(5,2));
+        table.add(new Card(7,1));
         handEvaluator.evaluate(player1, table);
+        ArrayList<Card> hand = handEvaluator.getHand();
+
+//        // set player cards
+//        dealer.setPlayersCards(deck, player1, player2);
+
+//        // set flop
+//        dealer.setFlop(deck, table);
+//
+//        // set turn
+//        dealer.setOneCard(deck, table);
+//
+//        // set river
+//        dealer.setOneCard(deck, table);
+
 
         //----- player1
 //        int player1Card1Id = getResources().getIdentifier(player1.get(0).getCardDrawableName(), "drawable", getPackageName());

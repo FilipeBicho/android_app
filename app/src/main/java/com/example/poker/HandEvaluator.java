@@ -24,8 +24,8 @@ public class HandEvaluator {
     static int IS_STRAIGHT_FLUSH = 9;
     static int IS_ROYAL_STRAIGHT_FLUSH = 10;
 
-    static String RANK_CARD_TYPE = "rank";
-    static String SUIT_CARD_TYPE = "suit";
+    private static String RANK_CARD_TYPE = "rank";
+    private static String SUIT_CARD_TYPE = "suit";
 
     //----- private instance variables
 
@@ -156,6 +156,10 @@ public class HandEvaluator {
             hand.add(kicker.get(kicker.size()-1));
     }
 
+    /**
+     *
+     * @return true if has a pair and set best hand
+     */
     private Boolean isPair()
     {
         if (rankCount.containsValue(2))
@@ -170,6 +174,33 @@ public class HandEvaluator {
         }
 
         return false;
+    }
+
+    /**
+     *
+     * @return always true and set highest hand
+     */
+    private Boolean isHighCard()
+    {
+        // Check if cards has an Ace
+        if(Integer.valueOf(allCards.get(0).getRank()).equals(0))
+        {
+            hand.add(allCards.get(0));
+            hand.add(allCards.get(allCards.size()-1));
+            hand.add(allCards.get(allCards.size()-2));
+            hand.add(allCards.get(allCards.size()-3));
+            hand.add(allCards.get(allCards.size()-4));
+        }
+        else
+        {
+            hand.add(allCards.get(allCards.size()-1));
+            hand.add(allCards.get(allCards.size()-2));
+            hand.add(allCards.get(allCards.size()-3));
+            hand.add(allCards.get(allCards.size()-4));
+            hand.add(allCards.get(allCards.size()-5));
+        }
+
+        return true;
     }
 
 
@@ -189,8 +220,19 @@ public class HandEvaluator {
         if (isPair())
             return IS_PAIR;
 
+        if (isHighCard())
+            return IS_HIGH_CARD;
 
         return 0;
+    }
+
+    /**
+     *
+     * @return final hand
+     */
+    public ArrayList<Card> getHand()
+    {
+        return hand;
     }
 
 }

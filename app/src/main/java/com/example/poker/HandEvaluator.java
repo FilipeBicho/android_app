@@ -156,6 +156,78 @@ public class HandEvaluator {
             hand.add(kicker.get(kicker.size()-1));
     }
 
+    /**
+     *
+     * @return true if has a flush and set best hand
+     */
+    private Boolean isFlush()
+    {
+        // 7 cards flush
+        if (suitCount.containsValue(7))
+        {
+            // Store all the keys that contains 7 cards flush
+            int key = getHashMapKeysFromValue(7, suitCount).get(0);
+            setHand(key, SUIT_CARD_TYPE);
+
+            // flush with Ace
+            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+            {
+                // move Ace to last position
+                hand.add(hand.size(), hand.get(0));
+                hand.remove(0);
+            }
+
+            // remove the 2 lowest cards
+            hand.remove(0);
+            hand.remove(0);
+
+        }
+        // 6 cards flush
+        else if (suitCount.containsValue(6))
+        {
+            // Store all the keys that contains 6 cards flush
+            int key = getHashMapKeysFromValue(6, suitCount).get(0);
+            setHand(key, SUIT_CARD_TYPE);
+
+            // flush with Ace
+            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+            {
+
+                // move Ace to last position
+                hand.add(hand.size(), hand.get(0));
+                hand.remove(0);
+            }
+
+            // remove the lowest card
+            hand.remove(0);
+        }
+        // 5 cards flush
+        else if (suitCount.containsValue(5))
+        {
+            // Store all the keys that contains 5 cards flush
+            int key = getHashMapKeysFromValue(5, suitCount).get(0);
+            setHand(key, SUIT_CARD_TYPE);
+
+            // flush with Ace
+            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+            {
+                // move Ace to last position
+                hand.add(hand.size(), hand.get(0));
+                hand.remove(0);
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * @return true if has a straight and set best hand
+     */
     private Boolean isStraight()
     {
         int straightCount = 0;
@@ -210,7 +282,7 @@ public class HandEvaluator {
 
     /**
      *
-     * @return if has 3 of a kkind and set best hand
+     * @return true if has 3 of a kind and set best hand
      */
     private Boolean isThreeOfAKind()
     {
@@ -276,24 +348,22 @@ public class HandEvaluator {
             for(Integer key : keys)
                 setHand(key, RANK_CARD_TYPE);
 
-            // If it has 2 pairs just add a kicker
+            // 2 pairs
             if(Integer.valueOf(keys.size()).equals(2))
             {
+                if(!Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+                {
+                    // move biggest pair to first position
+                    hand.add(hand.size(), hand.get(0));
+                    hand.remove(0);
 
-                //TODO check if it's really needed
-//                if(hand.get(2).getRank() == 0)
-//                {
-//                    ArrayList<Card> temp = new ArrayList<>(hand);
-//                    hand.clear();
-//                    hand.add(temp.get(2));
-//                    hand.add(temp.get(3));
-//                    hand.add(temp.get(0));
-//                    hand.add(temp.get(1));
-//                }
+                    hand.add(hand.size(), hand.get(0));
+                    hand.remove(0);
+                }
 
                 setHandKicker();
             }
-            // If it has 3 pairs then have to delete 2 and check if one pair is an Ace
+            // 3 pairs
             else
             {
                 // Check if has a pair of Aces
@@ -309,6 +379,14 @@ public class HandEvaluator {
                     // Remove the lowest pair
                     hand.remove(0);
                     hand.remove(0);
+
+                    // move biggest pair to first position
+                    hand.add(hand.size(), hand.get(0));
+                    hand.remove(0);
+
+                    hand.add(hand.size(), hand.get(0));
+                    hand.remove(0);
+
                     setHandKicker();
                 }
             }
@@ -379,6 +457,9 @@ public class HandEvaluator {
 
         // count rank and suit count
         setRankAndSuitCardsCount();
+
+        if (isFlush())
+            return IS_FLUSH;
 
         if (isStraight())
             return IS_STRAIGHT;

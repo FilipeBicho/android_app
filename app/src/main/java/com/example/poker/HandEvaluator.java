@@ -150,10 +150,86 @@ public class HandEvaluator {
 
         // Check if has an Ace
         // If not gets the card with highest value
-        if(Integer.valueOf(kicker.get(0).getRank()).equals(0))
+        if(Integer.valueOf(kicker.get(0).getRank()).equals(Card.ACE))
             hand.add(kicker.get(0));
         else
             hand.add(kicker.get(kicker.size()-1));
+    }
+
+    /**
+     *
+     * @return true if has a FullHouse and set best hand
+     */
+    private Boolean isFullHouse()
+    {
+        ArrayList<Integer> threeOfKindKeys = getHashMapKeysFromValue(3, rankCount);
+
+        if (threeOfKindKeys.size() >= 1)
+        {
+            // has a second Three of a kind
+            if (threeOfKindKeys.size() == 2 )
+            {
+                // set hand with all three of a kinds
+                for(Integer key : threeOfKindKeys)
+                    setHand(key, RANK_CARD_TYPE);
+
+                if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+                {
+                   hand.remove(hand.size()-1);
+                }
+                else
+                {
+                    // move biggest three of a kind to first position
+                    hand.add(hand.size(), hand.get(0));
+                    hand.remove(0);
+                    hand.add(hand.size(), hand.get(0));
+                    hand.remove(0);
+
+                    // set lowest three of a kind as a pair
+                    hand.remove(0);
+                }
+
+                return true;
+            }
+            else
+            {
+                ArrayList<Integer> pairKeys = getHashMapKeysFromValue(2, rankCount);
+
+                // has 1 pair or more
+                if (pairKeys.size() >= 1)
+                {
+                    // set hand with three of a kind
+                    for(Integer key : threeOfKindKeys)
+                        setHand(key, RANK_CARD_TYPE);
+
+                    // set hand with pair(s)
+                    for(Integer key : pairKeys)
+                        setHand(key, RANK_CARD_TYPE);
+
+                    // has a three of a kind and 2 pairs
+                    if (hand.size() == 7)
+                    {
+                        // biggest pair is an Ace
+                        if (Integer.valueOf(hand.get(3).getRank()).equals(Card.ACE))
+                        {
+                            // remove lowest pair
+                            hand.remove(hand.size() - 1);
+                            hand.remove(hand.size() - 1);
+                        }
+                        else
+                        {
+                            // remove lowest pair
+                            hand.remove(3);
+                            hand.remove(3);
+                        }
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -457,6 +533,9 @@ public class HandEvaluator {
 
         // count rank and suit count
         setRankAndSuitCardsCount();
+
+        if (isFullHouse())
+            return IS_FULL_HOUSE;
 
         if (isFlush())
             return IS_FLUSH;

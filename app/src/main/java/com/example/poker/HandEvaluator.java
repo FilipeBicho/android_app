@@ -158,6 +158,25 @@ public class HandEvaluator {
 
     /**
      *
+     * @return true if has a Four of a Kind and set best hand
+     */
+    private Boolean isFourOfAKind()
+    {
+        if(rankCount.containsValue(4))
+        {
+            int key = getHashMapKeysFromValue(4, rankCount).get(0);
+
+            setHand(key, RANK_CARD_TYPE);
+            setHandKicker();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
      * @return true if has a FullHouse and set best hand
      */
     private Boolean isFullHouse()
@@ -223,12 +242,10 @@ public class HandEvaluator {
                             hand.remove(3);
                         }
                     }
-
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -533,6 +550,9 @@ public class HandEvaluator {
 
         // count rank and suit count
         setRankAndSuitCardsCount();
+
+        if (isFourOfAKind())
+            return IS_FOUR_OF_A_KIND;
 
         if (isFullHouse())
             return IS_FULL_HOUSE;

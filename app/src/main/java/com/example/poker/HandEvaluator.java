@@ -158,6 +158,68 @@ public class HandEvaluator {
 
     /**
      *
+     * @return true if has a royal straight flush and set best hand
+     */
+    private Boolean isRoyalStraightFlush()
+    {
+        if (isStraightFlush())
+        {
+            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+                return true;
+
+            hand.clear();
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @return true if has a straight flush and set best hand
+     */
+    private Boolean isStraightFlush()
+    {
+        // flush with 7 cards
+        if (suitCount.containsValue(7))
+        {
+            return isStraight();
+        }
+        // flush with 5 or 6 cards
+        else if (suitCount.containsValue(5) || suitCount.containsValue(6))
+        {
+
+            ArrayList<Card> backupAllCards = new ArrayList<>(allCards);
+            int key = -1;
+
+            if (suitCount.containsValue(5))
+                key = getHashMapKeysFromValue(5, suitCount).get(0);
+            else if (suitCount.containsValue(6))
+                key = getHashMapKeysFromValue(6, suitCount).get(0);
+
+            // remove card without the flush suit
+            for (Card card : new ArrayList<Card>(allCards))
+            {
+                if (card.getSuit() != key)
+                    allCards.remove(card);
+            }
+
+            // check if all cards with flush suit have a straight
+            if (isStraight())
+            {
+                allCards = backupAllCards;
+                return true;
+            }
+            else
+            {
+                allCards = backupAllCards;
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     *
      * @return true if has a Four of a Kind and set best hand
      */
     private Boolean isFourOfAKind()
@@ -351,19 +413,19 @@ public class HandEvaluator {
                 Integer.valueOf(allCards.get(straightStartIndex).getRank()).equals(Card.KING) &&
                 Integer.valueOf(allCards.get(0).getRank()).equals(Card.ACE))
         {
-            hand.add(allCards.get(0));
-            hand.add(allCards.get(straightStartIndex));
-            hand.add(allCards.get(straightStartIndex-1));
-            hand.add(allCards.get(straightStartIndex-2));
             hand.add(allCards.get(straightStartIndex-3));
+            hand.add(allCards.get(straightStartIndex-2));
+            hand.add(allCards.get(straightStartIndex-1));
+            hand.add(allCards.get(straightStartIndex));
+            hand.add(allCards.get(0));
         }
         else if (straight >= 4)
         {
-            hand.add(allCards.get(straightStartIndex));
-            hand.add(allCards.get(straightStartIndex-1));
-            hand.add(allCards.get(straightStartIndex-2));
-            hand.add(allCards.get(straightStartIndex-3));
             hand.add(allCards.get(straightStartIndex-4));
+            hand.add(allCards.get(straightStartIndex-3));
+            hand.add(allCards.get(straightStartIndex-2));
+            hand.add(allCards.get(straightStartIndex-1));
+            hand.add(allCards.get(straightStartIndex));
         }
         else
         {
@@ -550,6 +612,12 @@ public class HandEvaluator {
 
         // count rank and suit count
         setRankAndSuitCardsCount();
+
+        if (isRoyalStraightFlush())
+            return IS_ROYAL_STRAIGHT_FLUSH;
+
+        if (isStraightFlush())
+            return IS_STRAIGHT_FLUSH;
 
         if (isFourOfAKind())
             return IS_FOUR_OF_A_KIND;

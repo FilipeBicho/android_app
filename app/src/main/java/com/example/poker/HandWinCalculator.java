@@ -59,6 +59,21 @@ public class HandWinCalculator {
 
     /**
      *
+     * @return player with straight flush winning hand
+     */
+    private String calculateStraightFlushWinner()
+    {
+        Integer player1StraightFlushRank = player1Hand.get(0).getRank();
+        Integer player2StraightFlushRank = player2Hand.get(0).getRank();
+
+        if (player1StraightFlushRank.equals(player2StraightFlushRank))
+            return DRAW;
+        else
+            return player1StraightFlushRank > player2StraightFlushRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+    }
+
+    /**
+     *
      * @return player with 4 of a kind winning hand
      */
     private String calculateFourOfAKindWinner()
@@ -322,6 +337,8 @@ public class HandWinCalculator {
                     return calculateFullHouseWinner();
                 case HandEvaluator.IS_FOUR_OF_A_KIND:
                     return calculateFourOfAKindWinner();
+                case HandEvaluator.IS_STRAIGHT_FLUSH:
+                    return calculateStraightFlushWinner();
             }
         }
 

@@ -176,7 +176,7 @@ class HandEvaluator {
     {
         if (isStraightFlush())
         {
-            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+            if (Integer.valueOf(hand.get(hand.size() - 1).getRank()).equals(Card.ACE))
                 return true;
 
             hand.clear();

@@ -334,18 +334,20 @@ class HandEvaluator {
             int key = getHashMapKeysFromValue(7, suitCount).get(0);
             setHand(key, SUIT_CARD_TYPE);
 
+            // Sort desc card by rank
+            Collections.sort(hand, Card.sortRankDesc);
+
             // flush with Ace
-            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+            if (Integer.valueOf(hand.get(hand.size() - 1).getRank()).equals(Card.ACE))
             {
-                // move Ace to last position
-                hand.add(hand.size(), hand.get(0));
-                hand.remove(0);
+                // move Ace to first position
+                hand.add(0, hand.get(hand.size() - 1));
+                hand.remove(hand.size() - 1);
             }
 
             // remove the 2 lowest cards
-            hand.remove(0);
-            hand.remove(0);
-
+            hand.remove(hand.size() - 1);
+            hand.remove(hand.size() - 1);
         }
         // 6 cards flush
         else if (suitCount.containsValue(6))
@@ -354,17 +356,19 @@ class HandEvaluator {
             int key = getHashMapKeysFromValue(6, suitCount).get(0);
             setHand(key, SUIT_CARD_TYPE);
 
-            // flush with Ace
-            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
-            {
+            // Sort desc card by rank
+            Collections.sort(hand, Card.sortRankDesc);
 
-                // move Ace to last position
-                hand.add(hand.size(), hand.get(0));
-                hand.remove(0);
+            // flush with Ace
+            if (Integer.valueOf(hand.get(hand.size() - 1).getRank()).equals(Card.ACE))
+            {
+                // move Ace to first position
+                hand.add(0, hand.get(hand.size() - 1));
+                hand.remove(hand.size() - 1);
             }
 
             // remove the lowest card
-            hand.remove(0);
+            hand.remove(hand.size() - 1);
         }
         // 5 cards flush
         else if (suitCount.containsValue(5))
@@ -373,12 +377,15 @@ class HandEvaluator {
             int key = getHashMapKeysFromValue(5, suitCount).get(0);
             setHand(key, SUIT_CARD_TYPE);
 
+            // Sort desc card by rank
+            Collections.sort(hand, Card.sortRankDesc);
+
             // flush with Ace
-            if (Integer.valueOf(hand.get(0).getRank()).equals(Card.ACE))
+            if (Integer.valueOf(hand.get(hand.size() - 1).getRank()).equals(Card.ACE))
             {
-                // move Ace to last position
-                hand.add(hand.size(), hand.get(0));
-                hand.remove(0);
+                // move Ace to first position
+                hand.add(0, hand.get(hand.size() - 1));
+                hand.remove(hand.size() - 1);
             }
         }
         else
@@ -612,7 +619,7 @@ class HandEvaluator {
         initAllCards(playerCards, tableCards);
 
         // Sort card by rank
-        Collections.sort(allCards, Card.sortRank);
+        Collections.sort(allCards, Card.sortRankAsc);
 
         // count rank and suit count
         setRankAndSuitCardsCount();

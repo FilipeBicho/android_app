@@ -113,7 +113,10 @@ public class Card {
         return "_" + this.getRank() + this.getSuit();
     }
 
-    static final Comparator<Card> sortRank = new Comparator<Card>() {
+    /**
+     * order cards by rank asc
+     */
+    static final Comparator<Card> sortRankAsc = new Comparator<Card>() {
 
         public int compare(Card card1, Card card2) {
 
@@ -122,9 +125,21 @@ public class Card {
 
             // sort asc
             return rank1 - rank2;
+        }
+    };
 
-            // sort desc
-            //rank2-rank1;
+    /**
+     * order cards by rank desc
+     */
+    static final Comparator<Card> sortRankDesc = new Comparator<Card>() {
+
+        public int compare(Card card1, Card card2) {
+
+            int rank1 = card1.getRank();
+            int rank2 = card2.getRank();
+
+            // sort asc
+            return rank2 - rank1;
         }
     };
 }

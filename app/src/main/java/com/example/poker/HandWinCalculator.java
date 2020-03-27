@@ -1,5 +1,6 @@
 package com.example.poker;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 
 public class HandWinCalculator {
@@ -54,6 +55,40 @@ public class HandWinCalculator {
                 return PLAYER_2_WIN;
 
         return DRAW;
+    }
+
+    /**
+     *
+     * @return player with flush winning hand
+     */
+    private String calculateFlushWinner()
+    {
+        Integer player1FlushRank = player1Hand.get(0).getRank();
+        Integer player2FlushRank = player2Hand.get(0).getRank();
+
+        if (player1FlushRank.equals(player2FlushRank))
+            return calculateKickerWinner(1);
+        else if (player1FlushRank.equals(Card.ACE))
+            return PLAYER_1_WIN;
+        else if (player2FlushRank.equals(Card.ACE))
+            return PLAYER_2_WIN;
+        else
+            return player1FlushRank > player2FlushRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+    }
+
+    /**
+     *
+     * @return player with straight winning hand
+     */
+    private String calculateStraightWinner()
+    {
+        Integer player1StraightRank = player1Hand.get(0).getRank();
+        Integer player2StraightRank = player2Hand.get(0).getRank();
+
+        if (player1StraightRank.equals(player2StraightRank))
+            return DRAW;
+        else
+            return player1StraightRank > player2StraightRank ? PLAYER_1_WIN : PLAYER_2_WIN;
     }
 
     /**
@@ -181,7 +216,6 @@ public class HandWinCalculator {
             return PLAYER_2_WIN;
         else
             return calculateKickerWinner(0);
-
     }
 
     //----- public instance methods
@@ -194,7 +228,6 @@ public class HandWinCalculator {
      */
     String calculate(int player1HandResult, int player2HandResult)
     {
-
         // draw
         if (player1HandResult == player2HandResult)
         {
@@ -208,6 +241,10 @@ public class HandWinCalculator {
                     return calculateTwoPairWinner();
                 case HandEvaluator.IS_THREE_OF_A_KIND:
                     return calculateThreeOfAKindWinner();
+                case HandEvaluator.IS_STRAIGHT:
+                    return calculateStraightWinner();
+                case HandEvaluator.IS_FLUSH:
+                    return calculateFlushWinner();
             }
         }
 

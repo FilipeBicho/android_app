@@ -34,16 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
+        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));
         player1.add(new Card(Card.ACE,Card.SUIT_CLUBS));
 
-        player2.add(new Card(Card.JACK,Card.SUIT_HEARTS));
-        player2.add(new Card(Card.KING,Card.SUIT_SPADES));
+        player2.add(new Card(Card.TEN,Card.SUIT_HEARTS));
+        player2.add(new Card(Card.THREE,Card.SUIT_SPADES));
 
         table.add(new Card(Card.KING,Card.SUIT_DIAMONDS));
-        table.add(new Card(Card.JACK,Card.SUIT_SPADES));
-        table.add(new Card(Card.ACE,Card.SUIT_SPADES));
-        table.add(new Card(Card.JACK,Card.SUIT_CLUBS));
+        table.add(new Card(Card.FIVE,Card.SUIT_DIAMONDS));
+        table.add(new Card(Card.KING,Card.SUIT_SPADES));
+        table.add(new Card(Card.KING,Card.SUIT_HEARTS));
         table.add(new Card(Card.KING,Card.SUIT_CLUBS));
 
         //--- evaluate players hands

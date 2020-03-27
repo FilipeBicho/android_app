@@ -59,6 +59,43 @@ public class HandWinCalculator {
 
     /**
      *
+     * @return player with 4 of a kind winning hand
+     */
+    private String calculateFourOfAKindWinner()
+    {
+        Integer player1FourOfAKindRank = player1Hand.get(0).getRank();
+        Integer player2FourOfAKindRank = player2Hand.get(0).getRank();
+
+        if (player1FourOfAKindRank.equals(player2FourOfAKindRank))
+        {
+            Integer player1KickerRank = player1Hand.get(4).getRank();
+            Integer player2KickerRank = player2Hand.get(4).getRank();
+
+            if (player1KickerRank.equals(player2KickerRank))
+                return DRAW;
+            else if (player1KickerRank.equals(Card.ACE))
+                return PLAYER_1_WIN;
+            else if (player2KickerRank.equals(Card.ACE))
+                return PLAYER_2_WIN;
+            else
+                return player1KickerRank > player2KickerRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        }
+        else if (player1FourOfAKindRank.equals(Card.ACE))
+        {
+            return PLAYER_1_WIN;
+        }
+        else if (player2FourOfAKindRank.equals(Card.ACE))
+        {
+            return PLAYER_2_WIN;
+        }
+        else
+        {
+            return player1FourOfAKindRank > player2FourOfAKindRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        }
+    }
+
+    /**
+     *
      * @return player with full house winning hand
      */
     private String calculateFullHouseWinner()
@@ -283,6 +320,8 @@ public class HandWinCalculator {
                     return calculateFlushWinner();
                 case HandEvaluator.IS_FULL_HOUSE:
                     return calculateFullHouseWinner();
+                case HandEvaluator.IS_FOUR_OF_A_KIND:
+                    return calculateFourOfAKindWinner();
             }
         }
 

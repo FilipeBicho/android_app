@@ -59,6 +59,42 @@ public class HandWinCalculator {
 
     /**
      *
+     * @return player with full house winning hand
+     */
+    private String calculateFullHouseWinner()
+    {
+        Integer player1ThreeOfAKindRank = player1Hand.get(0).getRank();
+        Integer player2ThreeOfAKindRank = player2Hand.get(0).getRank();
+        Integer player1PairRank = player1Hand.get(3).getRank();
+        Integer player2PairRank = player2Hand.get(3).getRank();
+
+        if (player1ThreeOfAKindRank.equals(player2ThreeOfAKindRank))
+        {
+            if (player1PairRank.equals(player2PairRank))
+                return DRAW;
+            else if (player1PairRank.equals(Card.ACE))
+                return PLAYER_1_WIN;
+            else if (player2PairRank.equals(Card.ACE))
+                return PLAYER_2_WIN;
+            else
+                return player1PairRank > player2PairRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        }
+        else if (player1ThreeOfAKindRank.equals(Card.ACE))
+        {
+            return PLAYER_1_WIN;
+        }
+        else if (player2ThreeOfAKindRank.equals(Card.ACE))
+        {
+            return PLAYER_2_WIN;
+        }
+        else
+        {
+            return player1ThreeOfAKindRank > player2ThreeOfAKindRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        }
+    }
+
+    /**
+     *
      * @return player with flush winning hand
      */
     private String calculateFlushWinner()
@@ -245,6 +281,8 @@ public class HandWinCalculator {
                     return calculateStraightWinner();
                 case HandEvaluator.IS_FLUSH:
                     return calculateFlushWinner();
+                case HandEvaluator.IS_FULL_HOUSE:
+                    return calculateFullHouseWinner();
             }
         }
 

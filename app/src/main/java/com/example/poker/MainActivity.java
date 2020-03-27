@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Card> table = new ArrayList<>();
         ArrayList<Card> player1 = new ArrayList<>();
         ArrayList<Card> player2 = new ArrayList<>();
+        ArrayList<Card> player1Hand;
+        ArrayList<Card> player2Hand;
+
+        HandWinCalculator handWinCalculator;
+        String winnerHandResult;
 
         ArrayList<ImageView> tableImg = new ArrayList<>();
         ArrayList<ImageView> player1Img = new ArrayList<>();
@@ -28,16 +34,30 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        player1.add(new Card(Card.ACE,Card.SUIT_DIAMONDS));
+        player1.add(new Card(Card.KING,Card.SUIT_CLUBS));
         player1.add(new Card(Card.KING,Card.SUIT_DIAMONDS));
 
-        table.add(new Card(Card.QUEEN,Card.SUIT_DIAMONDS));
-        table.add(new Card(Card.JACK,Card.SUIT_DIAMONDS));
-        table.add(new Card(Card.TEN,Card.SUIT_DIAMONDS));
+        player2.add(new Card(Card.ACE,Card.SUIT_CLUBS));
+        player2.add(new Card(Card.ACE,Card.SUIT_HEARTS));
+
         table.add(new Card(Card.FIVE,Card.SUIT_DIAMONDS));
-        table.add(new Card(Card.SEVEN,Card.SUIT_DIAMONDS));
-        handEvaluator.evaluate(player1, table);
-        ArrayList<Card> hand = handEvaluator.getHand();
+        table.add(new Card(Card.FOUR,Card.SUIT_CLUBS));
+        table.add(new Card(Card.JACK,Card.SUIT_DIAMONDS));
+        table.add(new Card(Card.KING,Card.SUIT_SPADES));
+        table.add(new Card(Card.ACE,Card.SUIT_HEARTS));
+
+        //--- evaluate players hands
+
+        int player1HandResult = handEvaluator.evaluate(player1, table);
+        player1Hand = new ArrayList<>(handEvaluator.getHand());
+        int player2HandResult = handEvaluator.evaluate(player2, table);
+        player2Hand = new ArrayList<>(handEvaluator.getHand());
+
+        //--- calculate winning player
+
+        handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
+        winnerHandResult = handWinCalculator.calculate(player1HandResult, player2HandResult);
+
 
 //        // set player cards
 //        dealer.setPlayersCards(deck, player1, player2);

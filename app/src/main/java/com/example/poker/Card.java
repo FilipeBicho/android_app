@@ -32,7 +32,7 @@ public class Card {
     static int SUIT_HEARTS = 0;
     static int SUIT_DIAMONDS = 1;
     static int SUIT_CLUBS = 2;
-    static int SUITSPADES = 3;
+    static int SUIT_SPADES = 3;
 
 
     //----- private instance variables

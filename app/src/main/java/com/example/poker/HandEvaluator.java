@@ -9,20 +9,20 @@ import java.util.Map;
  * Evaluator player poker hand on flop, turn and river
  * @author filipe bicho created 27.10.2017 improved 25.03.2020
  */
-public class HandEvaluator {
+class HandEvaluator {
 
-    //----- private static variables
+    //----- static const variables
 
-    static int IS_HIGH_CARD= 1;
-    static int IS_PAIR = 2;
-    static int IS_TWO_PAIR = 3;
-    static int IS_THREE_OF_A_KIND = 4;
-    static int IS_STRAIGHT = 5;
-    static int IS_FLUSH = 6;
-    static int IS_FULL_HOUSE = 7;
-    static int IS_FOUR_OF_A_KIND = 8;
-    static int IS_STRAIGHT_FLUSH = 9;
-    static int IS_ROYAL_STRAIGHT_FLUSH = 10;
+    static final int IS_HIGH_CARD= 1;
+    static final int IS_PAIR = 2;
+    static final int IS_TWO_PAIR = 3;
+    static final int IS_THREE_OF_A_KIND = 4;
+    static final int IS_STRAIGHT = 5;
+    static final int IS_FLUSH = 6;
+    static final int IS_FULL_HOUSE = 7;
+    static final int IS_FOUR_OF_A_KIND = 8;
+    static final int IS_STRAIGHT_FLUSH = 9;
+    static final int IS_ROYAL_STRAIGHT_FLUSH = 10;
 
     private static String RANK_CARD_TYPE = "rank";
     private static String SUIT_CARD_TYPE = "suit";
@@ -51,6 +51,18 @@ public class HandEvaluator {
 
 
     //----- private instance methods
+
+    /**
+     * reset values
+     */
+    private void reset()
+    {
+        hand.clear();
+        allCards.clear();
+        rankCount.clear();
+        suitCount.clear();
+    }
+
 
     /**
      * init allCards with player and table cards
@@ -214,7 +226,6 @@ public class HandEvaluator {
                 return false;
             }
         }
-
         return false;
     }
 
@@ -233,7 +244,6 @@ public class HandEvaluator {
 
             return true;
         }
-
         return false;
     }
 
@@ -431,7 +441,6 @@ public class HandEvaluator {
         {
             return false;
         }
-
         return true;
     }
 
@@ -480,10 +489,8 @@ public class HandEvaluator {
                 setHandKicker();
                 setHandKicker();
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -545,10 +552,8 @@ public class HandEvaluator {
                     setHandKicker();
                 }
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -565,10 +570,8 @@ public class HandEvaluator {
             setHandKicker();
             setHandKicker();
             setHandKicker();
-
             return true;
         }
-
         return false;
     }
 
@@ -599,11 +602,12 @@ public class HandEvaluator {
         return true;
     }
 
-
     //----- public instance methods
 
     int evaluate(ArrayList<Card> playerCards, ArrayList<Card> tableCards)
     {
+        reset();
+
         // merge player and table cards
         initAllCards(playerCards, tableCards);
 

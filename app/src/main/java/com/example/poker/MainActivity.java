@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Card> player1Hand;
         ArrayList<Card> player2Hand;
 
+        Odds oddsCalculator;
+
         HandWinCalculator handWinCalculator;
         String winnerHandResult;
 
@@ -34,36 +37,41 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        player1.add(new Card(Card.KING,Card.SUIT_HEARTS));
-        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));
+//        player1.add(new Card(Card.KING,Card.SUIT_HEARTS));
+//        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));
+//
+//        player2.add(new Card(Card.EIGHT,Card.SUIT_HEARTS));
+//        player2.add(new Card(Card.SEVEN,Card.SUIT_HEARTS));
+//
+//        table.add(new Card(Card.NINE,Card.SUIT_HEARTS));
+//        table.add(new Card(Card.QUEEN,Card.SUIT_HEARTS));
+//        table.add(new Card(Card.JACK,Card.SUIT_HEARTS));
+//        table.add(new Card(Card.TEN,Card.SUIT_HEARTS));
+//        table.add(new Card(Card.SIX,Card.SUIT_HEARTS));
 
-        player2.add(new Card(Card.EIGHT,Card.SUIT_HEARTS));
-        player2.add(new Card(Card.SEVEN,Card.SUIT_HEARTS));
 
-        table.add(new Card(Card.NINE,Card.SUIT_HEARTS));
-        table.add(new Card(Card.QUEEN,Card.SUIT_HEARTS));
-        table.add(new Card(Card.JACK,Card.SUIT_HEARTS));
-        table.add(new Card(Card.TEN,Card.SUIT_HEARTS));
-        table.add(new Card(Card.SIX,Card.SUIT_HEARTS));
+        // set player cards
+        dealer.setPlayersCards(deck, player1, player2);
+        oddsCalculator = new Odds(player1, player2, new ArrayList<Card>(deck.getDeck()));
+
+        // set flop
+        dealer.setFlop(deck, table);
+
+        //--- winning flop odds
+        oddsCalculator.flopWinningOdds(table);
 
         //--- evaluate players hands
 
-        int player1HandResult = handEvaluator.evaluate(player1, table);
-        player1Hand = new ArrayList<>(handEvaluator.getHand());
-        int player2HandResult = handEvaluator.evaluate(player2, table);
-        player2Hand = new ArrayList<>(handEvaluator.getHand());
+//        int player1HandResult = handEvaluator.evaluate(player1, table);
+//        player1Hand = new ArrayList<>(handEvaluator.getHand());
+//        int player2HandResult = handEvaluator.evaluate(player2, table);
+//        player2Hand = new ArrayList<>(handEvaluator.getHand());
+//
+//        //--- calculate winning player
+//
+//        handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
+//        winnerHandResult = handWinCalculator.calculate(player1HandResult, player2HandResult);
 
-        //--- calculate winning player
-
-        handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
-        winnerHandResult = handWinCalculator.calculate(player1HandResult, player2HandResult);
-
-
-//        // set player cards
-//        dealer.setPlayersCards(deck, player1, player2);
-
-//        // set flop
-//        dealer.setFlop(deck, table);
 //
 //        // set turn
 //        dealer.setOneCard(deck, table);

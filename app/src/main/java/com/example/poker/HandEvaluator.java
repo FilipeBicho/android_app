@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Evaluator player poker hand on flop, turn and river
- * @author filipe bicho created 27.10.2017 improved 25.03.2020
+ * @author filipe bicho created 25.03.2020
  */
 class HandEvaluator {
 
@@ -51,17 +51,6 @@ class HandEvaluator {
 
 
     //----- private instance methods
-
-    /**
-     * reset values
-     */
-    private void reset()
-    {
-        hand.clear();
-        allCards.clear();
-        rankCount.clear();
-        suitCount.clear();
-    }
 
 
     /**
@@ -611,6 +600,23 @@ class HandEvaluator {
 
     //----- public instance methods
 
+    /**
+     * reset values
+     */
+    void reset()
+    {
+        hand.clear();
+        allCards.clear();
+        rankCount.clear();
+        suitCount.clear();
+    }
+
+    /**
+     *
+     * @param playerCards player cards
+     * @param tableCards table cards
+     * @return hand evaluation result
+     */
     int evaluate(ArrayList<Card> playerCards, ArrayList<Card> tableCards)
     {
         reset();

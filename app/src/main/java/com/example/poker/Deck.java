@@ -7,9 +7,9 @@ import java.util.Random;
 /**
  * Class to create and shuffle a deck of cards
  *
- * @author filipe bicho created 27.10.2017 improved 23.03.2020
+ * @author filipe bicho created 23.03.2020
  */
-public class Deck {
+class Deck {
 
     //----- private instance variable
 
@@ -55,8 +55,17 @@ public class Deck {
      *
      * @return a card from the top of the deck and delete it
      */
-    public Card getCard()
+    Card getCard()
     {
         return deck.remove(deck.size()-1);
+    }
+
+    /**
+     *
+     * @return current deck
+     */
+    ArrayList<Card> getDeck()
+    {
+        return deck;
     }
 }

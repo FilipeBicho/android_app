@@ -1,15 +1,16 @@
 package com.example.poker;
 
-import java.sql.Driver;
 import java.util.ArrayList;
 
-public class HandWinCalculator {
+/**
+ * calculate winning hand
+ * @author filipe bicho created 27.03.2020
+ */
+class HandWinCalculator {
 
     //----- static const variables
-
-    static final String PLAYER_1_WIN = "player_1";
-    static final String PLAYER_2_WIN = "player_2";
-    static final String DRAW= "draw";
+    
+    static final int DRAW = 2;
 
     //----- private instance variables
 
@@ -43,16 +44,16 @@ public class HandWinCalculator {
      * @param index start index
      * @return string containing the winner or draw
      */
-    private String calculateKickerWinner(int index)
+    private int calculateKickerWinner(int index)
     {
         if (index >= 5)
-            return "ERROR: index if bigger than hand size";
+            return -1;
 
         for (; index < 5; index++)
             if (player1Hand.get(index).getRank() > player2Hand.get(index).getRank())
-                return PLAYER_1_WIN;
+                return Dealer.PLAYER_1;
             else if (player1Hand.get(index).getRank() < player2Hand.get(index).getRank())
-                return PLAYER_2_WIN;
+                return Dealer.PLAYER_2;
 
         return DRAW;
     }
@@ -61,7 +62,7 @@ public class HandWinCalculator {
      *
      * @return player with straight flush winning hand
      */
-    private String calculateStraightFlushWinner()
+    private int calculateStraightFlushWinner()
     {
         Integer player1StraightFlushRank = player1Hand.get(0).getRank();
         Integer player2StraightFlushRank = player2Hand.get(0).getRank();
@@ -69,14 +70,14 @@ public class HandWinCalculator {
         if (player1StraightFlushRank.equals(player2StraightFlushRank))
             return DRAW;
         else
-            return player1StraightFlushRank > player2StraightFlushRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+            return player1StraightFlushRank > player2StraightFlushRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
     /**
      *
      * @return player with 4 of a kind winning hand
      */
-    private String calculateFourOfAKindWinner()
+    private int calculateFourOfAKindWinner()
     {
         Integer player1FourOfAKindRank = player1Hand.get(0).getRank();
         Integer player2FourOfAKindRank = player2Hand.get(0).getRank();
@@ -89,23 +90,23 @@ public class HandWinCalculator {
             if (player1KickerRank.equals(player2KickerRank))
                 return DRAW;
             else if (player1KickerRank.equals(Card.ACE))
-                return PLAYER_1_WIN;
+                return Dealer.PLAYER_1;
             else if (player2KickerRank.equals(Card.ACE))
-                return PLAYER_2_WIN;
+                return Dealer.PLAYER_2;
             else
-                return player1KickerRank > player2KickerRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+                return player1KickerRank > player2KickerRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
         }
         else if (player1FourOfAKindRank.equals(Card.ACE))
         {
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         }
         else if (player2FourOfAKindRank.equals(Card.ACE))
         {
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
         }
         else
         {
-            return player1FourOfAKindRank > player2FourOfAKindRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+            return player1FourOfAKindRank > player2FourOfAKindRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
         }
     }
 
@@ -113,7 +114,7 @@ public class HandWinCalculator {
      *
      * @return player with full house winning hand
      */
-    private String calculateFullHouseWinner()
+    private int calculateFullHouseWinner()
     {
         Integer player1ThreeOfAKindRank = player1Hand.get(0).getRank();
         Integer player2ThreeOfAKindRank = player2Hand.get(0).getRank();
@@ -125,23 +126,23 @@ public class HandWinCalculator {
             if (player1PairRank.equals(player2PairRank))
                 return DRAW;
             else if (player1PairRank.equals(Card.ACE))
-                return PLAYER_1_WIN;
+                return Dealer.PLAYER_1;
             else if (player2PairRank.equals(Card.ACE))
-                return PLAYER_2_WIN;
+                return Dealer.PLAYER_2;
             else
-                return player1PairRank > player2PairRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+                return player1PairRank > player2PairRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
         }
         else if (player1ThreeOfAKindRank.equals(Card.ACE))
         {
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         }
         else if (player2ThreeOfAKindRank.equals(Card.ACE))
         {
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
         }
         else
         {
-            return player1ThreeOfAKindRank > player2ThreeOfAKindRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+            return player1ThreeOfAKindRank > player2ThreeOfAKindRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
         }
     }
 
@@ -149,7 +150,7 @@ public class HandWinCalculator {
      *
      * @return player with flush winning hand
      */
-    private String calculateFlushWinner()
+    private int calculateFlushWinner()
     {
         Integer player1FlushRank = player1Hand.get(0).getRank();
         Integer player2FlushRank = player2Hand.get(0).getRank();
@@ -157,18 +158,18 @@ public class HandWinCalculator {
         if (player1FlushRank.equals(player2FlushRank))
             return calculateKickerWinner(1);
         else if (player1FlushRank.equals(Card.ACE))
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         else if (player2FlushRank.equals(Card.ACE))
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
         else
-            return player1FlushRank > player2FlushRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+            return player1FlushRank > player2FlushRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
     /**
      *
      * @return player with straight winning hand
      */
-    private String calculateStraightWinner()
+    private int calculateStraightWinner()
     {
         Integer player1StraightRank = player1Hand.get(0).getRank();
         Integer player2StraightRank = player2Hand.get(0).getRank();
@@ -176,14 +177,14 @@ public class HandWinCalculator {
         if (player1StraightRank.equals(player2StraightRank))
             return DRAW;
         else
-            return player1StraightRank > player2StraightRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+            return player1StraightRank > player2StraightRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
     /**
      *
      * @return player with 3 of kind winning hand
      */
-    private String calculateThreeOfAKindWinner()
+    private int calculateThreeOfAKindWinner()
     {
         Integer player1ThreeOfAKindRank = player1Hand.get(0).getRank();
         Integer player2ThreeOfAKindRank = player2Hand.get(0).getRank();
@@ -196,25 +197,25 @@ public class HandWinCalculator {
             if (player1HasAce && player2HasAce)
                 return calculateKickerWinner(4);
             else if (player1HasAce)
-                return PLAYER_1_WIN;
+                return Dealer.PLAYER_1;
             else if (player2HasAce)
-                return PLAYER_2_WIN;
+                return Dealer.PLAYER_2;
             else
                 return calculateKickerWinner(3);
         }
         else if (player1ThreeOfAKindRank.equals(Card.ACE))
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         else if (player2ThreeOfAKindRank.equals(Card.ACE))
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
 
-        return player1ThreeOfAKindRank > player2ThreeOfAKindRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        return player1ThreeOfAKindRank > player2ThreeOfAKindRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
     /**
      *
      * @return player with 2 pairs winning hand
      */
-    private String calculateTwoPairWinner()
+    private int calculateTwoPairWinner()
     {
         Integer player1Pair1Rank = player1Hand.get(0).getRank();
         Integer player2Pair1Rank = player2Hand.get(0).getRank();
@@ -233,34 +234,34 @@ public class HandWinCalculator {
                 if (player1KickerRank.equals(player2KickerRank))
                     return DRAW;
                 else if (player1KickerRank.equals(Card.ACE))
-                    return PLAYER_1_WIN;
+                    return Dealer.PLAYER_1;
                 else if (player2KickerRank.equals(Card.ACE))
-                    return PLAYER_2_WIN;
+                    return Dealer.PLAYER_2;
                 else
-                    return player1KickerRank > player2KickerRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+                    return player1KickerRank > player2KickerRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
             }
             else
             {
-                return player1Pair2Rank > player2Pair2Rank ? PLAYER_1_WIN : PLAYER_2_WIN;
+                return player1Pair2Rank > player2Pair2Rank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
             }
         }
         else if (player1Pair1Rank.equals(Card.ACE))
         {
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         }
         else if (player2Pair1Rank.equals(Card.ACE))
         {
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
         }
 
-        return player1Pair1Rank > player2Pair1Rank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        return player1Pair1Rank > player2Pair1Rank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
     /**
      *
      * @return player with par winning hand
      */
-    private String calculateOnePairWinner()
+    private int calculateOnePairWinner()
     {
         Integer player1PairRank = player1Hand.get(0).getRank();
         Integer player2PairRank = player2Hand.get(0).getRank();
@@ -273,25 +274,25 @@ public class HandWinCalculator {
             if (player1HasAce && player2HasAce)
                 return calculateKickerWinner(3);
             else if (player1HasAce)
-                return PLAYER_1_WIN;
+                return Dealer.PLAYER_1;
             else if (player2HasAce)
-                return PLAYER_2_WIN;
+                return Dealer.PLAYER_2;
             else
                 return calculateKickerWinner(2);
         }
         else if (player1PairRank.equals(Card.ACE))
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         else if (player2PairRank.equals(Card.ACE))
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
 
-        return player1PairRank > player2PairRank ? PLAYER_1_WIN : PLAYER_2_WIN;
+        return player1PairRank > player2PairRank ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
     /**
      *
      * @return player with high card winning hand
      */
-    private String calculateHighCardWinner()
+    private int calculateHighCardWinner()
     {
         Boolean player1HasAce = Integer.valueOf(player1Hand.get(0).getRank()).equals(Card.ACE);
         Boolean player2HasAce = Integer.valueOf(player2Hand.get(0).getRank()).equals(Card.ACE);
@@ -299,9 +300,9 @@ public class HandWinCalculator {
         if (player1HasAce && player2HasAce)
             return calculateKickerWinner(1);
         else if (player1HasAce)
-            return PLAYER_1_WIN;
+            return Dealer.PLAYER_1;
         else if (player2HasAce)
-            return PLAYER_2_WIN;
+            return Dealer.PLAYER_2;
         else
             return calculateKickerWinner(0);
     }
@@ -312,9 +313,9 @@ public class HandWinCalculator {
      *
      * @param player1HandResult player 1 hand result
      * @param player2HandResult player 2 hand result
-     * @return string with winning player
+     * @return int with winning player
      */
-    String calculate(int player1HandResult, int player2HandResult)
+    int calculate(int player1HandResult, int player2HandResult)
     {
         // draw
         if (player1HandResult == player2HandResult)
@@ -342,7 +343,7 @@ public class HandWinCalculator {
             }
         }
 
-        return player1HandResult > player2HandResult ? "player_1" : "player_2";
+        return player1HandResult > player2HandResult ? Dealer.PLAYER_1 : Dealer.PLAYER_2;
     }
 
 }

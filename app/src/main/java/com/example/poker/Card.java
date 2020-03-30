@@ -7,7 +7,7 @@ import java.util.Comparator;
 /**
  *
  * Define a data structure to save and get the 52 cards of the deck
- * @author filipe bicho created 27.10.2017 improved 23.03.2020
+ * @author filipe bicho created 23.03.2020
  *
  */
 public class Card {
@@ -62,7 +62,7 @@ public class Card {
     //----- public constructor
 
     /**
-     * initialize cards
+     * initialize card with rank and suit
      *
      * @param rank given rank
      * @param suit given suit
@@ -71,6 +71,17 @@ public class Card {
     {
         this.cardRank = rank;
         this.cardSuit = suit;
+    }
+
+    /**
+     * initialize card with card
+     *
+     * @param card give card
+     */
+    public Card(Card card)
+    {
+        this.cardRank = card.getRank();
+        this.cardSuit = card.getSuit();
     }
 
     //----- public instance methods

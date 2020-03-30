@@ -5,9 +5,12 @@ import java.util.ArrayList;
 /**
  * Distribute cards to players and table
  *
- * @author filipe bicho created 27.10.2017 improved 24.03.2020
+ * @author filipe bicho created 24.03.2020
  */
 public class Dealer {
+
+    static final int PLAYER_1 = 0;
+    static final int PLAYER_2 = 1;
 
     //----- public instance methods
 

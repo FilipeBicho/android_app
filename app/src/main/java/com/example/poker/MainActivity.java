@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
         //--- winning flop odds
         oddsCalculator.flopWinningOdds(table);
 
+        // set turn
+        dealer.setOneCard(deck, table);
+
+        //----- winning turn odds
+        oddsCalculator.turnWinningOdds(table);
+
         //--- evaluate players hands
 
 //        int player1HandResult = handEvaluator.evaluate(player1, table);

@@ -111,7 +111,7 @@ class Odds {
     /**
      *
      * @param tableCards table cards
-     * @return odds of each player to win the game with the flop cards
+     * @return odds of each player to win the game on flop
      */
     ArrayList<String> flopWinningOdds(ArrayList<Card> tableCards)
     {
@@ -151,7 +151,56 @@ class Odds {
             winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
         }
 
+        // remove added cards to calculate odds
+        tableCards.remove(3);
+        tableCards.remove(3);
+
         return calculateOdds(winningHandResults, cardsCombination.size());
+    }
+
+    /**
+     *
+     * @param tableCards table cards
+     * @return odds of each player to win the game on turn
+     */
+    ArrayList<String> turnWinningOdds(ArrayList<Card> tableCards)
+    {
+        Integer[] winningHandResults = new Integer[3];
+        Integer[] handEvaluationResult = new Integer[2];
+        ArrayList<Card> player1Hand;
+        ArrayList<Card> player2Hand;
+
+        // remove table cards from the deck
+        for (Card tableCard : tableCards)
+            deck.remove(tableCard);
+
+        // init table river card
+        tableCards.add(null);
+
+        // init winning hand results
+        Arrays.fill(winningHandResults, 0);
+
+        for (Card card : deck)
+        {
+            tableCards.set(4, card);
+
+            // evaluate player 1 hand
+            handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+            player1Hand = new ArrayList<>(handEvaluator.getHand());
+
+            // evaluate player 2 hand
+            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(player2Cards, tableCards);
+            player2Hand = new ArrayList<>(handEvaluator.getHand());
+
+            // calculate and store winner hand
+            handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
+            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+        }
+
+        // remove added card to calculate odds
+        tableCards.remove(4);
+
+        return calculateOdds(winningHandResults, deck.size());
     }
 
 }

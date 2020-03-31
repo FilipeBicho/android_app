@@ -52,19 +52,22 @@ public class MainActivity extends AppCompatActivity {
 
         // set player cards
         dealer.setPlayersCards(deck, player1, player2);
-        oddsCalculator = new Odds(player1, player2, new ArrayList<Card>(deck.getDeck()));
+        oddsCalculator = new Odds(player1, null, new ArrayList<Card>(deck.getDeck()));
 
         // set flop
         dealer.setFlop(deck, table);
+        oddsCalculator.odds(table);
 
-        //--- winning flop odds
-        oddsCalculator.flopWinningOdds(table);
-
-        // set turn
+         // set turn
         dealer.setOneCard(deck, table);
+        oddsCalculator.odds(table);
 
-        //----- winning turn odds
-        oddsCalculator.turnWinningOdds(table);
+        // set river
+        dealer.setOneCard(deck, table);
+        oddsCalculator.odds(table);
+//
+//        //----- winning turn odds
+//        oddsCalculator.turnWinningOdds(table);
 
         //--- evaluate players hands
 

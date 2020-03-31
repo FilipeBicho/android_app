@@ -203,4 +203,44 @@ class Odds {
         return calculateOdds(winningHandResults, deck.size());
     }
 
+    ArrayList<String> odds(ArrayList<Card> tableCards)
+    {
+        ArrayList<Card> playerHand;
+        ArrayList<Card> opponentCards;
+        ArrayList<Card> opponentHand;
+        Integer[] winningHandResults = new Integer[3];
+        Integer[] handEvaluationResult = new Integer[2];
+        ArrayList<String> flopOdds;
+
+        // remove table cards from the deck
+        for (Card tableCard : tableCards)
+            deck.remove(tableCard);
+
+        // init winning hand results
+        Arrays.fill(winningHandResults, 0);
+
+        // player hand
+        handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+        playerHand = new ArrayList<>(handEvaluator.getHand());
+
+        ArrayList<ArrayList<Card>> opponentCardsCombinations = getCardsCombinations();
+
+        for (ArrayList<Card> cards : opponentCardsCombinations)
+        {
+            // opponent hand
+            opponentCards = new ArrayList<>(cards);
+            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
+            opponentHand = new ArrayList<>(handEvaluator.getHand());
+
+            // calculate and store winner hand
+            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
+            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+        }
+
+        return calculateOdds(winningHandResults, opponentCardsCombinations.size());
+    }
+
+
+
+
 }

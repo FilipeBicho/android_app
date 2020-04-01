@@ -3,6 +3,9 @@ package com.example.poker;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 
 /**
  * calculate winning ods on flop, turn and river
@@ -37,6 +40,8 @@ class Odds {
      * Hand win calculator
      */
     private HandWinCalculator handWinCalculator;
+
+    private LinkedHashSet<String> cardsCombinationsPermutation;
 
     //----- public constructor
 
@@ -89,6 +94,112 @@ class Odds {
         return allTableCardsCombinations;
     }
 
+
+    private LinkedHashSet<String> calculateCardsPermutations(ArrayList<String> combination, int index)
+    {
+        if (index >= combination.size() - 1)
+        {
+            StringBuilder permutation = new StringBuilder();
+            for (String strCard : combination)
+                permutation.append(strCard);
+
+            cardsCombinationsPermutation.add(permutation.toString());
+        }
+
+        for (int i = index; i < combination.size(); i++)
+        {
+            Collections.swap(combination, index, i);
+            calculateCardsPermutations(combination,index + 1);
+            Collections.swap(combination, index, i);
+        }
+
+        return cardsCombinationsPermutation;
+    }
+
+    private Boolean hasCombination(ArrayList<LinkedHashSet> permutations, String combination)
+    {
+        for (LinkedHashSet permutation : permutations)
+        {
+            if (permutation.contains(combination))
+                return  true;
+        }
+
+        return false;
+    }
+
+    private LinkedHashSet<String> getCardsPermutations(ArrayList<String> combination)
+    {
+
+        LinkedHashSet<String> permutations = new LinkedHashSet<>();
+
+        cardsCombinationsPermutation = new LinkedHashSet<>();
+
+        calculateCardsPermutations(combination, 0);
+
+        return cardsCombinationsPermutation;
+    }
+
+    private ArrayList<ArrayList<Card>> getFourCardsCombinations()
+    {
+        ArrayList<ArrayList<Card>> cardsCombinations = new ArrayList<>();
+        ArrayList<Card> currentCards;
+        ArrayList<String> currentStrCards = new ArrayList<>();
+        StringBuilder currentCombination = new StringBuilder();
+
+        ArrayList<String> getStrCardsPermutation = new ArrayList<>();
+        ArrayList<LinkedHashSet> permutations = new ArrayList<>();
+
+        // init current cards combinations
+        for (int i = 0; i < 4; i++)
+            currentStrCards.add("");
+
+        int i = 0;
+        for (Card card1 : deck)
+        {
+            String card1Str = card1.toString();
+            currentStrCards.set(0, card1Str);
+            for (Card card2 : deck)
+            {
+                if (!card2.equals(card1))
+                {
+                    String card2Str = card2.toString();
+                    currentStrCards.set(1, card2Str);
+                    for (Card card3 : deck)
+                    {
+                        if (!card3.equals(card2) && !card3.equals(card1))
+                        {
+                            String card3Str = card3.toString();
+                            currentStrCards.set(2, card3Str);
+                            for (Card card4 : deck)
+                            {
+                                if (!card4.equals(card3) && !card4.equals(card2) && !card4.equals(card1))
+                                {
+
+                                    String card4Str = card4.toString();
+                                    currentStrCards.set(3, card4Str);
+                                    String combinationCardsStr = card1Str + card2Str + card3Str + card4Str;
+                                    if (!hasCombination(permutations, combinationCardsStr))
+                                    {
+                                        permutations.add(getCardsPermutations(currentStrCards));
+                                        currentCards = new ArrayList<>();
+                                        currentCards.add(card1);
+                                        currentCards.add(card2);
+                                        currentCards.add(card3);
+                                        currentCards.add(card4);
+                                        cardsCombinations.add(currentCards);
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return cardsCombinations;
+    }
+
     /**
      *
      * @param winningHandResults total wins by player
@@ -119,6 +230,14 @@ class Odds {
         Integer[] handEvaluationResult = new Integer[2];
         ArrayList<Card> player1Hand;
         ArrayList<Card> player2Hand;
+
+        // remove player 1 cards from the deck
+        for (Card player1Card : player1Cards)
+            deck.remove(player1Card);
+
+        // remove player 2 cards from the deck
+        for (Card player2Card : player2Cards)
+            deck.remove(player2Card);
 
         // remove table cards from the deck
         for (Card tableCard : tableCards)
@@ -170,6 +289,14 @@ class Odds {
         ArrayList<Card> player1Hand;
         ArrayList<Card> player2Hand;
 
+        // remove player 1 cards from the deck
+        for (Card player1Card : player1Cards)
+            deck.remove(player1Card);
+
+        // remove player 2 cards from the deck
+        for (Card player2Card : player2Cards)
+            deck.remove(player2Card);
+
         // remove table cards from the deck
         for (Card tableCard : tableCards)
             deck.remove(tableCard);
@@ -212,6 +339,11 @@ class Odds {
         Integer[] handEvaluationResult = new Integer[2];
         ArrayList<String> flopOdds;
 
+        // remove player 1 cards from the deck
+        for (Card player1Card : player1Cards)
+            deck.remove(player1Card);
+
+
         // remove table cards from the deck
         for (Card tableCard : tableCards)
             deck.remove(tableCard);
@@ -223,9 +355,9 @@ class Odds {
         handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
         playerHand = new ArrayList<>(handEvaluator.getHand());
 
-        ArrayList<ArrayList<Card>> opponentCardsCombinations = getCardsCombinations();
+        ArrayList<ArrayList<Card>> combinations = getFourCardsCombinations();
 
-        for (ArrayList<Card> cards : opponentCardsCombinations)
+        for (ArrayList<Card> cards : combinations)
         {
             // opponent hand
             opponentCards = new ArrayList<>(cards);
@@ -235,12 +367,10 @@ class Odds {
             // calculate and store winner hand
             handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
             winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+
+
         }
 
-        return calculateOdds(winningHandResults, opponentCardsCombinations.size());
+        return calculateOdds(winningHandResults, combinations.size());
     }
-
-
-
-
 }

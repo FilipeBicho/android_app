@@ -49,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
 //        table.add(new Card(Card.TEN,Card.SUIT_HEARTS));
 //        table.add(new Card(Card.SIX,Card.SUIT_HEARTS));
 
+        // get untouched deck
+        ArrayList<Card> untouchedDeck = new ArrayList<>(deck.getDeck());
 
         // set player cards
         dealer.setPlayersCards(deck, player1, player2);
-        oddsCalculator = new Odds(player1, null, new ArrayList<Card>(deck.getDeck()));
+        oddsCalculator = new Odds(player1, null,untouchedDeck);
 
         // set flop
         dealer.setFlop(deck, table);

@@ -1,4 +1,4 @@
-package com.example.poker;
+package com.filipebicho.poker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,23 +50,23 @@ public class MainActivity extends AppCompatActivity {
 //        table.add(new Card(Card.SIX,Card.SUIT_HEARTS));
 
         // get untouched deck
-        ArrayList<Card> untouchedDeck = new ArrayList<>(deck.getDeck());
-
-        // set player cards
-        dealer.setPlayersCards(deck, player1, player2);
-        oddsCalculator = new Odds(player1, null,untouchedDeck);
-
-        // set flop
-        dealer.setFlop(deck, table);
-        oddsCalculator.odds(table);
-
-         // set turn
-        dealer.setOneCard(deck, table);
-        oddsCalculator.odds(table);
-
-        // set river
-        dealer.setOneCard(deck, table);
-        oddsCalculator.odds(table);
+//        ArrayList<Card> untouchedDeck = new ArrayList<>(deck.getDeck());
+//
+//        // set player cards
+//        dealer.setPlayersCards(deck, player1, player2);
+//        oddsCalculator = new Odds(player1, null,untouchedDeck);
+//
+//        // set flop
+//        dealer.setFlop(deck, table);
+//        oddsCalculator.odds(table);
+//
+//         // set turn
+//        dealer.setOneCard(deck, table);
+//        oddsCalculator.odds(table);
+//
+//        // set river
+//        dealer.setOneCard(deck, table);
+//        oddsCalculator.odds(table);
 //
 //        //----- winning turn odds
 //        oddsCalculator.turnWinningOdds(table);

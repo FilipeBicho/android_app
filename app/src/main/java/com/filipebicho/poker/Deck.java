@@ -1,4 +1,4 @@
-package com.example.poker;
+package com.filipebicho.poker;
 
 
 import java.util.ArrayList;

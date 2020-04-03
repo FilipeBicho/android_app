@@ -7,18 +7,16 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
-
 /**
  * Two cards combinations table entity class
  * @author filipe bicho created 02.04.2020
  */
-@Entity(tableName = "two_cards_combinations")
-public class TwoCardsCombinations {
+@Entity(tableName = "two_cards_combination")
+class TwoCardsCombination {
 
     //----- private instance variables
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
     private int id;
 
     @NonNull
@@ -31,9 +29,8 @@ public class TwoCardsCombinations {
      *
      * @param combination string
      */
-    TwoCardsCombinations(int id, @NotNull String combination)
+    TwoCardsCombination(@NotNull String combination)
     {
-        this.id = id;
         this.combination = combination;
     }
 
@@ -46,6 +43,14 @@ public class TwoCardsCombinations {
     int getId()
     {
         return this.id;
+    }
+
+    /**
+     *
+     * @param id set id
+     */
+     void setId(int id) {
+        this.id = id;
     }
 
     /**

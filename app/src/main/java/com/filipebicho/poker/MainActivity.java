@@ -38,15 +38,12 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ImageView> player1Img = new ArrayList<>();
         ArrayList<ImageView> player2Img = new ArrayList<>();
 
-
-        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
-        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));
-        TwoCardsCombinationsDao twoCardsCombinationsDao = CombinationsRoomDatabase.getInstance(getApplicationContext()).twoCardsCombinationsDao();
-        String combination = player1.get(0).toString() + player1.get(1).toString();
-        twoCardsCombinationsDao.insert(new TwoCardsCombinations(2, combination));
-        twoCardsCombinationsDao.getAllCombinations();
+        CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext());
+        combinationsCalculator.getTwoCardsCombinations();
 
 
+//        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
+//        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));
 //
 //        player2.add(new Card(Card.EIGHT,Card.SUIT_HEARTS));
 //        player2.add(new Card(Card.SEVEN,Card.SUIT_HEARTS));

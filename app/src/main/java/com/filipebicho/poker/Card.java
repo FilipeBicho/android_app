@@ -153,4 +153,15 @@ public class Card {
             return rank2 - rank1;
         }
     };
+
+    /**
+     *
+     * @param card Card
+     * @return true if Card objects are equal
+     */
+    public boolean equals(Object card)
+    {
+        return ((Card) card).getRank() == this.getRank() &&
+                ((Card) card).getSuit() == this.getSuit();
+    }
 }

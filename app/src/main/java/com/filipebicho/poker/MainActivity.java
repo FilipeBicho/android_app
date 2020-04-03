@@ -38,9 +38,14 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ImageView> player1Img = new ArrayList<>();
         ArrayList<ImageView> player2Img = new ArrayList<>();
 
-        CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext());
-        combinationsCalculator.getTwoCardsCombinations();
+        // set player cards
+        dealer.setPlayersCards(deck, player1, player2);
 
+        // set flop
+        dealer.setFlop(deck, table);
+
+        oddsCalculator = new Odds(player1, player2, new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext()));
+        oddsCalculator.flopWinningOdds(table);
 
 //        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
 //        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));

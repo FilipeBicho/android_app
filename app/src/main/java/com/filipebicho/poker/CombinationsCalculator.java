@@ -57,7 +57,8 @@ class CombinationsCalculator {
      * @param deck cards ArrayList
      * @param applicationContext Application Context
      */
-    CombinationsCalculator(ArrayList<Card> deck, Context applicationContext) {
+    CombinationsCalculator(ArrayList<Card> deck, Context applicationContext)
+    {
         this.deck = deck;
         twoCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).twoCardsCombinationsDao();
         setTwoCardsCombinations();
@@ -217,6 +218,27 @@ class CombinationsCalculator {
 
     /**
      *
+     * @param combination String containing combination
+     * @param cards ArrayList containing cards to compare
+     * @return true if combination contains any of the given cards
+     */
+    private Boolean combinationContainsCard(String combination, ArrayList<Card> cards)
+    {
+        ArrayList<Card> cardsCombination = getConvertedCardsCombination(combination);
+
+        for (Card card : cardsCombination)
+        {
+            if (cards.contains(card))
+                return true;
+        }
+
+        return false;
+    }
+
+    //----- public instance methods
+
+    /**
+     *
      * @return two cards combinations
      */
     ArrayList<ArrayList<Card>> getTwoCardsCombinations()
@@ -225,6 +247,23 @@ class CombinationsCalculator {
 
         for (TwoCardsCombination combination : twoCardsCombinationsDao.getAllCombinations())
             twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+
+        return twoCardsCombinations;
+    }
+
+    /**
+     *
+     * @return two cards combinations
+     */
+    ArrayList<ArrayList<Card>> getTwoCardsCombinationsWithoutGiveCards(ArrayList<Card> cards)
+    {
+        ArrayList<ArrayList<Card>> twoCardsCombinations = new ArrayList<>();
+
+        for (TwoCardsCombination combination : twoCardsCombinationsDao.getAllCombinations())
+        {
+            if (!combinationContainsCard(combination.getCombination(), cards))
+                twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+        }
 
         return twoCardsCombinations;
     }

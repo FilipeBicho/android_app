@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Two cards combinations table entity class
@@ -29,7 +31,7 @@ public class TwoCardsCombinations {
      *
      * @param combination string
      */
-    public TwoCardsCombinations(int id, String combination)
+    TwoCardsCombinations(int id, @NotNull String combination)
     {
         this.id = id;
         this.combination = combination;
@@ -41,7 +43,7 @@ public class TwoCardsCombinations {
      *
      * @return id
      */
-    public int getId()
+    int getId()
     {
         return this.id;
     }
@@ -50,7 +52,8 @@ public class TwoCardsCombinations {
      *
      * @return combination
      */
-    public String getCombination()
+    @NotNull
+    String getCombination()
     {
         return this.combination;
     }

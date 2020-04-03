@@ -31,11 +31,11 @@ public interface TwoCardsCombinationsDao {
     //--- select all combinations
 
     @Query("SELECT * FROM two_cards_combinations")
-    LiveData<List<TwoCardsCombinations>> getAllCombinations();
+    List<TwoCardsCombinations> getAllCombinations();
 
     //--- select all combinations except the given ones
 
     @Query("SELECT * FROM two_cards_combinations WHERE combination NOT IN (:combinations)")
-    LiveData<List<TwoCardsCombinations>> getAllRemainingCombinations(String[] combinations);
+    List<TwoCardsCombinations> getAllRemainingCombinations(String[] combinations);
 
 }

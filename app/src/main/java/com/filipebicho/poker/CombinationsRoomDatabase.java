@@ -40,6 +40,6 @@ public abstract class CombinationsRoomDatabase extends RoomDatabase {
      * @return database singleton
      */
     private static CombinationsRoomDatabase create(final Context context){
-        return Room.databaseBuilder(context,CombinationsRoomDatabase.class,"combinationsDatabase.db").build();
+        return Room.databaseBuilder(context,CombinationsRoomDatabase.class,"combinationsDatabase.db").allowMainThreadQueries().build();
     }
 }

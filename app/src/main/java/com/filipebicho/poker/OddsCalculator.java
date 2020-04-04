@@ -9,19 +9,19 @@ import java.util.Arrays;
  * predict odds on flop, turn and river for poker player simulator
  * @author filipe bicho created 28.03.2020
  */
-class Odds {
+class OddsCalculator {
 
     //----- private instance variables
 
     /**
      * player 1 cards
      */
-    ArrayList<Card> player1Cards;
+    private ArrayList<Card> player1Cards;
 
     /**
      * player 2 cards
      */
-    ArrayList<Card> player2Cards;
+    private ArrayList<Card> player2Cards;
 
     /**
      * Hand evaluator calculator
@@ -36,7 +36,7 @@ class Odds {
     /**
      * combinations calculator
      */
-    CombinationsCalculator combinationsCalculator;
+    private CombinationsCalculator combinationsCalculator;
 
     //----- public constructor
 
@@ -46,7 +46,7 @@ class Odds {
      * @param player2Cards cards
      * @param combinationsCalculator CombinationsCalculator
      */
-    Odds (ArrayList<Card> player1Cards, ArrayList<Card> player2Cards, CombinationsCalculator combinationsCalculator)
+    OddsCalculator(ArrayList<Card> player1Cards, ArrayList<Card> player2Cards, CombinationsCalculator combinationsCalculator)
     {
         this.player1Cards = player1Cards;
         this.player2Cards = player2Cards;
@@ -144,7 +144,6 @@ class Odds {
     ArrayList<String> flopWinningOdds(ArrayList<Card> tableCards)
     {
         Integer[] winningHandResults = new Integer[3];
-        Integer[] handEvaluationResult = new Integer[2];
         ArrayList<Card> player1Hand;
         ArrayList<Card> player2Hand;
         ArrayList<Card> usedCards = new ArrayList<>();
@@ -152,7 +151,6 @@ class Odds {
         usedCards.addAll(player1Cards);
         usedCards.addAll(player2Cards);
         usedCards.addAll(tableCards);
-
 
         // init table turn and river cards
         tableCards.add(null);
@@ -169,16 +167,16 @@ class Odds {
             tableCards.set(4, cards.get(1));
 
             // evaluate player 1 hand
-            handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+            int player1HandResult = handEvaluator.evaluate(player1Cards, tableCards);
             player1Hand = new ArrayList<>(handEvaluator.getHand());
 
             // evaluate player 2 hand
-            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(player2Cards, tableCards);
+            int player2HandResult = handEvaluator.evaluate(player2Cards, tableCards);
             player2Hand = new ArrayList<>(handEvaluator.getHand());
 
             // calculate and store winner hand
             handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
-            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+            winningHandResults[handWinCalculator.calculate(player1HandResult, player2HandResult)]++;
         }
 
         // remove added cards to calculate odds
@@ -199,7 +197,6 @@ class Odds {
         Integer[] handEvaluationResult = new Integer[2];
         ArrayList<Card> player1Hand;
         ArrayList<Card> player2Hand;
-        ArrayList<Card> usedCards = new ArrayList<>();
 
         // init table river card
         tableCards.add(null);

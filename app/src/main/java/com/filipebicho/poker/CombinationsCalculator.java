@@ -32,6 +32,11 @@ class CombinationsCalculator {
      */
     private static int TWO_CARDS_COMBINATIONS_TOTAL = 1326;
 
+    /**
+     * total of four cards combinations C(52,4)
+     */
+    private static int FOUR_CARDS_COMBINATIONS_TOTAL = 270725;
+
     //----- private instance variables
 
     /**
@@ -45,9 +50,19 @@ class CombinationsCalculator {
     private TwoCardsCombinationDao twoCardsCombinationsDao;
 
     /**
-     * Two cards combination Permutations
+     * Four cards combinations Dao
      */
-    private LinkedHashSet<String> twoCardsCombinationPermutations;
+    private FourCardsCombinationDao fourCardsCombinationsDao;
+
+    /**
+     * cards combination Permutations
+     */
+    private LinkedHashSet<String> cardsCombinationPermutations;
+
+    /**
+     * Four cards combination Permutations
+     */
+    private LinkedHashSet<String> fourCardsCombinationPermutations;
 
 
     //----- public constructor
@@ -61,7 +76,9 @@ class CombinationsCalculator {
     {
         this.deck = deck;
         twoCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).twoCardsCombinationsDao();
+        fourCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).fourCardsCombinationsDao();
         setTwoCardsCombinations();
+        setFourCardsCombinations();
     }
 
     //----- private instance methods
@@ -79,7 +96,7 @@ class CombinationsCalculator {
             for (String strCard : combination)
                 permutation.append(strCard);
 
-            twoCardsCombinationPermutations.add(permutation.toString());
+            cardsCombinationPermutations.add(permutation.toString());
         }
 
         for (int i = index; i < combination.size(); i++)
@@ -97,13 +114,11 @@ class CombinationsCalculator {
      */
     private LinkedHashSet<String> getCombinationPermutations(ArrayList<String> combination)
     {
-
-        LinkedHashSet<String> permutations = new LinkedHashSet<>();
-        twoCardsCombinationPermutations = new LinkedHashSet<>();
+        cardsCombinationPermutations = new LinkedHashSet<>();
 
         calculateCardsPermutations(combination, 0);
 
-        return twoCardsCombinationPermutations;
+        return cardsCombinationPermutations;
     }
 
     /**
@@ -130,7 +145,6 @@ class CombinationsCalculator {
     {
         ArrayList<String> cardsStr = new ArrayList<>();
         ArrayList<LinkedHashSet> permutations = new ArrayList<>();
-        ArrayList<Card> currentCards;
         StringBuilder combination;
 
         // init current cards string combinations
@@ -164,6 +178,72 @@ class CombinationsCalculator {
                 }
             }
         }
+
+        permutations.clear();
+    }
+
+    /**
+     * insert to DB all four cards combinations
+     */
+    private void insertIntoDBFourCardsCombinations()
+    {
+        ArrayList<String> cardsStr = new ArrayList<>();
+        ArrayList<LinkedHashSet> permutations = new ArrayList<>();
+        StringBuilder combination;
+
+        // init current cards string combinations
+        for (int i = 0; i < 4; i++)
+            cardsStr.add("");
+
+        for (Card card1 : deck)
+        {
+            cardsStr.set(0, card1.toString());
+
+            for (Card card2 : deck)
+            {
+                if (!card2.equals(card1))
+                {
+                    cardsStr.set(1, card2.toString());
+
+                    for (Card card3 : deck)
+                    {
+                        if (!card3.equals(card2) && !card3.equals(card1))
+                        {
+                            cardsStr.set(2, card3.toString());
+
+                            for (Card card4 : deck)
+                            {
+                                if (!card4.equals(card3) && !card4.equals(card2) && !card4.equals(card1))
+                                {
+                                    cardsStr.set(3, card4.toString());
+
+                                    combination = new StringBuilder();
+                                    for (String cardStr : cardsStr)
+                                        combination.append(cardStr);
+
+                                    if (!permutationOfCombinationExists(permutations, combination.toString()))
+                                    {
+                                        permutations.add(getCombinationPermutations(cardsStr));
+
+                                        String convertedCombinationString = card1.getRank() + "-" +
+                                                card1.getSuit() + "_" +
+                                                card2.getRank() + "-" +
+                                                card2.getSuit() + "_" +
+                                                card3.getRank() + "-" +
+                                                card3.getSuit() + "_" +
+                                                card4.getRank() + "-" +
+                                                card4.getSuit();
+                                        fourCardsCombinationsDao.insert(new FourCardsCombination(convertedCombinationString));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        permutations.clear();
     }
 
     /**
@@ -176,6 +256,19 @@ class CombinationsCalculator {
             //remove all combinations entries
             twoCardsCombinationsDao.deleteAll();
             insertIntoDBTwoCardsCombinations();
+        }
+    }
+
+    /**
+     * add four cards combinations into database
+     */
+    private void setFourCardsCombinations()
+    {
+        if (fourCardsCombinationsDao.getCombinationsCount() < FOUR_CARDS_COMBINATIONS_TOTAL)
+        {
+            //remove all combinations entries
+            fourCardsCombinationsDao.deleteAll();
+            insertIntoDBFourCardsCombinations();
         }
     }
 

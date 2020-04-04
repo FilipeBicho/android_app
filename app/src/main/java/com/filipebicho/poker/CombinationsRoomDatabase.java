@@ -10,12 +10,14 @@ import androidx.room.RoomDatabase;
  * Room database
  * @author filipe bicho created 02.04.2020
  */
-@Database(entities = {TwoCardsCombination.class}, version = 1, exportSchema = false)
+@Database(entities = {TwoCardsCombination.class, FourCardsCombination.class}, version = 2, exportSchema = false)
 public abstract class CombinationsRoomDatabase extends RoomDatabase {
 
     //----- public instance abstract variable
 
     public abstract TwoCardsCombinationDao twoCardsCombinationsDao();
+
+    public abstract FourCardsCombinationDao fourCardsCombinationsDao();
 
     //----- static instance variables
 

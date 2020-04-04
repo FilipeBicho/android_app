@@ -3,8 +3,6 @@ package com.filipebicho.poker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Card> player1Hand;
         ArrayList<Card> player2Hand;
 
-        Odds oddsCalculator;
+        OddsCalculator oddsCalculator;
 
         HandWinCalculator handWinCalculator;
         String winnerHandResult;
@@ -38,14 +36,20 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ImageView> player1Img = new ArrayList<>();
         ArrayList<ImageView> player2Img = new ArrayList<>();
 
+        // Init cards combinations
+        // needs to be initialized before the deck is changed
+        CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<Card>(deck.getDeck()), getApplicationContext());
+
         // set player cards
         dealer.setPlayersCards(deck, player1, player2);
 
         // set flop
         dealer.setFlop(deck, table);
 
-        oddsCalculator = new Odds(player1, player2, new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext()));
+        oddsCalculator = new OddsCalculator(player1, player2, combinationsCalculator);
         oddsCalculator.flopWinningOdds(table);
+
+
 
 //        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
 //        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));

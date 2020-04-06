@@ -2,20 +2,11 @@ package com.filipebicho.poker;
 
 
 import android.content.Context;
-import android.util.JsonWriter;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,15 +45,6 @@ class CombinationsCalculator {
      */
     private FourCardsCombinationDao fourCardsCombinationsDao;
 
-    /**
-     * cards combination Permutations
-     */
-    private LinkedHashSet<String> cardsCombinationPermutations;
-
-    /**
-     * Four cards combination Permutations
-     */
-    private LinkedHashSet<String> fourCardsCombinationPermutations;
 
 
     //----- public constructor
@@ -83,167 +65,70 @@ class CombinationsCalculator {
 
     //----- private instance methods
 
-    /**
-     *
-     * @param combination ArrayList contains current combination
-     * @param index start index to start calculate permutation
-     */
-    private void calculateCardsPermutations(ArrayList<String> combination, int index)
-    {
-        if (index >= combination.size() - 1)
-        {
-            StringBuilder permutation = new StringBuilder();
-            for (String strCard : combination)
-                permutation.append(strCard);
-
-            cardsCombinationPermutations.add(permutation.toString());
-        }
-
-        for (int i = index; i < combination.size(); i++)
-        {
-            Collections.swap(combination, index, i);
-            calculateCardsPermutations(combination,index + 1);
-            Collections.swap(combination, index, i);
-        }
-    }
 
     /**
-     *
-     * @param combination ArrayList contains current combination
-     * @return permutations of given combination
-     */
-    private LinkedHashSet<String> getCombinationPermutations(ArrayList<String> combination)
-    {
-        cardsCombinationPermutations = new LinkedHashSet<>();
-
-        calculateCardsPermutations(combination, 0);
-
-        return cardsCombinationPermutations;
-    }
-
-    /**
-     *
-     * @param permutations ArrayList containing calculated permutations
-     * @param combination string containing current cards combination
-     * @return true if exists permutation for the current cards combination
-     */
-    private Boolean permutationOfCombinationExists(ArrayList<LinkedHashSet> permutations, String combination)
-    {
-        for (LinkedHashSet permutation : permutations)
-        {
-            if (permutation.contains(combination))
-                return  true;
-        }
-
-        return false;
-    }
-
-    /**
-     * insert to DB all two cards combinations
+     * insert to database 2 cards combinations
      */
     private void insertIntoDBTwoCardsCombinations()
     {
-        ArrayList<String> cardsStr = new ArrayList<>();
-        ArrayList<LinkedHashSet> permutations = new ArrayList<>();
-        StringBuilder combination;
+        ArrayList<Card> deck = new ArrayList<>(this.deck);
 
-        // init current cards string combinations
-        for (int i = 0; i < 2; i++)
-            cardsStr.add("");
-
-        for (Card card1 : deck)
+        for (int i = 0; i < deck.size() -1 ; i++)
         {
-            cardsStr.set(0, card1.toString());
+            Card card1 = new Card(deck.get(i));
 
-            for (Card card2 : deck)
+            for (int j = i + 1; j < deck.size(); j++)
             {
-                if (!card2.equals(card1))
-                {
-                    cardsStr.set(1, card2.toString());
+                Card card2 = new Card(deck.get(j));
 
-                    combination = new StringBuilder();
-                    for (String cardStr : cardsStr)
-                        combination.append(cardStr);
-
-                    if (!permutationOfCombinationExists(permutations, combination.toString()))
-                    {
-                        permutations.add(getCombinationPermutations(cardsStr));
-
-                        String convertedCombinationString = card1.getRank() + "-" +
+                String convertedCombinationString = card1.getRank() + "-" +
                                 card1.getSuit() + "_" +
                                 card2.getRank() + "-" +
                                 card2.getSuit();
-                        twoCardsCombinationsDao.insert(new TwoCardsCombination(convertedCombinationString));
-                    }
-                }
+                twoCardsCombinationsDao.insert(new TwoCardsCombination(convertedCombinationString));
+
             }
         }
-
-        permutations.clear();
     }
 
     /**
-     * insert to DB all four cards combinations
+     * insert to database 4 cards combinations
      */
     private void insertIntoDBFourCardsCombinations()
     {
-        ArrayList<String> cardsStr = new ArrayList<>();
-        ArrayList<LinkedHashSet> permutations = new ArrayList<>();
-        StringBuilder combination;
+        ArrayList<Card> deck = new ArrayList<>(this.deck);
 
-        // init current cards string combinations
-        for (int i = 0; i < 4; i++)
-            cardsStr.add("");
-
-        for (Card card1 : deck)
+        int count = 0;
+        for (int i = 0; i < deck.size() - 3 ; i++)
         {
-            cardsStr.set(0, card1.toString());
+            Card card1 = new Card(deck.get(i));
 
-            for (Card card2 : deck)
+            for (int j = i + 1; j < deck.size() - 2; j++)
             {
-                if (!card2.equals(card1))
+                Card card2 = new Card(deck.get(j));
+
+                for (int k = j + 1; k < deck.size() - 1; k++)
                 {
-                    cardsStr.set(1, card2.toString());
+                    Card card3 = new Card(deck.get(k));
 
-                    for (Card card3 : deck)
+                    for (int l = k + 1; l < deck.size(); l++)
                     {
-                        if (!card3.equals(card2) && !card3.equals(card1))
-                        {
-                            cardsStr.set(2, card3.toString());
-
-                            for (Card card4 : deck)
-                            {
-                                if (!card4.equals(card3) && !card4.equals(card2) && !card4.equals(card1))
-                                {
-                                    cardsStr.set(3, card4.toString());
-
-                                    combination = new StringBuilder();
-                                    for (String cardStr : cardsStr)
-                                        combination.append(cardStr);
-
-                                    if (!permutationOfCombinationExists(permutations, combination.toString()))
-                                    {
-                                        permutations.add(getCombinationPermutations(cardsStr));
-
-                                        String convertedCombinationString = card1.getRank() + "-" +
-                                                card1.getSuit() + "_" +
-                                                card2.getRank() + "-" +
-                                                card2.getSuit() + "_" +
-                                                card3.getRank() + "-" +
-                                                card3.getSuit() + "_" +
-                                                card4.getRank() + "-" +
-                                                card4.getSuit();
-                                        fourCardsCombinationsDao.insert(new FourCardsCombination(convertedCombinationString));
-                                    }
-                                }
-                            }
-                        }
+                        Card card4 = new Card(deck.get(l));
+                        String convertedCombinationString = card1.getRank() + "-" +
+                                card1.getSuit() + "_" +
+                                card2.getRank() + "-" +
+                                card2.getSuit() + "_" +
+                                card3.getRank() + "-" +
+                                card3.getSuit() + "_" +
+                                card4.getRank() + "-" +
+                                card4.getSuit();
+                        fourCardsCombinationsDao.insert(new FourCardsCombination(convertedCombinationString));
+                        System.out.println(count);
+                        count++;
                     }
                 }
             }
         }
-
-        permutations.clear();
     }
 
     /**
@@ -282,11 +167,9 @@ class CombinationsCalculator {
         Pattern cardTypePattern = Pattern.compile("([^-]+)");
         Matcher cardTypeMatcher = cardTypePattern.matcher(encodedCard);
 
-        cardTypeMatcher.find();
-        int rank = Integer.parseInt(cardTypeMatcher.group(0));
+        int rank = cardTypeMatcher.find() ? Integer.parseInt(cardTypeMatcher.group(0)) : null;
 
-        cardTypeMatcher.find();
-        int suit = Integer.parseInt(cardTypeMatcher.group(0));
+        int suit = cardTypeMatcher.find() ? Integer.parseInt(cardTypeMatcher.group(0)) : null;
 
         return new Card(rank, suit);
     }
@@ -334,21 +217,7 @@ class CombinationsCalculator {
      *
      * @return two cards combinations
      */
-    ArrayList<ArrayList<Card>> getTwoCardsCombinations()
-    {
-        ArrayList<ArrayList<Card>> twoCardsCombinations = new ArrayList<>();
-
-        for (TwoCardsCombination combination : twoCardsCombinationsDao.getAllCombinations())
-            twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
-
-        return twoCardsCombinations;
-    }
-
-    /**
-     *
-     * @return two cards combinations
-     */
-    ArrayList<ArrayList<Card>> getTwoCardsCombinationsWithoutGiveCards(ArrayList<Card> cards)
+    ArrayList<ArrayList<Card>> getTwoCardsCombinationsWithoutGivenCards(ArrayList<Card> cards)
     {
         ArrayList<ArrayList<Card>> twoCardsCombinations = new ArrayList<>();
 
@@ -359,6 +228,25 @@ class CombinationsCalculator {
         }
 
         return twoCardsCombinations;
+    }
+
+    /**
+     *
+     * @param cards ArrayList containing used cards
+     * @param limit limit combinations of four cards
+     * @return four cards combinations
+     */
+    ArrayList<ArrayList<Card>> getFourCardsCombinationsWithoutGivenCards(ArrayList<Card> cards, int limit)
+    {
+        ArrayList<ArrayList<Card>> fourCardsCombinations = new ArrayList<>();
+
+        for (FourCardsCombination combination : fourCardsCombinationsDao.getRandomCombinationsWithLimit(limit))
+        {
+            if (!combinationContainsCard(combination.getCombination(), cards))
+                fourCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+        }
+
+        return fourCardsCombinations;
     }
 
 }

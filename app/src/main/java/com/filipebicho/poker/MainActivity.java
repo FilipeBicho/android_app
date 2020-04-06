@@ -46,10 +46,8 @@ public class MainActivity extends AppCompatActivity {
         // set flop
         dealer.setFlop(deck, table);
 
-        oddsCalculator = new OddsCalculator(player1, player2, combinationsCalculator);
-        oddsCalculator.flopWinningOdds(table);
-
-
+        oddsCalculator = new OddsCalculator(player1, null, combinationsCalculator);
+        oddsCalculator.oddsFlop(table, 10000);
 
 //        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
 //        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));

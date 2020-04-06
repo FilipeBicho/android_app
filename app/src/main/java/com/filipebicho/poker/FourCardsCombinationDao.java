@@ -29,16 +29,17 @@ public interface FourCardsCombinationDao {
     //--- select all combinations
 
     @Query("SELECT * FROM four_cards_combination")
-    List<TwoCardsCombination> getAllCombinations();
+    List<FourCardsCombination> getAllCombinations();
 
-    //--- select all combinations except the given ones
+    //--- select random combinations with limit
 
-    @Query("SELECT * FROM four_cards_combination WHERE combination NOT IN (:combinations)")
-    List<TwoCardsCombination> getAllRemainingCombinations(String[] combinations);
+    @Query("SELECT * FROM four_cards_combination ORDER BY RANDOM() LIMIT :limit")
+    List<FourCardsCombination> getRandomCombinationsWithLimit(int limit);
 
     //--- get count of two cards combinations
 
     @Query("SELECT COUNT(*) FROM four_cards_combination")
     int getCombinationsCount();
+
 
 }

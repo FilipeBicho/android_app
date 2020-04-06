@@ -3,6 +3,7 @@ package com.filipebicho.poker;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * calculate winning ods on flop, turn and river
@@ -55,68 +56,6 @@ class OddsCalculator {
 
     //----- private instance methods
 
-
-//    private ArrayList<ArrayList<Card>> getFourCardsCombinations()
-//    {
-//        ArrayList<ArrayList<Card>> cardsCombinations = new ArrayList<>();
-//        ArrayList<Card> currentCards;
-//        ArrayList<String> currentStrCards = new ArrayList<>();
-//        StringBuilder currentCombination = new StringBuilder();
-//
-//        ArrayList<String> getStrCardsPermutation = new ArrayList<>();
-//        ArrayList<LinkedHashSet> permutations = new ArrayList<>();
-//
-//        // init current cards combinations
-//        for (int i = 0; i < 4; i++)
-//            currentStrCards.add("");
-//
-//        int i = 0;
-//        for (Card card1 : deck)
-//        {
-//            String card1Str = card1.toString();
-//            currentStrCards.set(0, card1Str);
-//            for (Card card2 : deck)
-//            {
-//                if (!card2.equals(card1))
-//                {
-//                    String card2Str = card2.toString();
-//                    currentStrCards.set(1, card2Str);
-//                    for (Card card3 : deck)
-//                    {
-//                        if (!card3.equals(card2) && !card3.equals(card1))
-//                        {
-//                            String card3Str = card3.toString();
-//                            currentStrCards.set(2, card3Str);
-//                            for (Card card4 : deck)
-//                            {
-//                                if (!card4.equals(card3) && !card4.equals(card2) && !card4.equals(card1))
-//                                {
-//
-//                                    String card4Str = card4.toString();
-//                                    currentStrCards.set(3, card4Str);
-//                                    String combinationCardsStr = card1Str + card2Str + card3Str + card4Str;
-//                                    if (!hasCombination(permutations, combinationCardsStr))
-//                                    {
-//                                        permutations.add(getCardsPermutations(currentStrCards));
-//                                        currentCards = new ArrayList<>();
-//                                        currentCards.add(card1);
-//                                        currentCards.add(card2);
-//                                        currentCards.add(card3);
-//                                        currentCards.add(card4);
-//                                        cardsCombinations.add(currentCards);
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return cardsCombinations;
-//    }
-
     /**
      *
      * @param winningHandResults total wins by player
@@ -159,7 +98,7 @@ class OddsCalculator {
         // init winning hand results
         Arrays.fill(winningHandResults, 0);
 
-        ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinationsWithoutGiveCards(usedCards);
+        ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinationsWithoutGivenCards(usedCards);
 
         for (ArrayList<Card> cards : cardsCombinations)
         {
@@ -227,47 +166,64 @@ class OddsCalculator {
         return calculateOdds(winningHandResults, deck.size());
     }
 
-//    ArrayList<String> odds(ArrayList<Card> tableCards)
-//    {
-//        ArrayList<Card> playerHand;
-//        ArrayList<Card> opponentCards;
-//        ArrayList<Card> opponentHand;
-//        Integer[] winningHandResults = new Integer[3];
-//        Integer[] handEvaluationResult = new Integer[2];
-//        ArrayList<String> flopOdds;
-//
-//        // remove player 1 cards from the deck
-//        for (Card player1Card : player1Cards)
-//            deck.remove(player1Card);
-//
-//
-//        // remove table cards from the deck
-//        for (Card tableCard : tableCards)
-//            deck.remove(tableCard);
-//
-//        // init winning hand results
-//        Arrays.fill(winningHandResults, 0);
-//
-//        // player hand
-//        handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
-//        playerHand = new ArrayList<>(handEvaluator.getHand());
-//
-//        ArrayList<ArrayList<Card>> combinations = getFourCardsCombinations();
-//
-//        for (ArrayList<Card> cards : combinations)
-//        {
-//            // opponent hand
-//            opponentCards = new ArrayList<>(cards);
-//            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
-//            opponentHand = new ArrayList<>(handEvaluator.getHand());
-//
-//            // calculate and store winner hand
-//            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
-//            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
-//
-//
-//        }
-//
-//        return calculateOdds(winningHandResults, combinations.size());
-//    }
+    /**
+     *
+     * @param tableCards Arraylist containing flop
+     * @param combinationsLimit limit of returned combinations cards
+     * @return
+     */
+    ArrayList<String> oddsFlop(ArrayList<Card> tableCards, int combinationsLimit)
+    {
+        ArrayList<Card> playerHand;
+        ArrayList<Card> opponentCards = new ArrayList<>();
+        ArrayList<Card> opponentHand;
+        Integer[] winningHandResults = new Integer[3];
+        Integer[] handEvaluationResult = new Integer[2];
+        ArrayList<String> flopOdds;
+
+        // init winning hand results
+        Arrays.fill(winningHandResults, 0);
+
+        ArrayList<Card> usedCards = new ArrayList<>();
+        usedCards.addAll(player1Cards);
+        usedCards.addAll(tableCards);
+
+        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getFourCardsCombinationsWithoutGivenCards(usedCards, combinationsLimit);
+
+        opponentCards.add(null);
+        opponentCards.add(null);
+        tableCards.add(null);
+        tableCards.add(null);
+
+        ArrayList<Integer> randomIndices = new ArrayList<Integer>(Arrays.asList(0,1,2,3));
+        Collections.shuffle(randomIndices);
+
+        for (ArrayList<Card> cards : combinations)
+        {
+            // opponent cards
+            opponentCards.set(0, cards.get(randomIndices.get(0)));
+            opponentCards.set(1, cards.get(randomIndices.get(1)));
+
+            // table cards (turn & river)
+            tableCards.set(3, cards.get(randomIndices.get(2)));
+            tableCards.set(4, cards.get(randomIndices.get(3)));
+
+            // player hand
+            handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+            playerHand = new ArrayList<>(handEvaluator.getHand());
+
+            // opponent hand
+            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
+            opponentHand = new ArrayList<>(handEvaluator.getHand());
+
+            // calculate and store winner hand
+            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
+            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+        }
+
+        tableCards.remove(3);
+        tableCards.remove(3);
+
+        return calculateOdds(winningHandResults, combinations.size());
+    }
 }

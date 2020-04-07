@@ -24,6 +24,11 @@ class CombinationsCalculator {
     private static int TWO_CARDS_COMBINATIONS_TOTAL = 1326;
 
     /**
+     * total of three cards combinations C(52,4)
+     */
+    private static int THREE_CARDS_COMBINATIONS_TOTAL = 22100;
+
+    /**
      * total of four cards combinations C(52,4)
      */
     private static int FOUR_CARDS_COMBINATIONS_TOTAL = 270725;
@@ -39,6 +44,11 @@ class CombinationsCalculator {
      * Two cards combinations Dao
      */
     private TwoCardsCombinationDao twoCardsCombinationsDao;
+
+    /**
+     * Three cards combinations Dao
+     */
+    private ThreeCardsCombinationDao threeCardsCombinationsDao;
 
     /**
      * Four cards combinations Dao
@@ -58,8 +68,10 @@ class CombinationsCalculator {
     {
         this.deck = deck;
         twoCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).twoCardsCombinationsDao();
+        threeCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).threeCardsCombinationsDao();
         fourCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).fourCardsCombinationsDao();
         setTwoCardsCombinations();
+        setThreeCardsCombinations();
         setFourCardsCombinations();
     }
 
@@ -71,12 +83,10 @@ class CombinationsCalculator {
      */
     private void insertIntoDBTwoCardsCombinations()
     {
-        ArrayList<Card> deck = new ArrayList<>(this.deck);
 
         for (int i = 0; i < deck.size() -1 ; i++)
         {
             Card card1 = new Card(deck.get(i));
-
             for (int j = i + 1; j < deck.size(); j++)
             {
                 Card card2 = new Card(deck.get(j));
@@ -85,8 +95,36 @@ class CombinationsCalculator {
                                 card1.getSuit() + "_" +
                                 card2.getRank() + "-" +
                                 card2.getSuit();
-                twoCardsCombinationsDao.insert(new TwoCardsCombination(convertedCombinationString));
 
+                twoCardsCombinationsDao.insert(new TwoCardsCombination(convertedCombinationString));
+            }
+        }
+    }
+
+    /**
+     * insert to database 3 cards combinations
+     */
+    private void insertIntoDBThreeCardsCombinations()
+    {
+        for (int i = 0; i < deck.size() - 2 ; i++)
+        {
+            Card card1 = new Card(deck.get(i));
+            for (int j = i + 1; j < deck.size() - 1; j++)
+            {
+                Card card2 = new Card(deck.get(j));
+                for (int k = j + 1; k < deck.size(); k++)
+                {
+                    Card card3 = new Card(deck.get(k));
+
+                    String convertedCombinationString = card1.getRank() + "-" +
+                            card1.getSuit() + "_" +
+                            card2.getRank() + "-" +
+                            card2.getSuit() + "_" +
+                            card3.getRank() + "-" +
+                            card3.getSuit();
+
+                    threeCardsCombinationsDao.insert(new ThreeCardsCombination(convertedCombinationString));
+                }
             }
         }
     }
@@ -96,24 +134,20 @@ class CombinationsCalculator {
      */
     private void insertIntoDBFourCardsCombinations()
     {
-        ArrayList<Card> deck = new ArrayList<>(this.deck);
 
-        int count = 0;
         for (int i = 0; i < deck.size() - 3 ; i++)
         {
             Card card1 = new Card(deck.get(i));
-
             for (int j = i + 1; j < deck.size() - 2; j++)
             {
                 Card card2 = new Card(deck.get(j));
-
                 for (int k = j + 1; k < deck.size() - 1; k++)
                 {
                     Card card3 = new Card(deck.get(k));
-
                     for (int l = k + 1; l < deck.size(); l++)
                     {
                         Card card4 = new Card(deck.get(l));
+
                         String convertedCombinationString = card1.getRank() + "-" +
                                 card1.getSuit() + "_" +
                                 card2.getRank() + "-" +
@@ -122,9 +156,9 @@ class CombinationsCalculator {
                                 card3.getSuit() + "_" +
                                 card4.getRank() + "-" +
                                 card4.getSuit();
+
                         fourCardsCombinationsDao.insert(new FourCardsCombination(convertedCombinationString));
-                        System.out.println(count);
-                        count++;
+
                     }
                 }
             }
@@ -141,6 +175,19 @@ class CombinationsCalculator {
             //remove all combinations entries
             twoCardsCombinationsDao.deleteAll();
             insertIntoDBTwoCardsCombinations();
+        }
+    }
+
+    /**
+     * add three cards combinations into database
+     */
+    private void setThreeCardsCombinations()
+    {
+        if (threeCardsCombinationsDao.getCombinationsCount() < THREE_CARDS_COMBINATIONS_TOTAL)
+        {
+            //remove all combinations entries
+            threeCardsCombinationsDao.deleteAll();
+            insertIntoDBThreeCardsCombinations();
         }
     }
 
@@ -228,6 +275,25 @@ class CombinationsCalculator {
         }
 
         return twoCardsCombinations;
+    }
+
+    /**
+     *
+     * @param cards ArrayList containing used cards
+     * @param limit limit combinations of four cards
+     * @return three cards combinations
+     */
+    ArrayList<ArrayList<Card>> getThreeCardsCombinationsWithoutGivenCards(ArrayList<Card> cards, int limit)
+    {
+        ArrayList<ArrayList<Card>> threeCardsCombinations = new ArrayList<>();
+
+        for (ThreeCardsCombination combination : threeCardsCombinationsDao.getAllCombinations())
+        {
+            if (!combinationContainsCard(combination.getCombination(), cards))
+                threeCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+        }
+
+        return threeCardsCombinations;
     }
 
     /**

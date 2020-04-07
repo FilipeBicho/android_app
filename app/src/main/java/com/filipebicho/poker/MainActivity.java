@@ -38,16 +38,25 @@ public class MainActivity extends AppCompatActivity {
 
         // Init cards combinations
         // needs to be initialized before the deck is changed
-        CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<Card>(deck.getDeck()), getApplicationContext());
+        CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext());
 
         // set player cards
         dealer.setPlayersCards(deck, player1, player2);
+        oddsCalculator = new OddsCalculator(player1, null, combinationsCalculator);
 
         // set flop
         dealer.setFlop(deck, table);
-
-        oddsCalculator = new OddsCalculator(player1, null, combinationsCalculator);
         oddsCalculator.oddsFlop(table, 10000);
+
+        // set turn
+        dealer.setOneCard(deck, table);
+        oddsCalculator.oddsTurn(table, 10000);
+
+        // set river
+        dealer.setOneCard(deck, table);
+        oddsCalculator.oddsRiver(table);
+
+
 
 //        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
 //        player1.add(new Card(Card.TWO,Card.SUIT_HEARTS));

@@ -170,7 +170,7 @@ class OddsCalculator {
      *
      * @param tableCards Arraylist containing flop
      * @param combinationsLimit limit of returned combinations cards
-     * @return
+     * @return odds knowing flop and player cards
      */
     ArrayList<String> oddsFlop(ArrayList<Card> tableCards, int combinationsLimit)
     {
@@ -195,7 +195,7 @@ class OddsCalculator {
         tableCards.add(null);
         tableCards.add(null);
 
-        ArrayList<Integer> randomIndices = new ArrayList<Integer>(Arrays.asList(0,1,2,3));
+        ArrayList<Integer> randomIndices = new ArrayList<>(Arrays.asList(0,1,2,3));
         Collections.shuffle(randomIndices);
 
         for (ArrayList<Card> cards : combinations)
@@ -223,6 +223,113 @@ class OddsCalculator {
 
         tableCards.remove(3);
         tableCards.remove(3);
+
+        return calculateOdds(winningHandResults, combinations.size());
+    }
+
+    /**
+     *
+     * @param tableCards Arraylist containing flop & turn
+     * @param combinationsLimit limit of returned combinations cards
+     * @return odds knowing flop, turn and player cards
+     */
+    ArrayList<String> oddsTurn(ArrayList<Card> tableCards, int combinationsLimit)
+    {
+        ArrayList<Card> playerHand;
+        ArrayList<Card> opponentCards = new ArrayList<>();
+        ArrayList<Card> opponentHand;
+        Integer[] winningHandResults = new Integer[3];
+        Integer[] handEvaluationResult = new Integer[2];
+
+        // init winning hand results
+        Arrays.fill(winningHandResults, 0);
+
+        ArrayList<Card> usedCards = new ArrayList<>();
+        usedCards.addAll(player1Cards);
+        usedCards.addAll(tableCards);
+
+        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getThreeCardsCombinationsWithoutGivenCards(usedCards, combinationsLimit);
+
+        opponentCards.add(null);
+        opponentCards.add(null);
+        tableCards.add(null);
+
+        ArrayList<Integer> randomIndices = new ArrayList<>(Arrays.asList(0,1,2));
+        Collections.shuffle(randomIndices);
+
+        for (ArrayList<Card> cards : combinations)
+        {
+            // opponent cards
+            opponentCards.set(0, cards.get(randomIndices.get(0)));
+            opponentCards.set(1, cards.get(randomIndices.get(1)));
+
+            // table card (river)
+            tableCards.set(4, cards.get(randomIndices.get(2)));
+
+            // player hand
+            handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+            playerHand = new ArrayList<>(handEvaluator.getHand());
+
+            // opponent hand
+            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
+            opponentHand = new ArrayList<>(handEvaluator.getHand());
+
+            // calculate and store winner hand
+            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
+            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+        }
+
+        tableCards.remove(4);
+
+        return calculateOdds(winningHandResults, combinations.size());
+    }
+
+    /**
+     *
+     * @param tableCards Arraylist containing flop, turn & river
+     * @return odds knowing flop, turn and player cards
+     */
+    ArrayList<String> oddsRiver(ArrayList<Card> tableCards)
+    {
+        ArrayList<Card> playerHand;
+        ArrayList<Card> opponentCards = new ArrayList<>();
+        ArrayList<Card> opponentHand;
+        Integer[] winningHandResults = new Integer[3];
+        Integer[] handEvaluationResult = new Integer[2];
+
+        // init winning hand results
+        Arrays.fill(winningHandResults, 0);
+
+        ArrayList<Card> usedCards = new ArrayList<>();
+        usedCards.addAll(player1Cards);
+        usedCards.addAll(tableCards);
+
+        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getTwoCardsCombinationsWithoutGivenCards(usedCards);
+
+        opponentCards.add(null);
+        opponentCards.add(null);
+
+        ArrayList<Integer> randomIndices = new ArrayList<>(Arrays.asList(0,1));
+        Collections.shuffle(randomIndices);
+
+        for (ArrayList<Card> cards : combinations)
+        {
+            // opponent cards
+            opponentCards.set(0, cards.get(randomIndices.get(0)));
+            opponentCards.set(1, cards.get(randomIndices.get(1)));
+
+            // player hand
+            handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+            playerHand = new ArrayList<>(handEvaluator.getHand());
+
+            // opponent hand
+            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
+            opponentHand = new ArrayList<>(handEvaluator.getHand());
+
+            // calculate and store winner hand
+            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
+            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+        }
 
         return calculateOdds(winningHandResults, combinations.size());
     }

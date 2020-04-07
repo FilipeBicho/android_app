@@ -11,13 +11,12 @@ import org.jetbrains.annotations.NotNull;
  * Two cards combinations table entity class
  * @author filipe bicho created 02.04.2020
  */
-@Entity(tableName = "four_cards_combination")
-class FourCardsCombination {
+@Entity(tableName = "three_cards_combination")
+class ThreeCardsCombination {
 
     //----- private instance variables
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
     private int id;
 
     @NonNull
@@ -30,7 +29,7 @@ class FourCardsCombination {
      *
      * @param combination string
      */
-    FourCardsCombination(@NotNull String combination)
+    ThreeCardsCombination(@NotNull String combination)
     {
         this.combination = combination;
     }

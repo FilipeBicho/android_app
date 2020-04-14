@@ -670,4 +670,53 @@ class HandEvaluator {
         return hand;
     }
 
+    /**
+     *
+     * @param ranking int containing the ranking
+     * @return text from given ranking
+     */
+    String getHandEvaluationTextByRanking(int ranking)
+    {
+        String handEvaluationText = "";
+
+        switch (ranking)
+        {
+            case IS_ROYAL_STRAIGHT_FLUSH:
+                handEvaluationText = "Royal Straight Flush";
+                break;
+            case IS_STRAIGHT_FLUSH:
+                handEvaluationText = "Straight Flush";
+                break;
+            case IS_FOUR_OF_A_KIND:
+                handEvaluationText = "Four of a Kind";
+                break;
+            case IS_FULL_HOUSE:
+                handEvaluationText = "Full House";
+                break;
+            case IS_FLUSH:
+                handEvaluationText = "Flush";
+                break;
+            case IS_STRAIGHT:
+                handEvaluationText = "Straight";
+                break;
+            case IS_THREE_OF_A_KIND:
+                handEvaluationText = "Three of a Kind";
+                break;
+            case IS_TWO_PAIR:
+                handEvaluationText = "Two Pairs";
+                break;
+            case IS_PAIR:
+                handEvaluationText = "One Pair";
+                break;
+            case IS_HIGH_CARD:
+                handEvaluationText = "High Card";
+                break;
+            default:
+                handEvaluationText = "Ranking unknown";
+                break;
+        }
+
+        return handEvaluationText;
+    }
+
 }

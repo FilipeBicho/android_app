@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 
-
+/**
+ * Main activity class
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -40,21 +43,30 @@ public class MainActivity extends AppCompatActivity {
         // needs to be initialized before the deck is changed
         CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext());
 
-        // set player cards
+        TextView player1HandEvaluationTextView = findViewById(R.id.player1_hand_evaluation);
+        TextView player2HandEvaluationTextView = findViewById(R.id.player2_hand_evaluation);
+
+        //--- set cards
         dealer.setPlayersCards(deck, player1, player2);
         oddsCalculator = new OddsCalculator(player1, null, combinationsCalculator);
 
-        // set flop
+        //--- Flop
         dealer.setFlop(deck, table);
-        oddsCalculator.oddsFlop(table, 10000);
+        player1HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table)));
+        player2HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table)));
+        oddsCalculator.flopOdds(table, 10000);
 
         // set turn
         dealer.setOneCard(deck, table);
-        oddsCalculator.oddsTurn(table, 10000);
+        player1HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table)));
+        player2HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table)));
+        oddsCalculator.turnOdds(table, 10000);
 
         // set river
         dealer.setOneCard(deck, table);
-        oddsCalculator.oddsRiver(table);
+        player1HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table)));
+        player2HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table)));
+        oddsCalculator.riverOdds(table);
 
 
 

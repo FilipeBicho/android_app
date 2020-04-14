@@ -35,6 +35,15 @@
             android:layout_toRightOf="@+id/player1_1"
             android:contentDescription="@string/player1_card2" />
 
+        <TextView
+            android:id="@+id/player1_hand_evaluation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFF"
+            android:layout_below="@+id/player1_1"/>
+
+
         <ImageView
             android:id="@+id/flop_1"
             style="@style/game_card"
@@ -102,6 +111,14 @@
             android:layout_toEndOf="@+id/player2_1"
             android:layout_toRightOf="@+id/player2_1"
             android:contentDescription="@string/player2_card2" />
+
+        <TextView
+            android:id="@+id/player2_hand_evaluation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFF"
+            android:layout_above="@+id/player2_1"/>
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

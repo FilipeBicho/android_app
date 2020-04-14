@@ -4,8 +4,6 @@ package com.filipebicho.poker;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -314,5 +312,4 @@ class CombinationsCalculator {
 
         return fourCardsCombinations;
     }
-
 }

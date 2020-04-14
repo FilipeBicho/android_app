@@ -80,7 +80,7 @@ class OddsCalculator {
      * @param tableCards table cards
      * @return odds of each player to win the game on flop
      */
-    ArrayList<String> flopWinningOdds(ArrayList<Card> tableCards)
+    ArrayList<String> playerVsPlayerFlopOdds(ArrayList<Card> tableCards)
     {
         Integer[] winningHandResults = new Integer[3];
         ArrayList<Card> player1Hand;
@@ -130,7 +130,7 @@ class OddsCalculator {
      * @param tableCards table cards
      * @return odds of each player to win the game on turn
      */
-    ArrayList<String> turnWinningOdds(ArrayList<Card> tableCards, ArrayList<Card> deck)
+    ArrayList<String> playerVsPlayerTurnOdds(ArrayList<Card> tableCards, ArrayList<Card> deck)
     {
         Integer[] winningHandResults = new Integer[3];
         Integer[] handEvaluationResult = new Integer[2];
@@ -172,14 +172,13 @@ class OddsCalculator {
      * @param combinationsLimit limit of returned combinations cards
      * @return odds knowing flop and player cards
      */
-    ArrayList<String> oddsFlop(ArrayList<Card> tableCards, int combinationsLimit)
+    ArrayList<String> flopOdds(ArrayList<Card> tableCards, int combinationsLimit)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();
         ArrayList<Card> opponentHand;
         Integer[] winningHandResults = new Integer[3];
         Integer[] handEvaluationResult = new Integer[2];
-        ArrayList<String> flopOdds;
 
         // init winning hand results
         Arrays.fill(winningHandResults, 0);
@@ -233,7 +232,7 @@ class OddsCalculator {
      * @param combinationsLimit limit of returned combinations cards
      * @return odds knowing flop, turn and player cards
      */
-    ArrayList<String> oddsTurn(ArrayList<Card> tableCards, int combinationsLimit)
+    ArrayList<String> turnOdds(ArrayList<Card> tableCards, int combinationsLimit)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();
@@ -289,7 +288,7 @@ class OddsCalculator {
      * @param tableCards Arraylist containing flop, turn & river
      * @return odds knowing flop, turn and player cards
      */
-    ArrayList<String> oddsRiver(ArrayList<Card> tableCards)
+    ArrayList<String> riverOdds(ArrayList<Card> tableCards)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();

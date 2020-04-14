@@ -307,7 +307,7 @@ class HandWinCalculator {
             return calculateKickerWinner(0);
     }
 
-    //----- public instance methods
+    //----- public instance method
 
     /**
      *

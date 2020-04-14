@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author filipe bicho created 24.03.2020
  */
-public class Dealer {
+class Dealer {
 
     static final int PLAYER_1 = 0;
     static final int PLAYER_2 = 1;
@@ -21,7 +21,7 @@ public class Dealer {
      * @param player1 cards
      * @param player2 cards
      */
-    public void setPlayersCards(Deck deck, ArrayList<Card> player1, ArrayList<Card> player2)
+    void setPlayersCards(Deck deck, ArrayList<Card> player1, ArrayList<Card> player2)
     {
         player1.add(deck.getCard());
         player2.add(deck.getCard());
@@ -35,7 +35,7 @@ public class Dealer {
      * @param deck of cards
      * @param table cards
      */
-    public void setFlop(Deck deck, ArrayList<Card> table)
+    void setFlop(Deck deck, ArrayList<Card> table)
     {
         //burn card
         deck.getCard();
@@ -45,7 +45,7 @@ public class Dealer {
             table.add(deck.getCard());
     }
 
-    public void setOneCard(Deck deck, ArrayList<Card> table)
+    void setOneCard(Deck deck, ArrayList<Card> table)
     {
         //burn card
         deck.getCard();

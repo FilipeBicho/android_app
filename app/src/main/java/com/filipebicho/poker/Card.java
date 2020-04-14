@@ -90,7 +90,7 @@ public class Card {
      *
      * @return card rank
      */
-    public int getRank()
+    int getRank()
     {
         return cardRank;
     }
@@ -99,7 +99,7 @@ public class Card {
      *
      * @return card suit
      */
-    public int getSuit()
+    int getSuit()
     {
         return cardSuit;
     }
@@ -127,8 +127,8 @@ public class Card {
     /**
      * order cards by rank asc
      */
-    static final Comparator<Card> sortRankAsc = new Comparator<Card>() {
-
+    static final Comparator<Card> sortRankAsc = new Comparator<Card>()
+    {
         public int compare(Card card1, Card card2) {
 
             int rank1 = card1.getRank();
@@ -142,8 +142,8 @@ public class Card {
     /**
      * order cards by rank desc
      */
-    static final Comparator<Card> sortRankDesc = new Comparator<Card>() {
-
+    static final Comparator<Card> sortRankDesc = new Comparator<Card>()
+    {
         public int compare(Card card1, Card card2) {
 
             int rank1 = card1.getRank();

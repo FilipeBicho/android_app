@@ -52,6 +52,16 @@ class HandEvaluator {
 
     //----- private instance methods
 
+    /**
+     * reset values
+     */
+    private void reset()
+    {
+        hand.clear();
+        allCards.clear();
+        rankCount.clear();
+        suitCount.clear();
+    }
 
     /**
      * init allCards with player and table cards
@@ -106,7 +116,6 @@ class HandEvaluator {
 
         return keys;
     }
-
 
     /**
      * set hand cards by cards type
@@ -599,17 +608,6 @@ class HandEvaluator {
     }
 
     //----- public instance methods
-
-    /**
-     * reset values
-     */
-    void reset()
-    {
-        hand.clear();
-        allCards.clear();
-        rankCount.clear();
-        suitCount.clear();
-    }
 
     /**
      *

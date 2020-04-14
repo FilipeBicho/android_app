@@ -15,10 +15,19 @@ public abstract class CombinationsRoomDatabase extends RoomDatabase {
 
     //----- public instance abstract variable
 
+    /**
+     * @return two cards combinations dao
+     */
     public abstract TwoCardsCombinationDao twoCardsCombinationsDao();
 
+    /**
+     * @return three cards combinations dao
+     */
     public abstract ThreeCardsCombinationDao threeCardsCombinationsDao();
 
+    /**
+     * @return four cards combinations dao
+     */
     public abstract FourCardsCombinationDao fourCardsCombinationsDao();
 
     //----- static instance variables

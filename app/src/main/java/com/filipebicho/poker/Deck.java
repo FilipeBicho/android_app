@@ -20,6 +20,9 @@ class Deck {
 
     //----- public constructor
 
+    /**
+     * Init deck and shuffle
+     */
     Deck()
     {
 

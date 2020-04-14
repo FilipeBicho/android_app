@@ -113,43 +113,43 @@ public class MainActivity extends AppCompatActivity {
 
 
         //----- player1
-//        int player1Card1Id = getResources().getIdentifier(player1.get(0).getCardDrawableName(), "drawable", getPackageName());
-//        int player1Card2Id = getResources().getIdentifier(player1.get(1).getCardDrawableName(), "drawable", getPackageName());
-//
-//        player1Img.add((ImageView) findViewById(R.id.player1_1));
-//        player1Img.add((ImageView) findViewById(R.id.player1_2));
-//
-//        player1Img.get(0).setImageResource(player1Card1Id);
-//        player1Img.get(1).setImageResource(player1Card2Id);
-//
-//        //----- player2
-//        int player2Card1Id = getResources().getIdentifier(player2.get(0).getCardDrawableName(), "drawable", getPackageName());
-//        int player2Card2Id = getResources().getIdentifier(player2.get(1).getCardDrawableName(), "drawable", getPackageName());
-//
-//        player2Img.add((ImageView) findViewById(R.id.player2_1));
-//        player2Img.add((ImageView) findViewById(R.id.player2_2));
-//
-//        player2Img.get(0).setImageResource(player2Card1Id);
-//        player2Img.get(1).setImageResource(player2Card2Id);
-//
-//        //----- table
-//        int flop1 = getResources().getIdentifier(table.get(0).getCardDrawableName(), "drawable", getPackageName());
-//        int flop2 = getResources().getIdentifier(table.get(1).getCardDrawableName(), "drawable", getPackageName());
-//        int flop3 = getResources().getIdentifier(table.get(2).getCardDrawableName(), "drawable", getPackageName());
-//        int turn = getResources().getIdentifier(table.get(3).getCardDrawableName(), "drawable", getPackageName());
-//        int river = getResources().getIdentifier(table.get(4).getCardDrawableName(), "drawable", getPackageName());
-//
-//        tableImg.add((ImageView) findViewById(R.id.flop_1));
-//        tableImg.add((ImageView) findViewById(R.id.flop_2));
-//        tableImg.add((ImageView) findViewById(R.id.flop_3));
-//        tableImg.add((ImageView) findViewById(R.id.turn));
-//        tableImg.add((ImageView) findViewById(R.id.river));
-//
-//        tableImg.get(0).setImageResource(flop1);
-//        tableImg.get(1).setImageResource(flop2);
-//        tableImg.get(2).setImageResource(flop3);
-//        tableImg.get(3).setImageResource(turn);
-//        tableImg.get(4).setImageResource(river);
+        int player1Card1Id = getResources().getIdentifier(player1.get(0).getCardDrawableName(), "drawable", getPackageName());
+        int player1Card2Id = getResources().getIdentifier(player1.get(1).getCardDrawableName(), "drawable", getPackageName());
+
+        player1Img.add((ImageView) findViewById(R.id.player1_1));
+        player1Img.add((ImageView) findViewById(R.id.player1_2));
+
+        player1Img.get(0).setImageResource(player1Card1Id);
+        player1Img.get(1).setImageResource(player1Card2Id);
+
+        //----- player2
+        int player2Card1Id = getResources().getIdentifier(player2.get(0).getCardDrawableName(), "drawable", getPackageName());
+        int player2Card2Id = getResources().getIdentifier(player2.get(1).getCardDrawableName(), "drawable", getPackageName());
+
+        player2Img.add((ImageView) findViewById(R.id.player2_1));
+        player2Img.add((ImageView) findViewById(R.id.player2_2));
+
+        player2Img.get(0).setImageResource(player2Card1Id);
+        player2Img.get(1).setImageResource(player2Card2Id);
+
+        //----- table
+        int flop1 = getResources().getIdentifier(table.get(0).getCardDrawableName(), "drawable", getPackageName());
+        int flop2 = getResources().getIdentifier(table.get(1).getCardDrawableName(), "drawable", getPackageName());
+        int flop3 = getResources().getIdentifier(table.get(2).getCardDrawableName(), "drawable", getPackageName());
+        int turn = getResources().getIdentifier(table.get(3).getCardDrawableName(), "drawable", getPackageName());
+        int river = getResources().getIdentifier(table.get(4).getCardDrawableName(), "drawable", getPackageName());
+
+        tableImg.add((ImageView) findViewById(R.id.flop_1));
+        tableImg.add((ImageView) findViewById(R.id.flop_2));
+        tableImg.add((ImageView) findViewById(R.id.flop_3));
+        tableImg.add((ImageView) findViewById(R.id.turn));
+        tableImg.add((ImageView) findViewById(R.id.river));
+
+        tableImg.get(0).setImageResource(flop1);
+        tableImg.get(1).setImageResource(flop2);
+        tableImg.get(2).setImageResource(flop3);
+        tableImg.get(3).setImageResource(turn);
+        tableImg.get(4).setImageResource(river);
 
 
 

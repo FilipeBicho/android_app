@@ -92,6 +92,30 @@
             android:layout_toRightOf="@+id/turn"
             android:contentDescription="@string/river_card" />
 
+        <Button
+            android:id="@+id/show_turn_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/river"
+            android:layout_marginLeft="30dp"
+            android:text="Show turn button"
+            android:layout_toEndOf="@+id/river"
+            android:layout_marginStart="30dp" />
+
+        <Button
+            android:id="@+id/show_river_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/river"
+            android:layout_marginLeft="30dp"
+            android:text="Show river button"
+            android:layout_toEndOf="@+id/river"
+            android:layout_marginStart="30dp"
+            android:visibility="invisible"/>
+
+
         <ImageView
             android:id="@+id/player2_1"
             style="@style/game_card"

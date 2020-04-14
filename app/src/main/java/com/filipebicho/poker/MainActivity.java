@@ -4,6 +4,8 @@ package com.filipebicho.poker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
         OddsCalculator oddsCalculator;
 
-        HandWinCalculator handWinCalculator;
-        String winnerHandResult;
-
         ArrayList<ImageView> tableImg = new ArrayList<>();
         ArrayList<ImageView> player1Img = new ArrayList<>();
         ArrayList<ImageView> player2Img = new ArrayList<>();
+
+        final Button showTurnButton = findViewById(R.id.show_turn_button);
+        final Button showRiverButton = findViewById(R.id.show_river_button);
 
         // Init cards combinations
         // needs to be initialized before the deck is changed
@@ -48,26 +50,101 @@ public class MainActivity extends AppCompatActivity {
 
         //--- set cards
         dealer.setPlayersCards(deck, player1, player2);
-        oddsCalculator = new OddsCalculator(player1, null, combinationsCalculator);
+        oddsCalculator = new OddsCalculator(player1, player2, combinationsCalculator);
+
+        //----- player1
+
+        player1Img.add((ImageView) findViewById(R.id.player1_1));
+        player1Img.add((ImageView) findViewById(R.id.player1_2));
+
+        player1Img.get(0).setImageResource(getResources().getIdentifier(player1.get(0).getCardDrawableName(), "drawable", getPackageName()));
+        player1Img.get(1).setImageResource(getResources().getIdentifier(player1.get(1).getCardDrawableName(), "drawable", getPackageName()));
+
+        //----- player2
+
+        player2Img.add((ImageView) findViewById(R.id.player2_1));
+        player2Img.add((ImageView) findViewById(R.id.player2_2));
+
+        player2Img.get(0).setImageResource(getResources().getIdentifier(player2.get(0).getCardDrawableName(), "drawable", getPackageName()));
+        player2Img.get(1).setImageResource(getResources().getIdentifier(player2.get(1).getCardDrawableName(), "drawable", getPackageName()));
 
         //--- Flop
         dealer.setFlop(deck, table);
-        player1HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table)));
-        player2HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table)));
-        oddsCalculator.flopOdds(table, 10000);
 
-        // set turn
-        dealer.setOneCard(deck, table);
-        player1HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table)));
-        player2HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table)));
-        oddsCalculator.turnOdds(table, 10000);
+        tableImg.add((ImageView) findViewById(R.id.flop_1));
+        tableImg.add((ImageView) findViewById(R.id.flop_2));
+        tableImg.add((ImageView) findViewById(R.id.flop_3));
 
-        // set river
-        dealer.setOneCard(deck, table);
-        player1HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table)));
-        player2HandEvaluationTextView.setText(handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table)));
-        oddsCalculator.riverOdds(table);
+        tableImg.get(0).setImageResource(getResources().getIdentifier(table.get(0).getCardDrawableName(), "drawable", getPackageName()));
+        tableImg.get(1).setImageResource(getResources().getIdentifier(table.get(1).getCardDrawableName(), "drawable", getPackageName()));
+        tableImg.get(2).setImageResource(getResources().getIdentifier(table.get(2).getCardDrawableName(), "drawable", getPackageName()));
 
+        String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table));
+        String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
+
+        ArrayList<String> flopOdds = oddsCalculator.playerVsPlayerFlopOdds(table);
+
+        player1HandEvaluationTextView.setText(player1EvaluationText + " - " + flopOdds.get(0));
+        player2HandEvaluationTextView.setText(player2EvaluationText + " - " + flopOdds.get(1));
+
+
+        showTurnButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // set turn
+                dealer.setOneCard(deck, table);
+                tableImg.add((ImageView) findViewById(R.id.turn));
+                tableImg.get(3).setImageResource(getResources().getIdentifier(table.get(3).getCardDrawableName(), "drawable", getPackageName()));
+
+                String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table));
+                String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
+
+                ArrayList<String> turnOdds = oddsCalculator.playerVsPlayerTurnOdds(table, deck.getDeck());
+
+                player1HandEvaluationTextView.setText(player1EvaluationText + " - " + turnOdds.get(0));
+                player2HandEvaluationTextView.setText(player2EvaluationText + " - " + turnOdds.get(1));
+
+                showTurnButton.setVisibility(View.INVISIBLE);
+                showRiverButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        showRiverButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // set river
+                dealer.setOneCard(deck, table);
+                tableImg.add((ImageView) findViewById(R.id.river));
+                tableImg.get(4).setImageResource(getResources().getIdentifier(table.get(4).getCardDrawableName(), "drawable", getPackageName()));
+
+                int player1HandEvaluation = handEvaluator.evaluate(player1, table);
+                ArrayList<Card> player1Hand = new ArrayList<>(handEvaluator.getHand());
+
+                int player2HandEvaluation = handEvaluator.evaluate(player2, table);
+                ArrayList<Card> player2Hand = new ArrayList<>(handEvaluator.getHand());
+
+               HandWinCalculator handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
+               int winnerResult = handWinCalculator.calculate(player1HandEvaluation, player2HandEvaluation);
+
+                String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(player1HandEvaluation);
+                String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(player2HandEvaluation);
+
+               if (winnerResult == Dealer.PLAYER_1)
+               {
+                   player1HandEvaluationTextView.setText(player1EvaluationText + " - Winner");
+                   player2HandEvaluationTextView.setText(player2EvaluationText);
+               }
+               else if (winnerResult == Dealer.PLAYER_2)
+               {
+                   player1HandEvaluationTextView.setText(player1EvaluationText);
+                   player2HandEvaluationTextView.setText(player2EvaluationText + " - Winner");
+               }
+
+
+                showRiverButton.setVisibility(View.INVISIBLE);
+            }
+        });
 
 
 //        player1.add(new Card(Card.ACE,Card.SUIT_HEARTS));
@@ -122,48 +199,5 @@ public class MainActivity extends AppCompatActivity {
 //
 //        // set river
 //        dealer.setOneCard(deck, table);
-
-
-        //----- player1
-        int player1Card1Id = getResources().getIdentifier(player1.get(0).getCardDrawableName(), "drawable", getPackageName());
-        int player1Card2Id = getResources().getIdentifier(player1.get(1).getCardDrawableName(), "drawable", getPackageName());
-
-        player1Img.add((ImageView) findViewById(R.id.player1_1));
-        player1Img.add((ImageView) findViewById(R.id.player1_2));
-
-        player1Img.get(0).setImageResource(player1Card1Id);
-        player1Img.get(1).setImageResource(player1Card2Id);
-
-        //----- player2
-        int player2Card1Id = getResources().getIdentifier(player2.get(0).getCardDrawableName(), "drawable", getPackageName());
-        int player2Card2Id = getResources().getIdentifier(player2.get(1).getCardDrawableName(), "drawable", getPackageName());
-
-        player2Img.add((ImageView) findViewById(R.id.player2_1));
-        player2Img.add((ImageView) findViewById(R.id.player2_2));
-
-        player2Img.get(0).setImageResource(player2Card1Id);
-        player2Img.get(1).setImageResource(player2Card2Id);
-
-        //----- table
-        int flop1 = getResources().getIdentifier(table.get(0).getCardDrawableName(), "drawable", getPackageName());
-        int flop2 = getResources().getIdentifier(table.get(1).getCardDrawableName(), "drawable", getPackageName());
-        int flop3 = getResources().getIdentifier(table.get(2).getCardDrawableName(), "drawable", getPackageName());
-        int turn = getResources().getIdentifier(table.get(3).getCardDrawableName(), "drawable", getPackageName());
-        int river = getResources().getIdentifier(table.get(4).getCardDrawableName(), "drawable", getPackageName());
-
-        tableImg.add((ImageView) findViewById(R.id.flop_1));
-        tableImg.add((ImageView) findViewById(R.id.flop_2));
-        tableImg.add((ImageView) findViewById(R.id.flop_3));
-        tableImg.add((ImageView) findViewById(R.id.turn));
-        tableImg.add((ImageView) findViewById(R.id.river));
-
-        tableImg.get(0).setImageResource(flop1);
-        tableImg.get(1).setImageResource(flop2);
-        tableImg.get(2).setImageResource(flop3);
-        tableImg.get(3).setImageResource(turn);
-        tableImg.get(4).setImageResource(river);
-
-
-
     }
 }

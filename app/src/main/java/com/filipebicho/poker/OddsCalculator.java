@@ -39,6 +39,10 @@ class OddsCalculator {
      */
     private CombinationsCalculator combinationsCalculator;
 
+    private Integer[][] threeCardsPermutationsIndexes = {
+            {0,1,2},{0,2,1},{1,0,2},{1,2,0},{2,0,1},{2,1,0}
+    };
+
     //----- public constructor
 
     /**
@@ -253,34 +257,40 @@ class OddsCalculator {
         opponentCards.add(null);
         tableCards.add(null);
 
-        ArrayList<Integer> randomIndices = new ArrayList<>(Arrays.asList(0,1,2));
-        Collections.shuffle(randomIndices);
-
-        for (ArrayList<Card> cards : combinations)
+        int count = 0;
+        for (ArrayList<Card> combination : combinations)
         {
-            // opponent cards
-            opponentCards.set(0, cards.get(randomIndices.get(0)));
-            opponentCards.set(1, cards.get(randomIndices.get(1)));
+            if (combinationsCalculator.combinationContainsUsedCard(usedCards, combination))
+                continue;
 
-            // table card (river)
-            tableCards.set(4, cards.get(randomIndices.get(2)));
+            for (Integer[] permutation : threeCardsPermutationsIndexes)
+            {
+                // opponent cards
+                opponentCards.set(0, combination.get(permutation[0]));
+                opponentCards.set(1, combination.get(permutation[1]));
 
-            // player hand
-            handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
-            playerHand = new ArrayList<>(handEvaluator.getHand());
+                // table card (river)
+                tableCards.set(4, combination.get(permutation[2]));
 
-            // opponent hand
-            handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
-            opponentHand = new ArrayList<>(handEvaluator.getHand());
+                // player hand
+                handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
+                playerHand = new ArrayList<>(handEvaluator.getHand());
 
-            // calculate and store winner hand
-            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
-            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+                // opponent hand
+                handEvaluationResult[Dealer.PLAYER_2] = handEvaluator.evaluate(opponentCards, tableCards);
+                opponentHand = new ArrayList<>(handEvaluator.getHand());
+
+                // calculate and store winner hand
+                handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
+                winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+                count++;
+            }
+
         }
 
         tableCards.remove(4);
 
-        return calculateOdds(winningHandResults, combinations.size());
+        return calculateOdds(winningHandResults, count);
     }
 
     /**

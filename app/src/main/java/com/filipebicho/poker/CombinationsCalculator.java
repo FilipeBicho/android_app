@@ -53,7 +53,20 @@ class CombinationsCalculator {
      */
     private FourCardsCombinationDao fourCardsCombinationsDao;
 
+    /**
+     * Two cards combinations ArrayList
+     */
+    private ArrayList<ArrayList<Card>> twoCardsCombinations = new ArrayList<>();
 
+    /**
+     * Three cards combinations ArrayList
+     */
+    private ArrayList<ArrayList<Card>> threeCardsCombinations = new ArrayList<>();
+
+    /**
+     * Four cards combinations ArrayList
+     */
+    private ArrayList<ArrayList<Card>> fourCardsCombinations = new ArrayList<>();
 
     //----- public constructor
 
@@ -237,26 +250,24 @@ class CombinationsCalculator {
         return cards;
     }
 
+    //----- public instance methods
+
     /**
      *
-     * @param combination String containing combination
-     * @param cards ArrayList containing cards to compare
+     * @param usedCards ArrayList containing used cards
+     * @param combination ArrayList containing current combination
      * @return true if combination contains any of the given cards
      */
-    private Boolean combinationContainsCard(String combination, ArrayList<Card> cards)
+    Boolean combinationContainsUsedCard(ArrayList<Card> usedCards, ArrayList<Card> combination)
     {
-        ArrayList<Card> cardsCombination = getConvertedCardsCombination(combination);
-
-        for (Card card : cardsCombination)
+        for (Card card : usedCards)
         {
-            if (cards.contains(card))
+            if (combination.contains(card))
                 return true;
         }
 
         return false;
     }
-
-    //----- public instance methods
 
     /**
      *
@@ -264,13 +275,11 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getTwoCardsCombinationsWithoutGivenCards(ArrayList<Card> cards)
     {
-        ArrayList<ArrayList<Card>> twoCardsCombinations = new ArrayList<>();
+        if (!twoCardsCombinations.isEmpty())
+            return twoCardsCombinations;
 
         for (TwoCardsCombination combination : twoCardsCombinationsDao.getAllCombinations())
-        {
-            if (!combinationContainsCard(combination.getCombination(), cards))
                 twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
-        }
 
         return twoCardsCombinations;
     }
@@ -283,13 +292,11 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getThreeCardsCombinationsWithoutGivenCards(ArrayList<Card> cards, int limit)
     {
-        ArrayList<ArrayList<Card>> threeCardsCombinations = new ArrayList<>();
+        if (!threeCardsCombinations.isEmpty())
+            return threeCardsCombinations;
 
-        for (ThreeCardsCombination combination : threeCardsCombinationsDao.getAllCombinations())
-        {
-            if (!combinationContainsCard(combination.getCombination(), cards))
-                threeCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
-        }
+        for (ThreeCardsCombination combination : threeCardsCombinationsDao.getRandomCombinationsWithLimit(limit))
+            threeCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
 
         return threeCardsCombinations;
     }
@@ -302,13 +309,11 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getFourCardsCombinationsWithoutGivenCards(ArrayList<Card> cards, int limit)
     {
-        ArrayList<ArrayList<Card>> fourCardsCombinations = new ArrayList<>();
+        if (!fourCardsCombinations.isEmpty())
+            return fourCardsCombinations;
 
         for (FourCardsCombination combination : fourCardsCombinationsDao.getRandomCombinationsWithLimit(limit))
-        {
-            if (!combinationContainsCard(combination.getCombination(), cards))
                 fourCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
-        }
 
         return fourCardsCombinations;
     }

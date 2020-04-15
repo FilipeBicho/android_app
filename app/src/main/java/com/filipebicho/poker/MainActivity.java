@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         //--- set cards
         dealer.setPlayersCards(deck, player1, player2);
-        oddsCalculator = new OddsCalculator(player1, player2, combinationsCalculator);
+        oddsCalculator = new OddsCalculator(player1, null, combinationsCalculator);
 
         //----- player1
 
@@ -80,12 +80,12 @@ public class MainActivity extends AppCompatActivity {
         tableImg.get(2).setImageResource(getResources().getIdentifier(table.get(2).getCardDrawableName(), "drawable", getPackageName()));
 
         String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table));
-        String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
+       // String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
 
-        ArrayList<String> flopOdds = oddsCalculator.playerVsPlayerFlopOdds(table);
+        ArrayList<String> flopOdds = oddsCalculator.flopOdds(table, 10000);
 
         player1HandEvaluationTextView.setText(player1EvaluationText + " - " + flopOdds.get(0));
-        player2HandEvaluationTextView.setText(player2EvaluationText + " - " + flopOdds.get(1));
+       // player2HandEvaluationTextView.setText(player2EvaluationText + " - " + flopOdds.get(1));
 
 
         showTurnButton.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
                 tableImg.get(3).setImageResource(getResources().getIdentifier(table.get(3).getCardDrawableName(), "drawable", getPackageName()));
 
                 String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table));
-                String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
+            //    String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
 
-                ArrayList<String> turnOdds = oddsCalculator.playerVsPlayerTurnOdds(table, deck.getDeck());
+                ArrayList<String> turnOdds = oddsCalculator.turnOdds(table, 1000);
 
                 player1HandEvaluationTextView.setText(player1EvaluationText + " - " + turnOdds.get(0));
-                player2HandEvaluationTextView.setText(player2EvaluationText + " - " + turnOdds.get(1));
+              //  player2HandEvaluationTextView.setText(player2EvaluationText + " - " + turnOdds.get(1));
 
                 showTurnButton.setVisibility(View.INVISIBLE);
                 showRiverButton.setVisibility(View.VISIBLE);
@@ -118,28 +118,32 @@ public class MainActivity extends AppCompatActivity {
                 tableImg.add((ImageView) findViewById(R.id.river));
                 tableImg.get(4).setImageResource(getResources().getIdentifier(table.get(4).getCardDrawableName(), "drawable", getPackageName()));
 
-                int player1HandEvaluation = handEvaluator.evaluate(player1, table);
-                ArrayList<Card> player1Hand = new ArrayList<>(handEvaluator.getHand());
+                ArrayList<String> riverOdds = oddsCalculator.riverOdds(table);
 
-                int player2HandEvaluation = handEvaluator.evaluate(player2, table);
-                ArrayList<Card> player2Hand = new ArrayList<>(handEvaluator.getHand());
+                player1HandEvaluationTextView.setText(player1EvaluationText + " - " + riverOdds.get(0));
 
-               HandWinCalculator handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
-               int winnerResult = handWinCalculator.calculate(player1HandEvaluation, player2HandEvaluation);
+//                int player1HandEvaluation = handEvaluator.evaluate(player1, table);
+//                ArrayList<Card> player1Hand = new ArrayList<>(handEvaluator.getHand());
 
-                String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(player1HandEvaluation);
-                String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(player2HandEvaluation);
-
-               if (winnerResult == Dealer.PLAYER_1)
-               {
-                   player1HandEvaluationTextView.setText(player1EvaluationText + " - Winner");
-                   player2HandEvaluationTextView.setText(player2EvaluationText);
-               }
-               else if (winnerResult == Dealer.PLAYER_2)
-               {
-                   player1HandEvaluationTextView.setText(player1EvaluationText);
-                   player2HandEvaluationTextView.setText(player2EvaluationText + " - Winner");
-               }
+//                int player2HandEvaluation = handEvaluator.evaluate(player2, table);
+//                ArrayList<Card> player2Hand = new ArrayList<>(handEvaluator.getHand());
+//
+//               HandWinCalculator handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
+//               int winnerResult = handWinCalculator.calculate(player1HandEvaluation, player2HandEvaluation);
+//
+//                String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(player1HandEvaluation);
+//                String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(player2HandEvaluation);
+//
+//               if (winnerResult == Dealer.PLAYER_1)
+//               {
+//                   player1HandEvaluationTextView.setText(player1EvaluationText + " - Winner");
+//                   player2HandEvaluationTextView.setText(player2EvaluationText);
+//               }
+//               else if (winnerResult == Dealer.PLAYER_2)
+//               {
+//                   player1HandEvaluationTextView.setText(player1EvaluationText);
+//                   player2HandEvaluationTextView.setText(player2EvaluationText + " - Winner");
+//               }
 
 
                 showRiverButton.setVisibility(View.INVISIBLE);

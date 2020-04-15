@@ -286,11 +286,10 @@ class CombinationsCalculator {
 
     /**
      *
-     * @param cards ArrayList containing used cards
      * @param limit limit combinations of four cards
      * @return three cards combinations
      */
-    ArrayList<ArrayList<Card>> getThreeCardsCombinationsWithoutGivenCards(ArrayList<Card> cards, int limit)
+    ArrayList<ArrayList<Card>> getThreeCardsCombinations(int limit)
     {
         if (!threeCardsCombinations.isEmpty())
             return threeCardsCombinations;
@@ -303,11 +302,10 @@ class CombinationsCalculator {
 
     /**
      *
-     * @param cards ArrayList containing used cards
      * @param limit limit combinations of four cards
      * @return four cards combinations
      */
-    ArrayList<ArrayList<Card>> getFourCardsCombinationsWithoutGivenCards(ArrayList<Card> cards, int limit)
+    ArrayList<ArrayList<Card>> getFourCardsCombinations(int limit)
     {
         if (!fourCardsCombinations.isEmpty())
             return fourCardsCombinations;

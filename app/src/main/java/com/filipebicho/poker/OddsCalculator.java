@@ -115,12 +115,16 @@ class OddsCalculator {
         // init winning hand results
         Arrays.fill(winningHandResults, 0);
 
-        ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinationsWithoutGivenCards(usedCards);
+        ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinations();
 
-        for (ArrayList<Card> cards : cardsCombinations)
+        for (ArrayList<Card> combination : cardsCombinations)
         {
-            tableCards.set(3, cards.get(0));
-            tableCards.set(4, cards.get(1));
+
+            if (combinationsCalculator.combinationContainsUsedCard(usedCards, combination))
+                continue;
+
+            tableCards.set(3, combination.get(0));
+            tableCards.set(4, combination.get(1));
 
             // evaluate player 1 hand
             int player1HandResult = handEvaluator.evaluate(player1Cards, tableCards);
@@ -332,19 +336,21 @@ class OddsCalculator {
         usedCards.addAll(player1Cards);
         usedCards.addAll(tableCards);
 
-        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getTwoCardsCombinationsWithoutGivenCards(usedCards);
+        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getTwoCardsCombinations();
 
         opponentCards.add(null);
         opponentCards.add(null);
 
-        ArrayList<Integer> randomIndices = new ArrayList<>(Arrays.asList(0,1));
-        Collections.shuffle(randomIndices);
-
-        for (ArrayList<Card> cards : combinations)
+        int count = 0;
+        for (ArrayList<Card> combination : combinations)
         {
+
+            if (combinationsCalculator.combinationContainsUsedCard(usedCards, combination))
+                continue;
+
             // opponent cards
-            opponentCards.set(0, cards.get(randomIndices.get(0)));
-            opponentCards.set(1, cards.get(randomIndices.get(1)));
+            opponentCards.set(0, combination.get(0));
+            opponentCards.set(1, combination.get(1));
 
             // player hand
             handEvaluationResult[Dealer.PLAYER_1] = handEvaluator.evaluate(player1Cards, tableCards);
@@ -357,8 +363,9 @@ class OddsCalculator {
             // calculate and store winner hand
             handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
             winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+            count++;
         }
 
-        return calculateOdds(winningHandResults, combinations.size());
+        return calculateOdds(winningHandResults, count);
     }
 }

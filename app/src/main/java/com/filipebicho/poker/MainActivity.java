@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table));
        // String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
 
-        ArrayList<String> flopOdds = oddsCalculator.flopOdds(table, 1000);
+        ArrayList<String> flopOdds = oddsCalculator.flopOdds(table, 5000);
 
         player1HandEvaluationTextView.setText(player1EvaluationText + " - " + flopOdds.get(0));
        // player2HandEvaluationTextView.setText(player2EvaluationText + " - " + flopOdds.get(1));
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 String player1EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player1, table));
             //    String player2EvaluationText = handEvaluator.getHandEvaluationTextByRanking(handEvaluator.evaluate(player2, table));
 
-                ArrayList<String> turnOdds = oddsCalculator.turnOdds(table, 1000);
+                ArrayList<String> turnOdds = oddsCalculator.turnOdds(table, 5000);
 
                 player1HandEvaluationTextView.setText(player1EvaluationText + " - " + turnOdds.get(0));
               //  player2HandEvaluationTextView.setText(player2EvaluationText + " - " + turnOdds.get(1));

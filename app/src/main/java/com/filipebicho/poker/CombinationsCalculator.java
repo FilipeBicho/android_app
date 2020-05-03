@@ -273,13 +273,13 @@ class CombinationsCalculator {
      *
      * @return two cards combinations
      */
-    ArrayList<ArrayList<Card>> getTwoCardsCombinationsWithoutGivenCards(ArrayList<Card> cards)
+    ArrayList<ArrayList<Card>> getTwoCardsCombinations()
     {
         if (!twoCardsCombinations.isEmpty())
             return twoCardsCombinations;
 
         for (TwoCardsCombination combination : twoCardsCombinationsDao.getAllCombinations())
-                twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+            twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
 
         return twoCardsCombinations;
     }
@@ -311,7 +311,7 @@ class CombinationsCalculator {
             return fourCardsCombinations;
 
         for (FourCardsCombination combination : fourCardsCombinationsDao.getRandomCombinationsWithLimit(limit))
-                fourCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+            fourCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
 
         return fourCardsCombinations;
     }

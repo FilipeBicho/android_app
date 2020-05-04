@@ -115,7 +115,7 @@ class OddsCalculator {
         // init winning hand results
         Arrays.fill(winningHandResults, 0);
 
-        ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinations();
+        ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinations(CombinationsCalculator.TWO_CARDS_COMBINATIONS_TOTAL);
 
         for (ArrayList<Card> combination : cardsCombinations)
         {
@@ -224,6 +224,7 @@ class OddsCalculator {
 
             for (Integer[] permutation : fourCardsPermutationsIndexes)
             {
+
                 // opponent cards
                 opponentCards.set(0, combination.get(permutation[0]));
                 opponentCards.set(1, combination.get(permutation[1]));
@@ -319,9 +320,10 @@ class OddsCalculator {
     /**
      *
      * @param tableCards Arraylist containing flop, turn & river
+     * @param combinationsLimit limit of returned combinations cards
      * @return odds knowing flop, turn and player cards
      */
-    ArrayList<String> riverOdds(ArrayList<Card> tableCards)
+    ArrayList<String> riverOdds(ArrayList<Card> tableCards, int combinationsLimit)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();
@@ -336,7 +338,7 @@ class OddsCalculator {
         usedCards.addAll(player1Cards);
         usedCards.addAll(tableCards);
 
-        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getTwoCardsCombinations();
+        ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getTwoCardsCombinations(combinationsLimit);
 
         opponentCards.add(null);
         opponentCards.add(null);

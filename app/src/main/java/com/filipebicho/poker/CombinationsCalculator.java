@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,17 +28,17 @@ class CombinationsCalculator {
     /**
      * total of two cards combinations C(52,2)
      */
-    private static int TWO_CARDS_COMBINATIONS_TOTAL = 1326;
+    static int TWO_CARDS_COMBINATIONS_TOTAL = 1326;
 
     /**
      * total of three cards combinations C(52,4)
      */
-    private static int THREE_CARDS_COMBINATIONS_TOTAL = 22100;
+    static int THREE_CARDS_COMBINATIONS_TOTAL = 22100;
 
     /**
      * total of four cards combinations C(52,4)
      */
-    private static int FOUR_CARDS_COMBINATIONS_TOTAL = 270725;
+    static int FOUR_CARDS_COMBINATIONS_TOTAL = 270725;
 
     //----- private instance variables
 
@@ -114,7 +115,7 @@ class CombinationsCalculator {
     private void initTwoCardsCombinations(Scanner scanner)
     {
         while (scanner.hasNext())
-            fourCardsCombinationsString.add(scanner.nextLine());
+            twoCardsCombinationsString.add(scanner.nextLine());
     }
 
     /**
@@ -136,7 +137,7 @@ class CombinationsCalculator {
     private void initFourCardsCombinations(@NotNull Scanner scanner)
     {
         while (scanner.hasNext())
-            twoCardsCombinationsString.add(scanner.nextLine());
+            fourCardsCombinationsString.add(scanner.nextLine());
     }
 
     /**
@@ -346,15 +347,18 @@ class CombinationsCalculator {
 
     /**
      *
-     * @return two cards combinations
+     * @param limit limit combinations of four cards
+     * @return three cards combinations
      */
-    ArrayList<ArrayList<Card>> getTwoCardsCombinations()
+    ArrayList<ArrayList<Card>> getTwoCardsCombinations(int limit)
     {
-        if (!twoCardsCombinations.isEmpty())
-            return twoCardsCombinations;
+        if (twoCardsCombinationsString.size() < limit)
+            limit = twoCardsCombinationsString.size();
+        else
+            Collections.shuffle(twoCardsCombinationsString);
 
-        for (TwoCardsCombination combination : twoCardsCombinationsDao.getAllCombinations())
-            twoCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+        for (int i = 0; i < limit; i++)
+            twoCardsCombinations.add(getConvertedCardsCombination(twoCardsCombinationsString.get(i)));
 
         return twoCardsCombinations;
     }
@@ -366,11 +370,13 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getThreeCardsCombinations(int limit)
     {
-        if (!threeCardsCombinations.isEmpty())
-            return threeCardsCombinations;
+        if (threeCardsCombinationsString.size() < limit)
+            limit = threeCardsCombinationsString.size();
+        else
+            Collections.shuffle(threeCardsCombinationsString);
 
-        for (ThreeCardsCombination combination : threeCardsCombinationsDao.getRandomCombinationsWithLimit(limit))
-            threeCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+        for (int i = 0; i < limit; i++)
+            threeCardsCombinations.add(getConvertedCardsCombination(threeCardsCombinationsString.get(i)));
 
         return threeCardsCombinations;
     }
@@ -382,11 +388,13 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getFourCardsCombinations(int limit)
     {
-        if (!fourCardsCombinations.isEmpty())
-            return fourCardsCombinations;
+        if (fourCardsCombinationsString.size() < limit)
+            limit = fourCardsCombinationsString.size();
+        else
+            Collections.shuffle(fourCardsCombinationsString);
 
-        for (FourCardsCombination combination : fourCardsCombinationsDao.getRandomCombinationsWithLimit(limit))
-            fourCardsCombinations.add(getConvertedCardsCombination(combination.getCombination()));
+        for (int i = 0; i < limit; i++)
+            fourCardsCombinations.add(getConvertedCardsCombination(fourCardsCombinationsString.get(i)));
 
         return fourCardsCombinations;
     }

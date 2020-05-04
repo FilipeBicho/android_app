@@ -2,11 +2,19 @@ package com.filipebicho.poker;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Set combinations, save into DB and get from DB
@@ -68,25 +76,92 @@ class CombinationsCalculator {
      */
     private ArrayList<ArrayList<Card>> fourCardsCombinations = new ArrayList<>();
 
+    /**
+     * Two cards combinations string ArrayList
+     */
+    private ArrayList<String> twoCardsCombinationsString = new ArrayList<>();
+
+    /**
+     * Three cards combinations string ArrayList
+     */
+    private ArrayList<String> threeCardsCombinationsString = new ArrayList<>();
+
+    /**
+     * Four cards combinations string ArrayList
+     */
+    private ArrayList<String> fourCardsCombinationsString = new ArrayList<>();
+
     //----- public constructor
 
     /**
      *
      * @param deck cards ArrayList
-     * @param applicationContext Application Context
+     * @param resources Resources
      */
-    CombinationsCalculator(ArrayList<Card> deck, Context applicationContext)
+    CombinationsCalculator(ArrayList<Card> deck, Resources resources) throws IOException
     {
         this.deck = deck;
-        twoCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).twoCardsCombinationsDao();
-        threeCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).threeCardsCombinationsDao();
-        fourCardsCombinationsDao = CombinationsRoomDatabase.getInstance(applicationContext).fourCardsCombinationsDao();
-        setTwoCardsCombinations();
-        setThreeCardsCombinations();
-        setFourCardsCombinations();
+        initCardsCombinationsFromResources(resources);
     }
 
     //----- private instance methods
+
+    /**
+     * init two cards combinations string from file
+     *
+     * @param scanner two cards combinations file scanner
+     */
+    private void initTwoCardsCombinations(Scanner scanner)
+    {
+        while (scanner.hasNext())
+            fourCardsCombinationsString.add(scanner.nextLine());
+    }
+
+    /**
+     * init three cards combinations string from file
+     *
+     * @param scanner three cards combinations file scanner
+     */
+    private void initThreeCardsCombinations(Scanner scanner)
+    {
+        while (scanner.hasNext())
+            threeCardsCombinationsString.add(scanner.nextLine());
+    }
+
+    /**
+     * init four cards combinations string from file
+     *
+     * @param scanner four cards combinations file scanner
+     */
+    private void initFourCardsCombinations(@NotNull Scanner scanner)
+    {
+        while (scanner.hasNext())
+            twoCardsCombinationsString.add(scanner.nextLine());
+    }
+
+    /**
+     * init card combinations string combinations from resources
+     * @param resources resources
+     * @throws IOException
+     */
+    private void initCardsCombinationsFromResources(@NotNull Resources resources) throws IOException
+    {
+        InputStream inputStream = resources.openRawResource(R.raw.combinations);
+        ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+        ZipEntry zipEntry;
+
+        while ((zipEntry = zipInputStream.getNextEntry()) != null)
+        {
+            if (zipEntry.getName().equals("four_cards_combinations.txt"))
+                initFourCardsCombinations(new Scanner(zipInputStream));
+            if (zipEntry.getName().equals("three_cards_combinations.txt"))
+                initThreeCardsCombinations(new Scanner(zipInputStream));
+            if (zipEntry.getName().equals("two_cards_combinations.txt"))
+                initTwoCardsCombinations(new Scanner(zipInputStream));
+        }
+        zipInputStream.close();
+        inputStream.close();
+    }
 
 
     /**

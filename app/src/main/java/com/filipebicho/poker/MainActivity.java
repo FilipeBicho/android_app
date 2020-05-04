@@ -9,7 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.zip.ZipInputStream;
 
 
 /**
@@ -43,7 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Init cards combinations
         // needs to be initialized before the deck is changed
-        CombinationsCalculator combinationsCalculator = new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getApplicationContext());
+        CombinationsCalculator combinationsCalculator = null;
+        try {
+            combinationsCalculator = new CombinationsCalculator(new ArrayList<>(deck.getDeck()), getResources());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         TextView player1HandEvaluationTextView = findViewById(R.id.player1_hand_evaluation);
         TextView player2HandEvaluationTextView = findViewById(R.id.player2_hand_evaluation);

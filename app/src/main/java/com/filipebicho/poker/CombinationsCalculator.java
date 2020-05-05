@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -48,21 +49,6 @@ class CombinationsCalculator {
     private ArrayList<Card> deck;
 
     /**
-     * Two cards combinations Dao
-     */
-    private TwoCardsCombinationDao twoCardsCombinationsDao;
-
-    /**
-     * Three cards combinations Dao
-     */
-    private ThreeCardsCombinationDao threeCardsCombinationsDao;
-
-    /**
-     * Four cards combinations Dao
-     */
-    private FourCardsCombinationDao fourCardsCombinationsDao;
-
-    /**
      * Two cards combinations ArrayList
      */
     private ArrayList<ArrayList<Card>> twoCardsCombinations = new ArrayList<>();
@@ -96,12 +82,10 @@ class CombinationsCalculator {
 
     /**
      *
-     * @param deck cards ArrayList
      * @param resources Resources
      */
-    CombinationsCalculator(ArrayList<Card> deck, Resources resources) throws IOException
+    CombinationsCalculator(Resources resources) throws IOException
     {
-        this.deck = deck;
         initCardsCombinationsFromResources(resources);
     }
 
@@ -166,10 +150,12 @@ class CombinationsCalculator {
 
 
     /**
-     * insert to database 2 cards combinations
+     * insert to text file 2 cards combinations
+     * NOTE: just used once to generate the two cards combination text file
      */
-    private void insertIntoDBTwoCardsCombinations()
+    private void insertIntoDBTwoCardsCombinations(Context context) throws IOException
     {
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("two_cards_combinations.txt", Context.MODE_PRIVATE));
 
         for (int i = 0; i < deck.size() -1 ; i++)
         {
@@ -183,16 +169,19 @@ class CombinationsCalculator {
                                 card2.getRank() + "-" +
                                 card2.getSuit();
 
-                twoCardsCombinationsDao.insert(new TwoCardsCombination(convertedCombinationString));
+                outputStreamWriter.write(convertedCombinationString + "\n");
             }
         }
     }
 
     /**
      * insert to database 3 cards combinations
+     * NOTE: just used once to generate the two cards combination text file
      */
-    private void insertIntoDBThreeCardsCombinations()
+    private void insertIntoDBThreeCardsCombinations(Context context) throws IOException
     {
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("three_cards_combinations.txt", Context.MODE_PRIVATE));
+
         for (int i = 0; i < deck.size() - 2 ; i++)
         {
             Card card1 = new Card(deck.get(i));
@@ -210,7 +199,7 @@ class CombinationsCalculator {
                             card3.getRank() + "-" +
                             card3.getSuit();
 
-                    threeCardsCombinationsDao.insert(new ThreeCardsCombination(convertedCombinationString));
+                    outputStreamWriter.write(convertedCombinationString + "\n");
                 }
             }
         }
@@ -218,9 +207,11 @@ class CombinationsCalculator {
 
     /**
      * insert to database 4 cards combinations
+     * NOTE: just used once to generate the two cards combination text file
      */
-    private void insertIntoDBFourCardsCombinations()
+    private void insertIntoDBFourCardsCombinations(Context context) throws IOException
     {
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("four_cards_combinations.txt", Context.MODE_PRIVATE));
 
         for (int i = 0; i < deck.size() - 3 ; i++)
         {
@@ -244,50 +235,11 @@ class CombinationsCalculator {
                                 card4.getRank() + "-" +
                                 card4.getSuit();
 
-                        fourCardsCombinationsDao.insert(new FourCardsCombination(convertedCombinationString));
+                        outputStreamWriter.write(convertedCombinationString + "\n");
 
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * add two cards combinations into database
-     */
-    private void setTwoCardsCombinations()
-    {
-        if (twoCardsCombinationsDao.getCombinationsCount() < TWO_CARDS_COMBINATIONS_TOTAL)
-        {
-            //remove all combinations entries
-            twoCardsCombinationsDao.deleteAll();
-            insertIntoDBTwoCardsCombinations();
-        }
-    }
-
-    /**
-     * add three cards combinations into database
-     */
-    private void setThreeCardsCombinations()
-    {
-        if (threeCardsCombinationsDao.getCombinationsCount() < THREE_CARDS_COMBINATIONS_TOTAL)
-        {
-            //remove all combinations entries
-            threeCardsCombinationsDao.deleteAll();
-            insertIntoDBThreeCardsCombinations();
-        }
-    }
-
-    /**
-     * add four cards combinations into database
-     */
-    private void setFourCardsCombinations()
-    {
-        if (fourCardsCombinationsDao.getCombinationsCount() < FOUR_CARDS_COMBINATIONS_TOTAL)
-        {
-            //remove all combinations entries
-            fourCardsCombinationsDao.deleteAll();
-            insertIntoDBFourCardsCombinations();
         }
     }
 
@@ -352,6 +304,10 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getTwoCardsCombinations(int limit)
     {
+        // two cards combinations are initialized
+        if (twoCardsCombinations.size() > 0)
+            return twoCardsCombinations;
+
         if (twoCardsCombinationsString.size() < limit)
             limit = twoCardsCombinationsString.size();
         else
@@ -370,6 +326,10 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getThreeCardsCombinations(int limit)
     {
+        // three cards combinations are initialized
+        if (threeCardsCombinations.size() > 0)
+            return threeCardsCombinations;
+
         if (threeCardsCombinationsString.size() < limit)
             limit = threeCardsCombinationsString.size();
         else
@@ -388,6 +348,10 @@ class CombinationsCalculator {
      */
     ArrayList<ArrayList<Card>> getFourCardsCombinations(int limit)
     {
+        // four cards combinations are initialized
+        if (fourCardsCombinations.size() > 0)
+            return fourCardsCombinations;
+
         if (fourCardsCombinationsString.size() < limit)
             limit = fourCardsCombinationsString.size();
         else

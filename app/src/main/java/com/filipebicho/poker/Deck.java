@@ -63,12 +63,4 @@ class Deck {
         return deck.remove(deck.size()-1);
     }
 
-    /**
-     *
-     * @return current deck
-     */
-    ArrayList<Card> getDeck()
-    {
-        return deck;
-    }
 }

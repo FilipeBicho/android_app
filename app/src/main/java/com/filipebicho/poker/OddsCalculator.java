@@ -3,7 +3,6 @@ package com.filipebicho.poker;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * calculate winning ods on flop, turn and river

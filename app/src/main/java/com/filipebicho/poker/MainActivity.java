@@ -9,14 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.zip.ZipInputStream;
-
 
 /**
  * Main activity class

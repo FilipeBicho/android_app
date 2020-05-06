@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">poker</string>
     <string name="background_description">background</string>
+    <string name="start_button">Start</string>
     <string name="player1_card1">player1_card1</string>
     <string name="player1_card2">player1_card2</string>
     <string name="player2_card1">player2_card1</string>

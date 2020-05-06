@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,136 +13,17 @@
         android:scaleType="centerCrop"
         android:src="@drawable/background" />
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2">
-
-        <ImageView
-            android:id="@+id/player1_1"
-            style="@style/game_card"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/player1_card1" />
-
-        <ImageView
-            android:id="@+id/player1_2"
-            style="@style/game_card"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/player1_1"
-            android:layout_toRightOf="@+id/player1_1"
-            android:contentDescription="@string/player1_card2" />
-
-        <TextView
-            android:id="@+id/player1_hand_evaluation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="#FFFFFF"
-            android:layout_below="@+id/player1_1"/>
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/start_button"
+        android:drawableEnd="@drawable/right_arrow_white"
+        android:drawableRight="@drawable/right_arrow_white"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@android:color/white"
+        android:text="@string/start_button" />
 
 
-        <ImageView
-            android:id="@+id/flop_1"
-            style="@style/game_card"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="200dp"
-            android:layout_marginLeft="200dp"
-            android:contentDescription="@string/flop_card1" />
-
-        <ImageView
-            android:id="@+id/flop_2"
-            style="@style/game_card"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toEndOf="@+id/flop_1"
-            android:layout_toRightOf="@+id/flop_1"
-            android:contentDescription="@string/flop_card2" />
-
-        <ImageView
-            android:id="@+id/flop_3"
-            style="@style/game_card"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/flop_2"
-            android:layout_toRightOf="@+id/flop_2"
-            android:contentDescription="@string/flop_card3" />
-
-        <ImageView
-            android:id="@+id/turn"
-            style="@style/game_card"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_toEndOf="@+id/flop_3"
-            android:layout_toRightOf="@+id/flop_3"
-            android:contentDescription="@string/turn_card" />
-
-        <ImageView
-            android:id="@+id/river"
-            style="@style/game_card"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_toEndOf="@+id/turn"
-            android:layout_toRightOf="@+id/turn"
-            android:contentDescription="@string/river_card" />
-
-        <Button
-            android:id="@+id/show_turn_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/river"
-            android:layout_marginLeft="30dp"
-            android:text="Show turn button"
-            android:layout_toEndOf="@+id/river"
-            android:layout_marginStart="30dp" />
-
-        <Button
-            android:id="@+id/show_river_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/river"
-            android:layout_marginLeft="30dp"
-            android:text="Show river button"
-            android:layout_toEndOf="@+id/river"
-            android:layout_marginStart="30dp"
-            android:visibility="invisible"/>
-
-
-        <ImageView
-            android:id="@+id/player2_1"
-            style="@style/game_card"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="bottom"
-            android:contentDescription="@string/player2_card1" />
-
-        <ImageView
-            android:id="@+id/player2_2"
-            style="@style/game_card"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/player2_1"
-            android:layout_toRightOf="@+id/player2_1"
-            android:contentDescription="@string/player2_card2" />
-
-        <TextView
-            android:id="@+id/player2_hand_evaluation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="#FFFFFF"
-            android:layout_above="@+id/player2_1"/>
-
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

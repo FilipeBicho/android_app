@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <gradient
-        android:centerColor="@color/primary_color_dark"
-        android:endColor="@color/primary_color"
-        android:startColor="@color/primary_color"
+        android:centerColor="@color/primary_color"
+        android:endColor="@color/primary_color_dark"
+        android:startColor="@color/primary_color_dark"
         android:type="sweep" />
 
     <padding

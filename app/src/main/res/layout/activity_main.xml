@@ -7,11 +7,9 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/background_description"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background" />
+        android:contentDescription="@string/background_main_description"
+        android:src="@drawable/background_main"
+        style="@style/background"/>
 
     <Button
         android:id="@+id/start_button"

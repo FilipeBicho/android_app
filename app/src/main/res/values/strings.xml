@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">poker</string>
-    <string name="background_description">background</string>
+    <string name="background_main_description">background_main</string>
+    <string name="background_game_description">background_game</string>
     <string name="start_button">Start</string>
     <string name="player1_card1">player1_card1</string>
     <string name="player1_card2">player1_card2</string>
@@ -11,4 +12,8 @@
     <string name="flop_card3">flop_card3</string>
     <string name="turn_card">turn_card</string>
     <string name="river_card">river_card</string>
+
+    <string name="title_activity_game">GameActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

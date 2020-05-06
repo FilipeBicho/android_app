@@ -9,6 +9,8 @@
         <item name="android:scaleType">centerCrop</item>
     </style>
 
+    <!-- Main Activity -->
+
     <style name="start_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -18,5 +20,51 @@
         <item name="android:gravity">center_horizontal|center_vertical</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+
+    <!-- Game Activity -->
+
+    <style name="game_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">User VS Computer</item>
+        <item name="android:layout_margin">15sp</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+    
+    <style name="player_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/opponent_name</item>
+        <item name="android:layout_margin">3sp</item>
+    </style>
+
+    <style name="player_money">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/opponent_money</item>
+        <item name="android:layout_margin">3sp</item>
+    </style>
+
+    <style name="player_bet">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/bet_text</item>
+        <item name="android:layout_margin">3sp</item>
+    </style>
+
+    <style name="opponent_bet_value">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/opponent_bet_value</item>
+        <item name="android:layout_margin">3sp</item>
+    </style>
+
+    <style name="game_card">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:src">@drawable/card_back</item>
+        <item name="android:layout_margin">3sp</item>
+    </style>
+
 
 </resources>

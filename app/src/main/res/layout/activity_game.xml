@@ -50,7 +50,7 @@
 
                         <TextView
                             android:id="@+id/opponent_name"
-                            style="@style/player_text"
+                            style="@style/opponent_name"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true" />
 
@@ -63,7 +63,7 @@
 
                         <TextView
                             android:id="@+id/opponent_money"
-                            style="@style/player_money"
+                            style="@style/opponent_money"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true" />
 
@@ -135,7 +135,6 @@
 
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -143,9 +142,7 @@
                 <TextView
                     android:id="@+id/game_action"
                     style="@style/game_action" />
-
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -160,8 +157,141 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.2" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.8">
+
+                    <ScrollView style="@style/game_summary_scroll_view">
+                        <TextView
+                            android:id="@+id/summary"
+                            style="@style/game_summary_text"/>
+                    </ScrollView>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/player_bet"
+                            style="@style/player_bet"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/player_bet_value"
+                            style="@style/user_bet_value"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/user_card_1"
+                            style="@style/game_card"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:contentDescription="@string/user_card_1_description" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/user_card_2"
+                            style="@style/game_card"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
+                            android:contentDescription="@string/user_card_2_description" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/player_name"
+                            style="@style/user_name"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/user_money"
+                            style="@style/user_money"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

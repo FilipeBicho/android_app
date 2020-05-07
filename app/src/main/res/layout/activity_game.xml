@@ -134,15 +134,17 @@
             </LinearLayout>
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/game_action"
-                    style="@style/game_action" />
-            </LinearLayout>
+                    style="@style/game_action"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"  />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -170,17 +172,17 @@
                     android:layout_height="0dp"
                     android:layout_weight="0.2" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.8">
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.8">
 
-                    <ScrollView style="@style/game_summary_scroll_view">
-                        <TextView
-                            android:id="@+id/summary"
-                            style="@style/game_summary_text"/>
-                    </ScrollView>
-                </RelativeLayout>
+                        <ScrollView style="@style/game_summary_scroll_view">
+                            <TextView
+                                android:id="@+id/summary"
+                                style="@style/game_summary_text"/>
+                        </ScrollView>
+                    </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout

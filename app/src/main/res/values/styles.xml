@@ -114,5 +114,43 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="seekbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:progressDrawable">@drawable/seekbar_progress</item>
+        <item name="android:thumb">@drawable/seekbar_thumb</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:max">500</item>
+        <item name="android:maxHeight">10dp</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
+    <style name="input_money">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">5sp</item>
+        <item name="android:paddingBottom">5sp</item>
+        <item name="android:paddingLeft">10sp</item>
+        <item name="android:paddingRight">10sp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/game_summary</item>
+        <item name="android:layout_above">@+id/seekBar</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:minWidth">40dp</item>
+        <item name="android:maxWidth">80dp</item>
+    </style>
+
+    <style name="game_buttons">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/game_button</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:textColor">#FFF</item>
+    </style>
+
 
 </resources>

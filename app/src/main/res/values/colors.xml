@@ -4,4 +4,5 @@
     <color name="primary_color_dark">#390000</color>
     <color name="black">#000</color>
     <color name="scroll_view_transparent_background">#AEFFFFFF</color>
+    <color name="button_color">#a82020</color>
 </resources>

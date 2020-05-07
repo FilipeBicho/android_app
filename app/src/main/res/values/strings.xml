@@ -23,4 +23,7 @@
     <string name="turn_card">turn_card</string>
     <string name="river_card">river_card</string>
     <string name="summary_text">User makes All-In</string>
+    <string name="fold_button">Fold</string>
+    <string name="call_button">Call</string>
+    <string name="bet_button">Bet</string>
 </resources>

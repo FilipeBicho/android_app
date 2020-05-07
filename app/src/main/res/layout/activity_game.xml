@@ -291,7 +291,52 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.65"
+                    android:descendantFocusability="beforeDescendants"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical">
+
+                    <SeekBar
+                        android:id="@+id/seekBar"
+                        style="@style/seekbar"/>
+
+                    <TextView
+                        android:id="@+id/poker_chips"
+                        style="@style/input_money" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.35">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/fold"
+                            style="@style/game_buttons"
+                            android:text="@string/fold_button" />
+
+                        <Button
+                            android:id="@+id/call"
+                            style="@style/game_buttons"
+                            android:text="@string/call_button"/>
+
+                        <Button
+                            android:id="@+id/bet"
+                            style="@style/game_buttons"
+                            android:text="@string/bet_button"/>
+                    </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
         </LinearLayout>

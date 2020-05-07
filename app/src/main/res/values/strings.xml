@@ -26,4 +26,11 @@
     <string name="fold_button">Fold</string>
     <string name="call_button">Call</string>
     <string name="bet_button">Bet</string>
+    <string name="pot">Pot</string>
+    <string name="pot_value">0 €</string>
+    <string name="flop_1">flop1</string>
+    <string name="flop_2">flop2</string>
+    <string name="flop_3">flop3</string>
+    <string name="turn">turn</string>
+    <string name="river">river</string>
 </resources>

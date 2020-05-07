@@ -40,7 +40,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.1"
+                    android:layout_weight="1.2"
                     android:orientation="horizontal">
 
                     <RelativeLayout
@@ -78,13 +78,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights">
 
                         <ImageView
                             android:id="@+id/opponent_card_1"
                             style="@style/game_card"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
                             android:contentDescription="@string/opponent_card_1_description" />
                     </RelativeLayout>
 
@@ -98,6 +100,7 @@
                             style="@style/game_card"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
+                            android:layout_alignParentBottom="true"
                             android:contentDescription="@string/opponent_card_2_description" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -110,13 +113,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights">
 
                         <TextView
                             android:id="@+id/opponent_bet"
                             style="@style/player_bet"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true" />
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -128,7 +133,8 @@
                             android:id="@+id/opponent_bet_value"
                             style="@style/opponent_bet_value"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"/>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -143,15 +149,133 @@
                     android:id="@+id/game_action"
                     style="@style/game_action"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"  />
+                    android:layout_alignParentRight="true"/>
+
             </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:orientation="horizontal">
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.6">
+
+                    <TextView
+                        android:id="@+id/opponent_ranking"
+                        style="@style/ranking" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3">
+
+                            <TextView
+                                android:id="@+id/pot_str"
+                                style="@style/pot"
+                                android:text="@string/pot"/>
+
+                            <TextView
+                                android:id="@+id/pot"
+                                style="@style/pot"
+                                android:layout_below="@id/pot_str"
+                                android:text="@string/pot_value" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/card_flop1"
+                                style="@style/game_card"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:contentDescription="@string/flop_1"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginLeft="10sp"
+                                android:layout_marginStart="10sp"/>
+
+                            <ImageView
+                                android:id="@+id/card_flop2"
+                                style="@style/game_card"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/card_flop1"
+                                android:contentDescription="@string/flop_2"
+                                android:layout_toEndOf="@+id/card_flop1"
+                                android:layout_marginLeft="10sp"
+                                android:layout_marginStart="10sp"/>
+
+                            <ImageView
+                                android:id="@+id/card_flop3"
+                                style="@style/game_card"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/card_flop2"
+                                android:contentDescription="@string/flop_3"
+                                android:layout_toEndOf="@+id/card_flop2"
+                                android:layout_marginLeft="10sp"
+                                android:layout_marginStart="10sp"/>
+
+                            <ImageView
+                                android:id="@+id/card_turn"
+                                style="@style/game_card"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/card_flop3"
+                                android:layout_toEndOf="@+id/card_flop3"
+                                android:contentDescription="@string/turn"
+                                android:layout_marginLeft="25sp"
+                                android:layout_marginStart="25sp" />
+
+                            <ImageView
+                                android:id="@+id/card_river"
+                                style="@style/game_card"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/card_turn"
+                                android:layout_toEndOf="@+id/card_turn"
+                                android:contentDescription="@string/river"
+                                android:layout_marginLeft="25sp"
+                                android:layout_marginStart="25sp" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.6">
+
+                    <TextView
+                        android:id="@+id/player_ranking"
+                        style="@style/ranking"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -200,13 +324,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights">
 
                         <TextView
                             android:id="@+id/player_bet"
                             style="@style/player_bet"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true" />
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"/>
 
                     </RelativeLayout>
 
@@ -219,7 +345,8 @@
                             android:id="@+id/player_bet_value"
                             style="@style/user_bet_value"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentBottom="true"/>
 
                     </RelativeLayout>
                 </LinearLayout>

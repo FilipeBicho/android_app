@@ -88,11 +88,19 @@
         <item name="android:layout_margin">3sp</item>
     </style>
 
+    <style name="ranking">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center_horizontal|center_vertical</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:text">Royal Straight flush</item>
+    </style>
+
     <style name="game_card">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">72dp</item>
         <item name="android:src">@drawable/card_back</item>
-        <item name="android:layout_margin">3sp</item>
     </style>
 
     <style name="game_summary_scroll_view">
@@ -149,8 +157,18 @@
         <item name="android:layout_weight">1</item>
         <item name="android:background">@drawable/game_button</item>
         <item name="android:layout_margin">3dp</item>
-        <item name="android:textColor">#FFF</item>
+        <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="pot">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
 
 
 </resources>

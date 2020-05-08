@@ -232,7 +232,8 @@
                                 android:contentDescription="@string/flop_1"
                                 android:layout_alignParentStart="true"
                                 android:layout_marginLeft="10sp"
-                                android:layout_marginStart="10sp"/>
+                                android:layout_marginStart="10sp"
+                                android:visibility="invisible"/>
 
                             <ImageView
                                 android:id="@+id/card_flop2"
@@ -242,7 +243,8 @@
                                 android:contentDescription="@string/flop_2"
                                 android:layout_toEndOf="@+id/card_flop1"
                                 android:layout_marginLeft="10sp"
-                                android:layout_marginStart="10sp"/>
+                                android:layout_marginStart="10sp"
+                                android:visibility="invisible"/>
 
                             <ImageView
                                 android:id="@+id/card_flop3"
@@ -252,7 +254,8 @@
                                 android:contentDescription="@string/flop_3"
                                 android:layout_toEndOf="@+id/card_flop2"
                                 android:layout_marginLeft="10sp"
-                                android:layout_marginStart="10sp"/>
+                                android:layout_marginStart="10sp"
+                                android:visibility="invisible"/>
 
                             <ImageView
                                 android:id="@+id/card_turn"
@@ -262,7 +265,8 @@
                                 android:layout_toEndOf="@+id/card_flop3"
                                 android:contentDescription="@string/turn"
                                 android:layout_marginLeft="25sp"
-                                android:layout_marginStart="25sp" />
+                                android:layout_marginStart="25sp"
+                                android:visibility="invisible"/>
 
                             <ImageView
                                 android:id="@+id/card_river"
@@ -272,7 +276,8 @@
                                 android:layout_toEndOf="@+id/card_turn"
                                 android:contentDescription="@string/river"
                                 android:layout_marginLeft="25sp"
-                                android:layout_marginStart="25sp" />
+                                android:layout_marginStart="25sp"
+                                android:visibility="invisible"/>
 
                         </RelativeLayout>
 
@@ -366,7 +371,7 @@
 
                         <TextView
                             android:id="@+id/player_bet_value"
-                            style="@style/user_bet_value"
+                            style="@style/player_bet_value"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentBottom="true"/>
@@ -470,7 +475,7 @@
                         style="@style/seekbar"/>
 
                     <TextView
-                        android:id="@+id/poker_chips"
+                        android:id="@+id/input_money"
                         style="@style/input_money" />
                 </RelativeLayout>
 

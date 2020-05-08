@@ -52,7 +52,8 @@
                             android:id="@+id/opponent_name"
                             style="@style/opponent_name"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true" />
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"/>
 
                     </RelativeLayout>
 
@@ -65,7 +66,8 @@
                             android:id="@+id/opponent_money"
                             style="@style/opponent_money"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentBottom="true"/>
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -73,7 +75,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.6">
+                    android:layout_weight="0.7">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -88,6 +90,16 @@
                             android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
                             android:contentDescription="@string/opponent_card_1_description" />
+
+                        <TextView
+                            android:id="@+id/opponent_odds"
+                            style="@style/odds"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_toLeftOf="@id/opponent_card_1"
+                            android:layout_toStartOf="@id/opponent_card_1" />
+
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -365,7 +377,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.6">
+                    android:layout_weight="0.7">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -391,6 +403,16 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
                             android:contentDescription="@string/user_card_2_description" />
+
+                        <TextView
+                            android:id="@+id/player_odds"
+                            style="@style/odds"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_toRightOf="@id/user_card_2"
+                            android:layout_toEndOf="@id/user_card_2"
+                            android:layout_alignParentTop="true" />
+
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -402,13 +424,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights">
 
                         <TextView
                             android:id="@+id/player_name"
                             style="@style/user_name"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true" />
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -420,7 +444,8 @@
                             android:id="@+id/user_money"
                             style="@style/user_money"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"/>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

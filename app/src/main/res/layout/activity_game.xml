@@ -116,6 +116,11 @@
                         android:layout_weight="1"
                         tools:ignore="NestedWeights">
 
+                        <ImageView
+                            android:id="@+id/opponent_dealer"
+                            style="@style/dealer"
+                            android:contentDescription="@string/opponent_dealer"/>
+
                         <TextView
                             android:id="@+id/opponent_bet"
                             style="@style/player_bet"
@@ -326,6 +331,12 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         tools:ignore="NestedWeights">
+
+                        <ImageView
+                            android:id="@+id/user_dealer"
+                            style="@style/dealer"
+                            android:contentDescription="@string/user_dealer"/>
+
 
                         <TextView
                             android:id="@+id/player_bet"

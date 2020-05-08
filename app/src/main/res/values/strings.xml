@@ -33,4 +33,6 @@
     <string name="flop_3">flop3</string>
     <string name="turn">turn</string>
     <string name="river">river</string>
+    <string name="opponent_dealer">Opponent dealer</string>
+    <string name="user_dealer">User dealer</string>
 </resources>

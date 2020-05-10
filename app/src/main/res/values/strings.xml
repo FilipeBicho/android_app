@@ -36,5 +36,5 @@
     <string name="turn">turn</string>
     <string name="river">river</string>
     <string name="opponent_dealer">Opponent dealer</string>
-    <string name="user_dealer">User dealer</string>
+    <string name="player_dealer">Player dealer</string>
 </resources>

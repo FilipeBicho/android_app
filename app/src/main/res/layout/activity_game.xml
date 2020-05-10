@@ -225,7 +225,7 @@
                             android:layout_weight="1">
 
                             <ImageView
-                                android:id="@+id/card_flop1"
+                                android:id="@+id/table_flop_1_card"
                                 style="@style/game_card"
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerVertical="true"
@@ -236,44 +236,44 @@
                                 android:visibility="invisible"/>
 
                             <ImageView
-                                android:id="@+id/card_flop2"
+                                android:id="@+id/table_flop_2_card"
                                 style="@style/game_card"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@+id/card_flop1"
+                                android:layout_toRightOf="@+id/table_flop_1_card"
                                 android:contentDescription="@string/flop_2"
-                                android:layout_toEndOf="@+id/card_flop1"
+                                android:layout_toEndOf="@+id/table_flop_1_card"
                                 android:layout_marginLeft="10sp"
                                 android:layout_marginStart="10sp"
                                 android:visibility="invisible"/>
 
                             <ImageView
-                                android:id="@+id/card_flop3"
+                                android:id="@+id/table_flop_3_card"
                                 style="@style/game_card"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@+id/card_flop2"
+                                android:layout_toRightOf="@+id/table_flop_2_card"
                                 android:contentDescription="@string/flop_3"
-                                android:layout_toEndOf="@+id/card_flop2"
+                                android:layout_toEndOf="@+id/table_flop_2_card"
                                 android:layout_marginLeft="10sp"
                                 android:layout_marginStart="10sp"
                                 android:visibility="invisible"/>
 
                             <ImageView
-                                android:id="@+id/card_turn"
+                                android:id="@+id/table_turn_card"
                                 style="@style/game_card"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@+id/card_flop3"
-                                android:layout_toEndOf="@+id/card_flop3"
+                                android:layout_toRightOf="@+id/table_flop_2_card"
+                                android:layout_toEndOf="@+id/table_flop_3_card"
                                 android:contentDescription="@string/turn"
                                 android:layout_marginLeft="25sp"
                                 android:layout_marginStart="25sp"
                                 android:visibility="invisible"/>
 
                             <ImageView
-                                android:id="@+id/card_river"
+                                android:id="@+id/table_river_card"
                                 style="@style/game_card"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@+id/card_turn"
-                                android:layout_toEndOf="@+id/card_turn"
+                                android:layout_toRightOf="@+id/table_turn_card"
+                                android:layout_toEndOf="@+id/table_turn_card"
                                 android:contentDescription="@string/river"
                                 android:layout_marginLeft="25sp"
                                 android:layout_marginStart="25sp"
@@ -350,9 +350,9 @@
                         tools:ignore="NestedWeights">
 
                         <ImageView
-                            android:id="@+id/user_dealer"
+                            android:id="@+id/player_dealer"
                             style="@style/dealer"
-                            android:contentDescription="@string/user_dealer"/>
+                            android:contentDescription="@string/player_dealer"/>
 
 
                         <TextView
@@ -390,7 +390,7 @@
                         android:layout_weight="1">
 
                         <ImageView
-                            android:id="@+id/user_card_1"
+                            android:id="@+id/player_card_1"
                             style="@style/game_card"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
@@ -403,7 +403,7 @@
                         android:layout_weight="1">
 
                         <ImageView
-                            android:id="@+id/user_card_2"
+                            android:id="@+id/player_card_2"
                             style="@style/game_card"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
@@ -414,8 +414,8 @@
                             style="@style/odds"
                             android:layout_marginLeft="5dp"
                             android:layout_marginStart="5dp"
-                            android:layout_toRightOf="@id/user_card_2"
-                            android:layout_toEndOf="@id/user_card_2"
+                            android:layout_toRightOf="@id/player_card_2"
+                            android:layout_toEndOf="@id/player_card_2"
                             android:layout_alignParentTop="true" />
 
                     </RelativeLayout>

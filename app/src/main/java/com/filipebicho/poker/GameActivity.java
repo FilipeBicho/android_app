@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -116,6 +118,13 @@ public class GameActivity extends AppCompatActivity {
     // game action
     private TextView gameActionTexView;
 
+    // buttons and seekBar
+    private Button foldButton;
+    private Button callButton;
+    private Button betButton;
+    private SeekBar betSeekBar;
+    private TextView inputBetTextView;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,9 +135,8 @@ public class GameActivity extends AppCompatActivity {
         // init labels
         initLabels();
 
-        money[Dealer.PLAYER_1] = (float) 30;
+        money[Dealer.PLAYER_1] = (float) START_MONEY;
         money[Dealer.PLAYER_2] = (float) START_MONEY;
-
 
         // pre flop
         preFlop();
@@ -139,16 +147,16 @@ public class GameActivity extends AppCompatActivity {
      */
     private void initLabels()
     {
+        playerName = "Filipe";
+        opponentName = "Rival";
+
         // init game title text
         TextView gameTitleTextView = findViewById(R.id.game_title);
-        gameTitleTextView.setText("Filipe VS Joao");
+        gameTitleTextView.setText(String.format("%s VS %s", playerName, opponentName));
 
         // init player and opponent names
         TextView playerNameTextView = findViewById(R.id.player_name);
         TextView opponentNameTextView = findViewById(R.id.opponent_name);
-
-        playerName = "Filipe";
-        opponentName = "Rival";
 
         playerNameTextView.setText(playerName);
         opponentNameTextView.setText(opponentName);
@@ -173,6 +181,13 @@ public class GameActivity extends AppCompatActivity {
 
         // init game action
         gameActionTexView = findViewById(R.id.game_action);
+
+        // init buttons and seek bar
+        foldButton = findViewById(R.id.fold);
+        callButton = findViewById(R.id.call);
+        betButton = findViewById(R.id.bet);
+        betSeekBar = findViewById(R.id.seekBar);
+        inputBetTextView = findViewById(R.id.input_bet);
     }
 
     /**
@@ -240,13 +255,13 @@ public class GameActivity extends AppCompatActivity {
                 // set game action, bets and summary labels
                 if (BLIND == Dealer.PLAYER_1)
                 {
-                    gameActionTexView.setText(String.format("%s pays small blind (%s €)\n\"", playerName, SMALL_BLIND_VALUE));
+                    gameActionTexView.setText(String.format("%s pays small blind (%s €)\n", playerName, SMALL_BLIND_VALUE));
                     summaryText += String.format("%s pays small blind (%s €)\n\"", playerName, SMALL_BLIND_VALUE);
                 }
                 else
                 {
-                    gameActionTexView.setText(String.format("%s pays small blind (%s €)\n\"", opponentName, SMALL_BLIND_VALUE));
-                    summaryText += String.format("%s pays small blind (%s €)\n\"", opponentName, SMALL_BLIND_VALUE);
+                    gameActionTexView.setText(String.format("%s pays small blind (%s €)\n", opponentName, SMALL_BLIND_VALUE));
+                    summaryText += String.format("%s pays small blind (%s €)\n", opponentName, SMALL_BLIND_VALUE);
                 }
 
                 playerBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_1]));
@@ -256,6 +271,89 @@ public class GameActivity extends AppCompatActivity {
 
                 // TODO Blind makes all-in
             }
+        }
+        // Dealer doesn't have enough money to pay small blind
+        else if (money[DEALER] <= SMALL_BLIND_VALUE)
+        {
+            // Dealer makes all-in
+            bet[DEALER] = money[DEALER];
+            money[DEALER] -= bet[DEALER];
+
+            // Blind pays all-in
+            bet[BLIND] = bet[DEALER];
+            money[BLIND] -= bet[BLIND];
+
+            // calculate pot
+            pot = bet[BLIND] + bet[DEALER];
+
+            updateMoneyAndPotLabels();
+
+            if (BLIND == Dealer.PLAYER_1)
+            {
+                gameActionTexView.setText(String.format("%s makes All in with %s €\n", playerName, bet[Dealer.PLAYER_1]));
+                summaryText += String.format("%s makes All in with %s €\n", playerName, bet[Dealer.PLAYER_1]);
+                summaryText += String.format("%s pays All in with %s €\n", opponentName, bet[Dealer.PLAYER_2]);
+
+            }
+            else
+            {
+                gameActionTexView.setText(String.format("%s makes All in with %s €\n\"", opponentName, bet[Dealer.PLAYER_2]));
+                summaryText += String.format("%s makes All in with %s €\n", opponentName, bet[Dealer.PLAYER_2]);
+                summaryText += String.format("%s pays All in with %s €\n", playerName, bet[Dealer.PLAYER_1]);
+            }
+
+            summaryTextView.setText(summaryText);
+
+            // set bets labels
+            playerBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_1]));
+            opponentBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_2]));
+
+            //TODO five cards showdown
+        }
+        // Bind and Dealer have enough money
+        else
+        {
+            // Dealer pays small blind
+            bet[DEALER] = (float) SMALL_BLIND_VALUE;
+            money[DEALER] -= bet[DEALER];
+
+            // Blind pays big blind
+            bet[BLIND] = (float) BIG_BLIND_VALUE;
+            money[BLIND] -= bet[BLIND];
+
+            // calculate pot
+            pot = bet[BLIND] + bet[DEALER];
+
+            updateMoneyAndPotLabels();
+
+            if (BLIND == Dealer.PLAYER_1)
+            {
+                gameActionTexView.setText(String.format("%s pays big blind (%s €)\n", playerName, bet[Dealer.PLAYER_1]));
+                summaryText += String.format("%s pays big blind (%s €)\n", playerName, bet[Dealer.PLAYER_1]);
+                summaryText += String.format("%s pays small blind (%s €)\n", opponentName, bet[Dealer.PLAYER_2]);
+
+            }
+            else
+            {
+                gameActionTexView.setText(String.format("%s pays big blind (%s €)\n", opponentName, bet[Dealer.PLAYER_2]));
+                summaryText += String.format("%s pays big blind (%s €)\n", opponentName, bet[Dealer.PLAYER_2]);
+                summaryText += String.format("%s pays small blind (%s €)\n", playerName, bet[Dealer.PLAYER_1]);
+            }
+
+            summaryTextView.setText(summaryText);
+
+            // set bets labels
+            playerBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_1]));
+            opponentBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_2]));
+
+            // set buttons
+            foldButton.setVisibility(View.VISIBLE);
+            callButton.setVisibility(View.VISIBLE);
+            betButton.setVisibility(View.VISIBLE);
+            betSeekBar.setVisibility(View.VISIBLE);
+            inputBetTextView.setVisibility(View.VISIBLE);
+
+
         }
     }
 
@@ -321,7 +419,7 @@ public class GameActivity extends AppCompatActivity {
 
         // random select dealer or switch dealer
         if (DEALER == -1)
-            DEALER = 1; //(int) ( Math.random() * 1 + 0);
+            DEALER = (int) ( Math.random() * 1 + 0);
         else
             DEALER = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
 

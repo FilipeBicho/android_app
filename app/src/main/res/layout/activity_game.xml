@@ -475,8 +475,8 @@
                         style="@style/seekbar"/>
 
                     <TextView
-                        android:id="@+id/input_money"
-                        style="@style/input_money" />
+                        android:id="@+id/input_bet"
+                        style="@style/input_bet" />
                 </RelativeLayout>
 
                 <RelativeLayout

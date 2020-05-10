@@ -7,7 +7,7 @@
     <string name="opponent_name">Opponent</string>
     <string name="user_money">1500 €</string>
     <string name="opponent_money">1500 €</string>
-    <string name="input_money_value">0 €</string>
+    <string name="input_bet_value">0 €</string>
     <string name="user_card_1_description">User card 1 description</string>
     <string name="user_card_2_description">User card 2 description</string>
     <string name="opponent_card_1_description">Opponent card 1 description</string>

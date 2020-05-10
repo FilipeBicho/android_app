@@ -52,7 +52,7 @@
         <item name="android:layout_margin">3sp</item>
     </style>
 
-    <style name="user_money">
+    <style name="player_money">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/user_money</item>
@@ -115,7 +115,7 @@
     <style name="game_summary_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
 

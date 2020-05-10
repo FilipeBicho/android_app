@@ -446,8 +446,8 @@
                         android:layout_weight="1">
 
                         <TextView
-                            android:id="@+id/user_money"
-                            style="@style/user_money"
+                            android:id="@+id/player_money"
+                            style="@style/player_money"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"/>

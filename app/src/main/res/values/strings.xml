@@ -46,6 +46,6 @@
     <string name="player_wins_pot">%s wins %s €</string>
     <string name="player_pays_small_blind">%s pays small blind (%s €)</string>
     <string name="player_pays_big_blind">%s pays big blind (%s €)</string>
-    <string name="player_makes_allin">%s makes All in with %s €</string>
-    <string name="player_pays_allin">%s pays All in with %s €</string>
+    <string name="player_makes_allin">%s makes All in (%s €)</string>
+    <string name="player_pays_allin">%s pays All in (%s €)</string>
 </resources>

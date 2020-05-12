@@ -24,10 +24,11 @@ public class GameActivity extends AppCompatActivity {
 
     CombinationsCalculator combinationsCalculator;
 
-    //----- Dealer
+    //----- Dealer, Blind and player turn
 
     private int DEALER = -1;
     private int BLIND = -1;
+    private int PLAYER_TURN = -1;
 
     //----- Big and small blind values
 
@@ -160,8 +161,6 @@ public class GameActivity extends AppCompatActivity {
         preFlop();
     }
 
-
-
     /**
      * hide buttons and seek bar
      */
@@ -265,13 +264,19 @@ public class GameActivity extends AppCompatActivity {
 
                 // set game action labels
                 if (BLIND == Dealer.PLAYER_1)
-                    gameActionTexView.setText(String.format(getString(R.string.player_bets), playerName, bet[Dealer.PLAYER_1]));
+                {
+                    gameActionTexView.setText(String.format(getString(R.string.player_makes_allin), playerName, bet[Dealer.PLAYER_1]));
+                    summaryText += String.format(getString(R.string.player_makes_allin) + "\n", playerName, bet[Dealer.PLAYER_1]);
+                    summaryText += String.format(getString(R.string.player_pays_allin) + "\n", opponentName, bet[Dealer.PLAYER_2]);
+                }
                 else
-                    gameActionTexView.setText(String.format(getString(R.string.player_bets), opponentName, bet[Dealer.PLAYER_2]));
+                {
+                    gameActionTexView.setText(String.format(getString(R.string.player_makes_allin), opponentName, bet[Dealer.PLAYER_2]));
+                    summaryText += String.format(getString(R.string.player_makes_allin) + "\n", opponentName, bet[Dealer.PLAYER_2]);
+                    summaryText += String.format(getString(R.string.player_pays_allin) + "\n", playerName, bet[Dealer.PLAYER_1]);
+                }
 
                 // set summary text
-                summaryText += String.format(getString(R.string.player_bets) + "\n", playerName, bet[Dealer.PLAYER_1]);
-                summaryText += String.format(getString(R.string.player_bets) + "\n", opponentName, bet[Dealer.PLAYER_2]);
                 summaryTextView.setText(summaryText);
 
                 // update bet labels
@@ -292,7 +297,7 @@ public class GameActivity extends AppCompatActivity {
                 pot = bet[BLIND] + bet[DEALER];
 
                 // set game action, bets and summary labels
-                if (BLIND == Dealer.PLAYER_1)
+                if (DEALER == Dealer.PLAYER_1)
                 {
                     gameActionTexView.setText(String.format(getString(R.string.player_pays_small_blind), playerName, SMALL_BLIND_VALUE));
                     summaryText += String.format(getString(R.string.player_pays_small_blind) + "\n", playerName, SMALL_BLIND_VALUE);
@@ -329,7 +334,7 @@ public class GameActivity extends AppCompatActivity {
             // calculate pot
             pot = bet[BLIND] + bet[DEALER];
 
-            if (BLIND == Dealer.PLAYER_1)
+            if (DEALER == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]));
                 summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]);
@@ -371,15 +376,15 @@ public class GameActivity extends AppCompatActivity {
             if (BLIND == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_pays_big_blind), playerName, bet[Dealer.PLAYER_1]));
-                summaryText += String.format(getString(R.string.player_pays_big_blind) + "\n", playerName, bet[Dealer.PLAYER_1]);
                 summaryText += String.format(getString(R.string.player_pays_small_blind) + "\n", opponentName, bet[Dealer.PLAYER_2]);
+                summaryText += String.format(getString(R.string.player_pays_big_blind) + "\n", playerName, bet[Dealer.PLAYER_1]);
 
             }
             else
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_pays_big_blind) + "\n", opponentName, bet[Dealer.PLAYER_2]));
-                summaryText += String.format(getString(R.string.player_pays_big_blind) + "\n", opponentName, bet[Dealer.PLAYER_2]);
                 summaryText += String.format(getString(R.string.player_pays_small_blind) + "\n", playerName, bet[Dealer.PLAYER_1]);
+                summaryText += String.format(getString(R.string.player_pays_big_blind) + "\n", opponentName, bet[Dealer.PLAYER_2]);
             }
 
             // set summary text
@@ -390,6 +395,9 @@ public class GameActivity extends AppCompatActivity {
 
             // update money and pot labels
             updateMoneyAndPotLabels();
+
+            // set current player
+            PLAYER_TURN = DEALER;
 
             // show buttons and seek bar
             foldButton.setVisibility(View.VISIBLE);
@@ -462,6 +470,8 @@ public class GameActivity extends AppCompatActivity {
             DEALER = (int) ( Math.random() * 1 + 0);
         else
             DEALER = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        DEALER = 0;
 
         // init big blind
         BLIND = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
@@ -611,7 +621,7 @@ public class GameActivity extends AppCompatActivity {
     {
         foldButton.setOnClickListener(v -> {
             hideButtonsAndSeekBar();
-            fold(BLIND);
+            fold(PLAYER_TURN);
         });
 
         callButton.setOnClickListener(v -> {

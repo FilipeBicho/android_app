@@ -125,7 +125,10 @@ public class GameActivity extends AppCompatActivity {
     private SeekBar betSeekBar;
     private TextView inputBetTextView;
 
-
+    /**
+     *
+     * @param savedInstanceState Bundle
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -135,11 +138,28 @@ public class GameActivity extends AppCompatActivity {
         // init labels
         initLabels();
 
+        // init buttons click listeners
+        initButtonsClickListeners();
+
         money[Dealer.PLAYER_1] = (float) START_MONEY;
         money[Dealer.PLAYER_2] = (float) START_MONEY;
 
         // pre flop
         preFlop();
+    }
+
+    /**
+     * init buttons click listeners
+     */
+    private void initButtonsClickListeners()
+    {
+        foldButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideButtonsAndSeekBar();
+                fold(BLIND);
+            }
+        });
     }
 
     /**
@@ -198,6 +218,48 @@ public class GameActivity extends AppCompatActivity {
         playerMoneyTextView.setText(String.format("%s €", money[Dealer.PLAYER_1]));
         opponentMoneyTextView.setText(String.format("%s €", money[Dealer.PLAYER_2]));
         potTextView.setText(String.format("%s €", pot));
+    }
+
+    /**
+     * given player makes fold
+     * @param player int
+     */
+    private void fold(int player)
+    {
+        // set opponent value
+        int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        // set action
+        if (player == Dealer.PLAYER_1)
+            gameActionTexView.setText(String.format("%s makes fold", playerName));
+        else
+            gameActionTexView.setText(String.format("%s makes fold", opponentName));
+
+        // opponent wins the pot
+        money[opponent] += pot;
+
+        // set summary text
+        summaryText += gameActionTexView.getText() + "\n";
+        summaryText += player == Dealer.PLAYER_1 ? String.format("%s wins %s", playerName, pot) : String.format("%s wins %s", playerName, pot);
+
+        // reset pot
+        pot = (float) 0;
+
+        // reset bets
+        bet[player] = (float) 0;
+        bet[opponent] = (float) 0;
+
+        // set bet labels
+        playerBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_1]));
+        opponentBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_2]));
+
+        // update labels
+        updateMoneyAndPotLabels();
+
+        // set summary text
+        summaryTextView.setText(summaryText);
+
+
     }
 
     /**
@@ -346,7 +408,7 @@ public class GameActivity extends AppCompatActivity {
             playerBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_1]));
             opponentBetTextView.setText(String.format("%s €", bet[Dealer.PLAYER_2]));
 
-            // set buttons
+            // show buttons and seek bar
             foldButton.setVisibility(View.VISIBLE);
             callButton.setVisibility(View.VISIBLE);
             betButton.setVisibility(View.VISIBLE);
@@ -457,6 +519,18 @@ public class GameActivity extends AppCompatActivity {
 
         // calculate pre flop bets
         preFlopBets();
+    }
+
+    /**
+     * hide buttons and seek bar
+     */
+    private void hideButtonsAndSeekBar()
+    {
+        foldButton.setVisibility(View.INVISIBLE);
+        callButton.setVisibility(View.INVISIBLE);
+        betButton.setVisibility(View.INVISIBLE);
+        betSeekBar.setVisibility(View.INVISIBLE);
+        inputBetTextView.setVisibility(View.INVISIBLE);
     }
 
     /**

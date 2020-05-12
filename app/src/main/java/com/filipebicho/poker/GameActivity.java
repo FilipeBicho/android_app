@@ -160,16 +160,7 @@ public class GameActivity extends AppCompatActivity {
         preFlop();
     }
 
-    /**
-     * init buttons click listeners
-     */
-    private void initButtonsClickListeners()
-    {
-        foldButton.setOnClickListener(v -> {
-            hideButtonsAndSeekBar();
-            fold(BLIND);
-        });
-    }
+
 
     /**
      * hide buttons and seek bar
@@ -551,8 +542,8 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint("StringFormatMatches")
     private void fold(int player)
     {
-        // set opponent value
-        int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+        // init opponent
+        final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
 
         // set action
         if (player == Dealer.PLAYER_1)
@@ -571,6 +562,62 @@ public class GameActivity extends AppCompatActivity {
         summaryTextView.setText(summaryText);
 
         restartGame();
+    }
+
+    private void call(int player)
+    {
+        // init opponent
+        final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        // init call amount
+        float callAmount = bet[opponent] - bet[player];
+
+        // all-in if player don't have enough money to make a call
+        if (callAmount <= money[player])
+        {
+            // allin
+            bet[player] = money[player];
+            money[player] -= bet[player];
+
+            // set action
+            if (player == Dealer.PLAYER_1)
+            {
+                gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]));
+                summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]);
+
+            }
+            else
+            {
+                gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]));
+                summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]);
+            }
+
+            // opponent equals player bet
+            bet[opponent] =  bet[player];
+
+            // calculate pot
+            pot = bet[player] + bet[opponent];
+        }
+
+
+
+
+    }
+
+    /**
+     * init buttons click listeners
+     */
+    private void initButtonsClickListeners()
+    {
+        foldButton.setOnClickListener(v -> {
+            hideButtonsAndSeekBar();
+            fold(BLIND);
+        });
+
+        callButton.setOnClickListener(v -> {
+            hideButtonsAndSeekBar();
+
+        });
     }
 
     /**

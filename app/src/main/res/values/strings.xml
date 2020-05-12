@@ -28,6 +28,7 @@
     <string name="fold_button">Fold</string>
     <string name="call_button">Call</string>
     <string name="bet_button">Bet</string>
+    <string name="check_button">Check</string>
     <string name="pot">Pot</string>
     <string name="pot_value">0 €</string>
     <string name="flop_1">flop1</string>
@@ -49,4 +50,5 @@
     <string name="player_makes_allin">%s makes All in (%s €)</string>
     <string name="player_pays_allin">%s pays All in (%s €)</string>
     <string name="player_calls">%s calls (%s €)</string>
+    <string name="player_checks">%s makes check</string>
 </resources>

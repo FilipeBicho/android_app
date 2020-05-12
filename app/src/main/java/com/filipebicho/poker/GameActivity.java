@@ -32,6 +32,14 @@ public class GameActivity extends AppCompatActivity {
     private String RIVER = "river";
     private String CURRENT_ROUND = "";
 
+    //----- Check flag
+
+    // true if check or bet is still possible
+    private Boolean CHECK_BET = true;
+
+    // display check button instead call button on true
+    private Boolean CHECK_BUTTON = false;
+
     //----- Dealer, Blind and player turn
 
     private int DEALER = -1;
@@ -156,7 +164,7 @@ public class GameActivity extends AppCompatActivity {
         initButtonsClickListeners();
 
         // init player and opponent money
-        money[Dealer.PLAYER_1] = (float) 30;
+        money[Dealer.PLAYER_1] = (float) START_MONEY;
         money[Dealer.PLAYER_2] = (float) START_MONEY;
 
         // init combination calculator
@@ -408,12 +416,20 @@ public class GameActivity extends AppCompatActivity {
             // set current player
             PLAYER_TURN = DEALER;
 
-            // show buttons and seek bar
-            foldButton.setVisibility(View.VISIBLE);
-            callButton.setVisibility(View.VISIBLE);
-            betButton.setVisibility(View.VISIBLE);
-            betSeekBar.setVisibility(View.VISIBLE);
-            inputBetTextView.setVisibility(View.VISIBLE);
+            if (PLAYER_TURN == Dealer.PLAYER_2)
+            {
+                // TODO change to fold_call_bet method
+                call();
+            }
+            else
+            {
+                // show buttons and seek bar
+                foldButton.setVisibility(View.VISIBLE);
+                callButton.setVisibility(View.VISIBLE);
+                betButton.setVisibility(View.VISIBLE);
+                betSeekBar.setVisibility(View.VISIBLE);
+                inputBetTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -511,6 +527,9 @@ public class GameActivity extends AppCompatActivity {
 
         // init current round
         CURRENT_ROUND = PRE_FLOP;
+
+        // check or bet is still possible
+        CHECK_BET = true;
 
         // calculate pre flop bets
         preFlopBets();
@@ -621,15 +640,14 @@ public class GameActivity extends AppCompatActivity {
             // set action
             if (player == Dealer.PLAYER_1)
             {
-                gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]));
+                gameActionTexView.setText(String.format(getString(R.string.player_makes_allin), playerName, bet[Dealer.PLAYER_1]));
                 summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]);
             }
             else
             {
-                gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]));
+                gameActionTexView.setText(String.format(getString(R.string.player_makes_allin), opponentName, bet[Dealer.PLAYER_2]));
                 summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]);
             }
-
 
             // set summary text
             summaryTextView.setText(summaryText);
@@ -645,7 +663,7 @@ public class GameActivity extends AppCompatActivity {
         else
         {
             // player equals opponent bet
-            bet[player] = bet[opponent];
+            bet[player] += callAmount;
 
             // update money
             money[player] -= callAmount;
@@ -672,8 +690,74 @@ public class GameActivity extends AppCompatActivity {
 
             // update money and pot labels
             updateMoneyAndPotLabels();
+
+            PLAYER_TURN = opponent;
+
+            // if is pre flop call then other player still has to play
+            if (CHECK_BET && CURRENT_ROUND.equals(PRE_FLOP))
+            {
+                if (PLAYER_TURN == Dealer.PLAYER_2)
+                {
+                    check();
+                }
+                else
+                {
+                    CHECK_BUTTON = true;
+                    callButton.setText(R.string.check_button);
+                    callButton.setVisibility(View.VISIBLE);
+                    betButton.setVisibility(View.VISIBLE);
+                    betSeekBar.setVisibility(View.VISIBLE);
+                    inputBetTextView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void check()
+    {
+        // init player and opponent
+        final int player = PLAYER_TURN;
+        final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        // set action
+        if (player == Dealer.PLAYER_1)
+        {
+            gameActionTexView.setText(String.format(getString(R.string.player_checks), playerName));
+            summaryText += String.format(getString(R.string.player_checks)  + "\n", playerName);
+        }
+        else
+        {
+            gameActionTexView.setText(String.format(getString(R.string.player_checks), opponentName));
+            summaryText += String.format(getString(R.string.player_checks)  + "\n", opponentName);
         }
 
+        // set summary text
+        summaryTextView.setText(summaryText);
+
+        // opponent still has to play if is not pre flop
+        if (CHECK_BET && !CURRENT_ROUND.equals(PRE_FLOP))
+        {
+            // it's not possible to check again
+            CHECK_BET = false;
+
+            if (PLAYER_TURN == Dealer.PLAYER_2)
+            {
+                check();
+            }
+            else
+            {
+                CHECK_BUTTON = true;
+                callButton.setText(R.string.check_button);
+                callButton.setVisibility(View.VISIBLE);
+                betButton.setVisibility(View.VISIBLE);
+                betSeekBar.setVisibility(View.VISIBLE);
+                inputBetTextView.setVisibility(View.VISIBLE);
+            }
+        }
+        else
+        {
+            // TODO show flop, turn or river
+        }
 
     }
 
@@ -689,7 +773,11 @@ public class GameActivity extends AppCompatActivity {
 
         callButton.setOnClickListener(v -> {
             hideButtonsAndSeekBar();
-            call();
+
+            if (CHECK_BUTTON)
+                check();
+            else
+                call();
         });
     }
 

@@ -24,6 +24,14 @@ public class GameActivity extends AppCompatActivity {
 
     CombinationsCalculator combinationsCalculator;
 
+    //----- Rounds
+
+    private String PRE_FLOP = "pre_flop";
+    private String FLOP = "flop";
+    private String TURN = "turn";
+    private String RIVER = "river";
+    private String CURRENT_ROUND = "";
+
     //----- Dealer, Blind and player turn
 
     private int DEALER = -1;
@@ -134,7 +142,8 @@ public class GameActivity extends AppCompatActivity {
      *
      * @param savedInstanceState Bundle
      */
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         setFullScreen();
@@ -147,7 +156,7 @@ public class GameActivity extends AppCompatActivity {
         initButtonsClickListeners();
 
         // init player and opponent money
-        money[Dealer.PLAYER_1] = (float) START_MONEY;
+        money[Dealer.PLAYER_1] = (float) 30;
         money[Dealer.PLAYER_2] = (float) START_MONEY;
 
         // init combination calculator
@@ -500,6 +509,9 @@ public class GameActivity extends AppCompatActivity {
         summaryText += String.format(getString(R.string.game_number), gameNumber);
         summaryTextView.setText(summaryText);
 
+        // init current round
+        CURRENT_ROUND = PRE_FLOP;
+
         // calculate pre flop bets
         preFlopBets();
     }
@@ -546,13 +558,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * given player makes fold
-     * @param player int
+     * Fold
      */
     @SuppressLint("StringFormatMatches")
-    private void fold(int player)
+    private void fold()
     {
-        // init opponent
+        // init player and opponent
+        final int player = PLAYER_TURN;
         final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
 
         // set action
@@ -574,27 +586,43 @@ public class GameActivity extends AppCompatActivity {
         restartGame();
     }
 
-    private void call(int player)
+    /**
+     * Call
+     */
+    @SuppressLint("StringFormatMatches")
+    private void call()
     {
-        // init opponent
+        // init player and opponent
+        final int player = PLAYER_TURN;
         final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
 
         // init call amount
         float callAmount = bet[opponent] - bet[player];
 
         // all-in if player don't have enough money to make a call
-        if (callAmount <= money[player])
+        if (money[player] <= callAmount)
         {
+            // set new call amount
+            callAmount = callAmount - money[player];
+
             // allin
-            bet[player] = money[player];
-            money[player] -= bet[player];
+            bet[player] += callAmount;
+
+            //update money
+            money[player] -= callAmount;
+            money[opponent] += callAmount;
+
+            // opponent equals player bet
+            bet[opponent] =  bet[player];
+
+            // calculate pot
+            pot = bet[player] + bet[opponent];
 
             // set action
             if (player == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]));
                 summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]);
-
             }
             else
             {
@@ -602,14 +630,49 @@ public class GameActivity extends AppCompatActivity {
                 summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]);
             }
 
-            // opponent equals player bet
-            bet[opponent] =  bet[player];
+
+            // set summary text
+            summaryTextView.setText(summaryText);
+
+            // update bet labels
+            updateBetLabels();
+
+            // update money and pot labels
+            updateMoneyAndPotLabels();
+
+            // TODO show down
+        }
+        else
+        {
+            // player equals opponent bet
+            bet[player] = bet[opponent];
+
+            // update money
+            money[player] -= callAmount;
 
             // calculate pot
             pot = bet[player] + bet[opponent];
+
+            if (player == Dealer.PLAYER_1)
+            {
+                gameActionTexView.setText(String.format(getString(R.string.player_calls), playerName, callAmount));
+                summaryText += String.format(getString(R.string.player_calls) + "\n", playerName, callAmount);
+            }
+            else
+            {
+                gameActionTexView.setText(String.format(getString(R.string.player_calls), opponentName, callAmount));
+                summaryText += String.format(getString(R.string.player_calls) + "\n", opponentName, callAmount);
+            }
+
+            // set summary text
+            summaryTextView.setText(summaryText);
+
+            // update bet labels
+            updateBetLabels();
+
+            // update money and pot labels
+            updateMoneyAndPotLabels();
         }
-
-
 
 
     }
@@ -621,12 +684,12 @@ public class GameActivity extends AppCompatActivity {
     {
         foldButton.setOnClickListener(v -> {
             hideButtonsAndSeekBar();
-            fold(PLAYER_TURN);
+            fold();
         });
 
         callButton.setOnClickListener(v -> {
             hideButtonsAndSeekBar();
-
+            call();
         });
     }
 

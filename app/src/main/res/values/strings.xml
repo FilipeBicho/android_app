@@ -48,4 +48,5 @@
     <string name="player_pays_big_blind">%s pays big blind (%s €)</string>
     <string name="player_makes_allin">%s makes All in (%s €)</string>
     <string name="player_pays_allin">%s pays All in (%s €)</string>
+    <string name="player_calls">%s calls (%s €)</string>
 </resources>

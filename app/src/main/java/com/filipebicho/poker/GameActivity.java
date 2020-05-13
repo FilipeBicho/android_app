@@ -82,13 +82,11 @@ public class GameActivity extends AppCompatActivity {
     // flop odds
     private ArrayList<Float> flopOdds;
 
-    // player and opponent turn odds
-    private Float playerOddsTurn;
-    private Float opponentOddsTurn;
+    // turn odds
+    private ArrayList<Float> turnOdds;
 
-    // player and opponent river odds
-    private Float playerOddsRiver;
-    private Float opponentOddsRiver;
+    // river odds
+    private ArrayList<Float> riverOdds;
 
     //----- Dealer
 
@@ -590,7 +588,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * flop functionality
+     * flop
      */
     @SuppressLint("SetTextI18n")
     private void flop()
@@ -658,8 +656,136 @@ public class GameActivity extends AppCompatActivity {
                 });
             });
         });
+    }
 
+    /**
+     * turn
+     */
+    @SuppressLint("SetTextI18n")
+    private void turn()
+    {
+        CURRENT_ROUND = TURN;
 
+        // check is possible
+        CHECK_BET = true;
+
+        // reset bets
+        bet[Dealer.PLAYER_1] = (float) 0;
+        bet[Dealer.PLAYER_2] = (float) 0;
+
+        // save pot state
+        savedPot = pot;
+
+        // init turn card
+        dealer.setOneCard(deck, tableCards);
+
+        // calculate odds
+        turnOdds = oddsCalculator.turnOdds(tableCards, 1000);
+
+        // set odds text view
+        playerOddsTextView.setText(turnOdds.get(Dealer.PLAYER_1).toString() + " %");
+        opponentOddsTextView.setText(turnOdds.get(Dealer.PLAYER_2).toString() + " %");
+
+        // set summary text
+        summaryText += getString(R.string.turn_header);
+        summaryText += tableCards.toString() + "\n";
+        summaryTextView.setText(summaryText);
+
+        // update bet labels
+        updateBetLabels();
+
+        // update money and pot labels
+        updateMoneyAndPotLabels();
+
+        // make sure blind plays first
+        PLAYER_TURN = BLIND;
+
+        //----- display flop and buttons
+
+        // init turn card
+        tableCardsImg.get(3).setImageResource(getResources().getIdentifier(tableCards.get(3).getCardDrawableName(), "drawable", getPackageName()));
+
+        // display flop animation
+        tableCardsImg.get(3).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
+            if (PLAYER_TURN == Dealer.PLAYER_2)
+            {
+                check();
+            }
+            else
+            {
+                CHECK_BUTTON = true;
+                callButton.setText(R.string.check_button);
+                callButton.setVisibility(View.VISIBLE);
+                betButton.setVisibility(View.VISIBLE);
+                betSeekBar.setVisibility(View.VISIBLE);
+                inputBetTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    /**
+     * River
+     */
+    @SuppressLint("SetTextI18n")
+    private void river()
+    {
+        CURRENT_ROUND = RIVER;
+
+        // check is possible
+        CHECK_BET = true;
+
+        // reset bets
+        bet[Dealer.PLAYER_1] = (float) 0;
+        bet[Dealer.PLAYER_2] = (float) 0;
+
+        // save pot state
+        savedPot = pot;
+
+        // init river card
+        dealer.setOneCard(deck, tableCards);
+
+        // calculate odds
+        riverOdds = oddsCalculator.riverOdds(tableCards, 1000);
+
+        // set odds text view
+        playerOddsTextView.setText(riverOdds.get(Dealer.PLAYER_1).toString() + " %");
+        opponentOddsTextView.setText(riverOdds.get(Dealer.PLAYER_2).toString() + " %");
+
+        // set summary text
+        summaryText += getString(R.string.river_header);
+        summaryText += tableCards.toString() + "\n";
+        summaryTextView.setText(summaryText);
+
+        // update bet labels
+        updateBetLabels();
+
+        // update money and pot labels
+        updateMoneyAndPotLabels();
+
+        // make sure blind plays first
+        PLAYER_TURN = BLIND;
+
+        //----- display flop and buttons
+
+        // init river card
+        tableCardsImg.get(4).setImageResource(getResources().getIdentifier(tableCards.get(4).getCardDrawableName(), "drawable", getPackageName()));
+
+        // display flop animation
+        tableCardsImg.get(4).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
+            if (PLAYER_TURN == Dealer.PLAYER_2)
+            {
+                check();
+            }
+            else
+            {
+                CHECK_BUTTON = true;
+                callButton.setText(R.string.check_button);
+                callButton.setVisibility(View.VISIBLE);
+                betButton.setVisibility(View.VISIBLE);
+                betSeekBar.setVisibility(View.VISIBLE);
+                inputBetTextView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     /**
@@ -851,6 +977,10 @@ public class GameActivity extends AppCompatActivity {
         {
             if (CURRENT_ROUND.equals(PRE_FLOP))
                 flop();
+            else if (CURRENT_ROUND.equals(FLOP))
+                turn();
+            else if (CURRENT_ROUND.equals(TURN))
+                river();
         }
     }
 

@@ -31,7 +31,7 @@ class OddsCalculator {
     /**
      * Hand win calculator
      */
-    private HandWinCalculator handWinCalculator;
+    private HandWinnerCalculator handWinnerCalculator;
 
     /**
      * combinations calculator
@@ -1001,8 +1001,8 @@ class OddsCalculator {
             player2Hand = new ArrayList<>(handEvaluator.getHand());
 
             // calculate and store winner hand
-            handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
-            winningHandResults[handWinCalculator.calculate(player1HandResult, player2HandResult)]++;
+            handWinnerCalculator = new HandWinnerCalculator(player1Hand, player2Hand);
+            winningHandResults[handWinnerCalculator.calculate(player1HandResult, player2HandResult)]++;
             count++;
         }
 
@@ -1045,8 +1045,8 @@ class OddsCalculator {
             player2Hand = new ArrayList<>(handEvaluator.getHand());
 
             // calculate and store winner hand
-            handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
-            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+            handWinnerCalculator = new HandWinnerCalculator(player1Hand, player2Hand);
+            winningHandResults[handWinnerCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
             count++;
         }
 
@@ -1111,8 +1111,8 @@ class OddsCalculator {
                 opponentHand = new ArrayList<>(handEvaluator.getHand());
 
                 // calculate and store winner hand
-                handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
-                winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+                handWinnerCalculator = new HandWinnerCalculator(playerHand, opponentHand);
+                winningHandResults[handWinnerCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
                 count++;
             }
         }
@@ -1174,8 +1174,8 @@ class OddsCalculator {
                 opponentHand = new ArrayList<>(handEvaluator.getHand());
 
                 // calculate and store winner hand
-                handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
-                winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+                handWinnerCalculator = new HandWinnerCalculator(playerHand, opponentHand);
+                winningHandResults[handWinnerCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
                 count++;
             }
 
@@ -1232,8 +1232,8 @@ class OddsCalculator {
             opponentHand = new ArrayList<>(handEvaluator.getHand());
 
             // calculate and store winner hand
-            handWinCalculator = new HandWinCalculator(playerHand, opponentHand);
-            winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+            handWinnerCalculator = new HandWinnerCalculator(playerHand, opponentHand);
+            winningHandResults[handWinnerCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
             count++;
         }
 

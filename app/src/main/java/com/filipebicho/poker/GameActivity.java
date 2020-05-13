@@ -69,6 +69,8 @@ public class GameActivity extends AppCompatActivity {
     // player and opponent hand
     private ArrayList<Card> playerHand = new ArrayList<>();
     private ArrayList<Card> opponentHand = new ArrayList<>();
+    private int playerHandRanking = 0;
+    private int opponentHandRanking = 0;
 
     //----- Odds
 
@@ -340,8 +342,6 @@ public class GameActivity extends AppCompatActivity {
             DEALER = (int) ( Math.random() * 1 + 0);
         else
             DEALER = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
-
-        DEALER = 0;
 
         // init big blind
         BLIND = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
@@ -1118,7 +1118,7 @@ public class GameActivity extends AppCompatActivity {
         bet[player] += money[player];
         money[player] = (float) 0;
 
-        //update pot
+        // update pot
         pot = savedPot + bet[player] + bet[opponent];
 
         if (player == Dealer.PLAYER_1)
@@ -1168,14 +1168,28 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+
+
+    /**
+     * show opponent cards, hand and ranking
+     * show player hand and ranking
+     */
     @SuppressLint("StringFormatMatches")
     private void showDown()
     {
-        // init player and opponent hand and hand ranking
+        // update pot
+        pot = savedPot + bet[Dealer.PLAYER_1] + bet[Dealer.PLAYER_2];
+
+        // calculate player hand and hand ranking
         HandEvaluator handEvaluator = new HandEvaluator();
-        int playerHandRaking = handEvaluator.evaluate(playerCards, tableCards);
+        playerHandRanking = handEvaluator.evaluate(playerCards, tableCards);
+        String playerHandRankingText = handEvaluator.getHandEvaluationTextByRanking(playerHandRanking);
         playerHand = handEvaluator.getHand();
-        int opponentHandRaking = handEvaluator.evaluate(opponentCards, tableCards);
+
+        // calculate opponent hand and hand ranking
+        handEvaluator = new HandEvaluator();
+        opponentHandRanking = handEvaluator.evaluate(opponentCards, tableCards);
+        String opponentHandRankingText = handEvaluator.getHandEvaluationTextByRanking(opponentHandRanking);
         opponentHand = handEvaluator.getHand();
 
         // set hand ranking text view as visible
@@ -1183,22 +1197,66 @@ public class GameActivity extends AppCompatActivity {
         opponentHandRankingTextView.setVisibility(View.VISIBLE);
 
         // set player and opponent hand ranking label
-        playerHandRankingTextView.setText(handEvaluator.getHandEvaluationTextByRanking(playerHandRaking));
-        opponentHandRankingTextView.setText(handEvaluator.getHandEvaluationTextByRanking(opponentHandRaking));
+        playerHandRankingTextView.setText(playerHandRankingText);
+        opponentHandRankingTextView.setText(opponentHandRankingText);
 
         // set player and opponent hand on summary
-        summaryText += String.format(getString(R.string.player_hand), playerName, playerHand) + "\n";
-        summaryText += String.format(getString(R.string.opponent_hand), opponentName, opponentHand) + "\n";
+        summaryText += String.format(getString(R.string.player_hand), playerName, playerHand, playerHandRankingText) + "\n";
+        summaryText += String.format(getString(R.string.opponent_hand), opponentName, opponentHand, opponentHandRankingText) + "\n";
         summaryTextView.setText(summaryText);
 
         //TODO show opponent cards
 
         hideButtonsAndSeekBar();
 
+        // calculate hand winner
+        calculateWinner();
 
+        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
+            restartGame();
+    }
 
+    @SuppressLint("StringFormatMatches")
+    private void calculateWinner()
+    {
+        HandWinnerCalculator handWinnerCalculator = new HandWinnerCalculator(playerHand, opponentHand);
 
+        int winner = handWinnerCalculator.calculate(playerHandRanking, opponentHandRanking);
 
+        if (winner == Dealer.PLAYER_1)
+        {
+            // set summary and game action labels
+            gameActionTexView.setText(String.format(getString(R.string.player_wins_pot), playerName, pot));
+            summaryText += String.format(getString(R.string.player_wins_pot), playerName, pot) + "\n";
+            summaryTextView.setText(summaryText);
+
+            // update money
+            money[Dealer.PLAYER_1] += pot;
+        }
+        else if (winner == Dealer.PLAYER_2)
+        {
+            // set summary and game action labels
+            gameActionTexView.setText(String.format(getString(R.string.player_wins_pot), opponentName, pot));
+            summaryText += String.format(getString(R.string.player_wins_pot), opponentName, pot) + "\n";
+            summaryTextView.setText(summaryText);
+
+            // update money
+            money[Dealer.PLAYER_2] += pot;
+        }
+        else if (winner == handWinnerCalculator.DRAW)
+        {
+            // split pot
+            pot /= 2;
+
+            // set summary and game action labels
+            gameActionTexView.setText(String.format(getString(R.string.draw), pot));
+            summaryText += String.format(getString(R.string.draw), pot) + "\n";
+            summaryTextView.setText(summaryText);
+
+            // update money
+            money[Dealer.PLAYER_1] += pot;
+            money[Dealer.PLAYER_2] += pot;
+        }
     }
 
     /**

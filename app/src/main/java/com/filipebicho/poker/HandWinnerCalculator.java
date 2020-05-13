@@ -6,11 +6,11 @@ import java.util.ArrayList;
  * calculate winning hand
  * @author filipe bicho created 27.03.2020
  */
-class HandWinCalculator {
+class HandWinnerCalculator {
 
     //----- static const variables
     
-    static final int DRAW = 2;
+    final int DRAW = 2;
 
     //----- private instance variables
 
@@ -31,7 +31,7 @@ class HandWinCalculator {
      * @param player1Hand player 1 hand
      * @param player2Hand player 2 hand
      */
-    HandWinCalculator (ArrayList<Card> player1Hand, ArrayList<Card> player2Hand)
+    HandWinnerCalculator(ArrayList<Card> player1Hand, ArrayList<Card> player2Hand)
     {
         this.player1Hand = new ArrayList<>(player1Hand);
         this.player2Hand = new ArrayList<>(player2Hand);

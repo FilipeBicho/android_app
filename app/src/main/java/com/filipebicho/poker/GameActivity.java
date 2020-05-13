@@ -67,8 +67,8 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<Card> tableCards = new ArrayList<>();
 
     // player and opponent hand
-    private final ArrayList<Card> playerHand = new ArrayList<>();
-    private final ArrayList<Card> opponentHand = new ArrayList<>();
+    private ArrayList<Card> playerHand = new ArrayList<>();
+    private ArrayList<Card> opponentHand = new ArrayList<>();
 
     //----- Odds
 
@@ -155,6 +155,10 @@ public class GameActivity extends AppCompatActivity {
     private Button betButton;
     private SeekBar betSeekBar;
     private TextView inputBetTextView;
+
+    // player and opponent hand ranking text
+    private TextView playerHandRankingTextView;
+    private TextView opponentHandRankingTextView;
 
     /**
      *
@@ -265,6 +269,10 @@ public class GameActivity extends AppCompatActivity {
         // init player and opponent odds labels
         playerOddsTextView = findViewById(R.id.player_odds);
         opponentOddsTextView = findViewById(R.id.opponent_odds);
+
+        // init player and opponent hand ranking
+        playerHandRankingTextView = findViewById(R.id.player_ranking);
+        opponentHandRankingTextView = findViewById(R.id.opponent_ranking);
     }
 
     /**
@@ -924,7 +932,14 @@ public class GameActivity extends AppCompatActivity {
             {
                 if (money[player] > 0 && money[opponent] > 0)
                 {
-
+                    if (CURRENT_ROUND.equals(PRE_FLOP))
+                        flop();
+                    else if (CURRENT_ROUND.equals(FLOP))
+                        turn();
+                    else if (CURRENT_ROUND.equals(TURN))
+                        river();
+                    else if (CURRENT_ROUND.equals(RIVER))
+                        showDown();
                 }
             }
         }
@@ -981,6 +996,8 @@ public class GameActivity extends AppCompatActivity {
                 turn();
             else if (CURRENT_ROUND.equals(TURN))
                 river();
+            else if (CURRENT_ROUND.equals(RIVER))
+                showDown();
         }
     }
 
@@ -1149,6 +1166,39 @@ public class GameActivity extends AppCompatActivity {
         {
             //TODO showdown
         }
+    }
+
+    @SuppressLint("StringFormatMatches")
+    private void showDown()
+    {
+        // init player and opponent hand and hand ranking
+        HandEvaluator handEvaluator = new HandEvaluator();
+        int playerHandRaking = handEvaluator.evaluate(playerCards, tableCards);
+        playerHand = handEvaluator.getHand();
+        int opponentHandRaking = handEvaluator.evaluate(opponentCards, tableCards);
+        opponentHand = handEvaluator.getHand();
+
+        // set hand ranking text view as visible
+        playerHandRankingTextView.setVisibility(View.VISIBLE);
+        opponentHandRankingTextView.setVisibility(View.VISIBLE);
+
+        // set player and opponent hand ranking label
+        playerHandRankingTextView.setText(handEvaluator.getHandEvaluationTextByRanking(playerHandRaking));
+        opponentHandRankingTextView.setText(handEvaluator.getHandEvaluationTextByRanking(opponentHandRaking));
+
+        // set player and opponent hand on summary
+        summaryText += String.format(getString(R.string.player_hand), playerName, playerHand) + "\n";
+        summaryText += String.format(getString(R.string.opponent_hand), opponentName, opponentHand) + "\n";
+        summaryTextView.setText(summaryText);
+
+        //TODO show opponent cards
+
+        hideButtonsAndSeekBar();
+
+
+
+
+
     }
 
     /**

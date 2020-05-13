@@ -54,4 +54,6 @@
     <string name="player_pays_allin">%s pays All in (%s €)</string>
     <string name="player_calls">%s calls (%s €)</string>
     <string name="player_checks">%s makes check</string>
+    <string name="player_hand">%s hand: %s</string>
+    <string name="opponent_hand">%s hand: %s</string>
 </resources>

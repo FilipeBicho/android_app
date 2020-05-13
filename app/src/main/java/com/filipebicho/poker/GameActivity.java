@@ -157,15 +157,15 @@ public class GameActivity extends AppCompatActivity {
         setFullScreen();
         setContentView(R.layout.activity_game);
 
+        // init player and opponent money
+        money[Dealer.PLAYER_1] = (float) START_MONEY;
+        money[Dealer.PLAYER_2] = (float) START_MONEY;
+
         // init labels
         initLabels();
 
         // init buttons click listeners
-        initButtonsClickListeners();
-
-        // init player and opponent money
-        money[Dealer.PLAYER_1] = (float) START_MONEY;
-        money[Dealer.PLAYER_2] = (float) START_MONEY;
+        initButtonsAndSeekBarListeners();
 
         // init combination calculator
         try {
@@ -413,7 +413,7 @@ public class GameActivity extends AppCompatActivity {
             // update money and pot labels
             updateMoneyAndPotLabels();
 
-            // set current player
+            // change player turn
             PLAYER_TURN = DEALER;
 
             if (PLAYER_TURN == Dealer.PLAYER_2)
@@ -627,7 +627,7 @@ public class GameActivity extends AppCompatActivity {
             // allin
             bet[player] += callAmount;
 
-            //update money
+            // update money
             money[player] -= callAmount;
             money[opponent] += callAmount;
 
@@ -713,14 +713,13 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Check
+     */
     private void check()
     {
-        // init player and opponent
-        final int player = PLAYER_TURN;
-        final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
-
         // set action
-        if (player == Dealer.PLAYER_1)
+        if (PLAYER_TURN == Dealer.PLAYER_1)
         {
             gameActionTexView.setText(String.format(getString(R.string.player_checks), playerName));
             summaryText += String.format(getString(R.string.player_checks)  + "\n", playerName);
@@ -740,6 +739,9 @@ public class GameActivity extends AppCompatActivity {
             // it's not possible to check again
             CHECK_BET = false;
 
+            // change player turn
+            PLAYER_TURN = PLAYER_TURN == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
             if (PLAYER_TURN == Dealer.PLAYER_2)
             {
                 check();
@@ -758,13 +760,118 @@ public class GameActivity extends AppCompatActivity {
         {
             // TODO show flop, turn or river
         }
-
     }
+
+    /**
+     * Bet
+     */
+    @SuppressLint("StringFormatMatches")
+    private void bet()
+    {
+        // init player and opponent
+        final int player = PLAYER_TURN;
+        final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        // it's not possible to check anymore
+        CHECK_BET = false;
+
+        // all-in if player don't have enough money to pay opponent bet
+        if (bet[opponent] >= money[player] + bet[player])
+        {
+           // TODO implement all-in
+        }
+        else
+        {
+            // TODO implement bot bet
+            Float currentBet = player == Dealer.PLAYER_1 ? betSeekBar.getProgress() : (float) BIG_BLIND_VALUE;
+
+            // player bet is all-in
+            if (currentBet >= money[player])
+            {
+                // TODO implement all-in
+            }
+            else
+            {
+                // remove old bet from money
+                money[player] += bet[player];
+
+                // update bet
+                bet[player] = currentBet + bet[opponent];
+
+                // all-in
+                if (bet[player] >= money[player])
+                    bet[player] = money[player];
+
+                // update money
+                money[player] -= bet[player];
+
+                // update pot
+                pot = bet[player] + bet[opponent];
+
+                // set action
+                if (player == Dealer.PLAYER_1)
+                {
+                    gameActionTexView.setText(String.format(getString(R.string.player_bets), playerName, bet[Dealer.PLAYER_1]));
+                    summaryText += String.format(getString(R.string.player_bets)  + "\n", playerName, bet[Dealer.PLAYER_1]);
+                }
+                else
+                {
+                    gameActionTexView.setText(String.format(getString(R.string.player_bets), opponentName, bet[Dealer.PLAYER_2]));
+                    summaryText += String.format(getString(R.string.player_bets)  + "\n", opponentName, bet[Dealer.PLAYER_2]);
+                }
+
+                // set summary text
+                summaryTextView.setText(summaryText);
+
+                // update bet labels
+                updateBetLabels();
+
+                // update money and pot labels
+                updateMoneyAndPotLabels();
+
+                // change player turn
+                PLAYER_TURN = opponent;
+
+                if (PLAYER_TURN == Dealer.PLAYER_2)
+                {
+                    // opponent can still raise the bet
+                    if (money[opponent] + bet[opponent] > bet[player])
+                    {
+                        bet();
+                    }
+                    else
+                    {
+                        // TODO implement fold_allin method
+                    }
+                }
+                else
+                {
+                    betSeekBar.setProgress(BIG_BLIND_VALUE);
+
+                    // show buttons and seek bar
+                    foldButton.setVisibility(View.VISIBLE);
+                    CHECK_BUTTON = false;
+                    callButton.setText(R.string.call_button);
+                    callButton.setVisibility(View.VISIBLE);
+
+                    // opponent can still raise the bet
+                    if (money[opponent] + bet[opponent] > bet[player])
+                    {
+                        betButton.setVisibility(View.VISIBLE);
+                        betSeekBar.setVisibility(View.VISIBLE);
+                        inputBetTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * init buttons click listeners
      */
-    private void initButtonsClickListeners()
+    @SuppressLint("SetTextI18n")
+    private void initButtonsAndSeekBarListeners()
     {
         foldButton.setOnClickListener(v -> {
             hideButtonsAndSeekBar();
@@ -778,6 +885,51 @@ public class GameActivity extends AppCompatActivity {
                 check();
             else
                 call();
+        });
+
+        betButton.setOnClickListener(v -> {
+            hideButtonsAndSeekBar();
+            bet();
+        });
+
+        // set min value
+        betSeekBar.setProgress(BIG_BLIND_VALUE);
+
+        // set max value
+        betSeekBar.setMax(Math.round(money[Dealer.PLAYER_1]));
+
+        // Set the amount of poker chips with the seek bar
+        inputBetTextView.setText(betSeekBar.getProgress() + " €");
+
+        betSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                // set min value
+                if (betSeekBar.getProgress() < BIG_BLIND_VALUE)
+                    betSeekBar.setProgress(BIG_BLIND_VALUE);
+
+                // min bet is 2 * big blind
+                if (betSeekBar.getProgress() > BIG_BLIND_VALUE && betSeekBar.getProgress() < (2 * BIG_BLIND_VALUE))
+                    betSeekBar.setProgress(BIG_BLIND_VALUE * 2);
+
+                // set max value
+                betSeekBar.setMax(Math.round(money[Dealer.PLAYER_1]));
+
+
+                // Set the amount of poker chips with the seek bar
+                inputBetTextView.setText(betSeekBar.getProgress() + " €");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
         });
     }
 

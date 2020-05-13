@@ -77,13 +77,13 @@ class OddsCalculator {
      * @param totalCombinations total calculated combinations number
      * @return odds of each player winning
      */
-    private ArrayList<String> calculateOdds(Integer[] winningHandResults, int totalCombinations)
+    private ArrayList<Float> calculateOdds(Integer[] winningHandResults, int totalCombinations)
     {
-        ArrayList<String> odds = new ArrayList<>();
+        ArrayList<Float> odds = new ArrayList<>();
         DecimalFormat twoDecimalFormat = new DecimalFormat("##.00");
 
         for (Integer result : winningHandResults)
-            odds.add(twoDecimalFormat.format((((float) result / totalCombinations) * 100)));
+            odds.add(Float.parseFloat(twoDecimalFormat.format((((float )result / totalCombinations) * 100))));
 
         return odds;
     }
@@ -962,7 +962,7 @@ class OddsCalculator {
      * @param tableCards table cards
      * @return odds of each player to win the game on flop
      */
-    ArrayList<String> playerVsPlayerFlopOdds(ArrayList<Card> tableCards)
+    ArrayList<Float> playerVsPlayerFlopOdds(ArrayList<Card> tableCards)
     {
         Integer[] winningHandResults = new Integer[3];
         ArrayList<Card> player1Hand;
@@ -982,6 +982,7 @@ class OddsCalculator {
 
         ArrayList<ArrayList<Card>> cardsCombinations = combinationsCalculator.getTwoCardsCombinations(CombinationsCalculator.TWO_CARDS_COMBINATIONS_TOTAL);
 
+        int count = 0;
         for (ArrayList<Card> combination : cardsCombinations)
         {
 
@@ -1002,13 +1003,14 @@ class OddsCalculator {
             // calculate and store winner hand
             handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
             winningHandResults[handWinCalculator.calculate(player1HandResult, player2HandResult)]++;
+            count++;
         }
 
         // remove added cards to calculate odds
         tableCards.remove(3);
         tableCards.remove(3);
 
-        return calculateOdds(winningHandResults, cardsCombinations.size());
+        return calculateOdds(winningHandResults, count);
     }
 
     /**
@@ -1016,7 +1018,7 @@ class OddsCalculator {
      * @param tableCards table cards
      * @return odds of each player to win the game on turn
      */
-    ArrayList<String> playerVsPlayerTurnOdds(ArrayList<Card> tableCards, ArrayList<Card> deck)
+    ArrayList<Float> playerVsPlayerTurnOdds(ArrayList<Card> tableCards, ArrayList<Card> deck)
     {
         Integer[] winningHandResults = new Integer[3];
         Integer[] handEvaluationResult = new Integer[2];
@@ -1029,6 +1031,7 @@ class OddsCalculator {
         // init winning hand results
         Arrays.fill(winningHandResults, 0);
 
+        int count = 0;
         for (Card card : deck)
         {
             tableCards.set(4, card);
@@ -1044,12 +1047,13 @@ class OddsCalculator {
             // calculate and store winner hand
             handWinCalculator = new HandWinCalculator(player1Hand, player2Hand);
             winningHandResults[handWinCalculator.calculate(handEvaluationResult[Dealer.PLAYER_1], handEvaluationResult[Dealer.PLAYER_2])]++;
+            count++;
         }
 
         // remove added card to calculate odds
         tableCards.remove(4);
 
-        return calculateOdds(winningHandResults, deck.size());
+        return calculateOdds(winningHandResults, count);
     }
 
     /**
@@ -1058,7 +1062,7 @@ class OddsCalculator {
      * @param combinationsLimit limit of returned combinations cards
      * @return odds knowing flop and player cards
      */
-    ArrayList<String> flopOdds(ArrayList<Card> tableCards, int combinationsLimit)
+    ArrayList<Float> flopOdds(ArrayList<Card> tableCards, int combinationsLimit)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();
@@ -1125,7 +1129,7 @@ class OddsCalculator {
      * @param combinationsLimit limit of returned combinations cards
      * @return odds knowing flop, turn and player cards
      */
-    ArrayList<String> turnOdds(ArrayList<Card> tableCards, int combinationsLimit)
+    ArrayList<Float> turnOdds(ArrayList<Card> tableCards, int combinationsLimit)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();
@@ -1188,7 +1192,7 @@ class OddsCalculator {
      * @param combinationsLimit limit of returned combinations cards
      * @return odds knowing flop, turn and player cards
      */
-    ArrayList<String> riverOdds(ArrayList<Card> tableCards, int combinationsLimit)
+    ArrayList<Float> riverOdds(ArrayList<Card> tableCards, int combinationsLimit)
     {
         ArrayList<Card> playerHand;
         ArrayList<Card> opponentCards = new ArrayList<>();

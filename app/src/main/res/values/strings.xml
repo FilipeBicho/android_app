@@ -41,7 +41,10 @@
 
     <!-- Game activity -->
     <string name="new_game">New Game</string>
-    <string name="game_number">"\n\n------ Game %d-----\n\n"</string>
+    <string name="game_number">\n\n------ Game %d-----\n\n</string>
+    <string name="flop_header">--- Flop ---\n</string>
+    <string name="turn_header">--- Turn ---\n</string>
+    <string name="river_header">--- River ---\n</string>
     <string name="player_folds">%s folds</string>
     <string name="player_bets">%s bets %s €</string>
     <string name="player_wins_pot">%s wins %s €</string>

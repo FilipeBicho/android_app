@@ -174,8 +174,8 @@ public class GameActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // pre flop
-        preFlop();
+        // start a new game
+        newGame();
     }
 
     /**
@@ -257,10 +257,153 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
+     * init preFlop cards, odds and bets
+     */
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
+    private void newGame()
+    {
+
+        //--- init player, opponent and table cards
+
+        //init cards
+        Dealer dealer = new Dealer();
+        dealer.setPlayersCards(new Deck(), playerCards, opponentCards);
+
+        // init player cards images
+        playerCardsImg = new ArrayList<>();
+        playerCardsImg.add(findViewById(R.id.player_card_1));
+        playerCardsImg.add(findViewById(R.id.player_card_2));
+        playerCardsImg.get(0).setImageResource(getResources().getIdentifier(playerCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+        playerCardsImg.get(1).setImageResource(getResources().getIdentifier(playerCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
+
+        // init opponent cards images
+        opponentCardsImg = new ArrayList<>();
+        opponentCardsImg.add(findViewById(R.id.opponent_card_1));
+        opponentCardsImg.add(findViewById(R.id.opponent_card_2));
+        // TODO remove to avoid show opponent cards
+        opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+        opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
+
+//        // init table cards images
+//        tableCardsImg = new ArrayList<>();
+//        tableCardsImg.add(findViewById(R.id.table_flop_1_card));
+//        tableCardsImg.add(findViewById(R.id.table_flop_2_card));
+//        tableCardsImg.add(findViewById(R.id.table_flop_3_card));
+//        tableCardsImg.add(findViewById(R.id.table_turn_card));
+//        tableCardsImg.add(findViewById(R.id.table_river_card));
+//        tableCardsImg.get(0).setImageResource(getResources().getIdentifier(tableCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+//        tableCardsImg.get(1).setImageResource(getResources().getIdentifier(tableCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
+//        tableCardsImg.get(2).setImageResource(getResources().getIdentifier(tableCards.get(2).getCardDrawableName(), "drawable", getPackageName()));
+//        tableCardsImg.get(3).setImageResource(getResources().getIdentifier(tableCards.get(3).getCardDrawableName(), "drawable", getPackageName()));
+//        tableCardsImg.get(4).setImageResource(getResources().getIdentifier(tableCards.get(4).getCardDrawableName(), "drawable", getPackageName()));
+
+        //--- init odds
+        oddsCalculator = new OddsCalculator(playerCards, opponentCards, combinationsCalculator);
+
+
+        // init player and opponent pre flop odds
+        playerOddsPreFlop = (float) oddsCalculator.preFlopOdds(playerCards);
+        playerOddsTextView = findViewById(R.id.player_odds);
+        playerOddsTextView.setText(playerOddsPreFlop.toString() + " %");
+        playerOddsTextView.setVisibility(View.VISIBLE); // TODO remove
+        opponentOddsPreFlop = (float) oddsCalculator.preFlopOdds(opponentCards);
+        opponentOddsTextView = findViewById(R.id.opponent_odds);
+        opponentOddsTextView.setText(opponentOddsPreFlop.toString() + " %");
+        opponentOddsTextView.setVisibility(View.VISIBLE); // TODO remove
+
+        //--- calculate and init dealer
+
+        // random select dealer or switch dealer
+        if (DEALER == -1)
+            DEALER = (int) ( Math.random() * 1 + 0);
+        else
+            DEALER = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        DEALER = 0;
+
+        // init big blind
+        BLIND = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        // init dealer label
+        if (DEALER == Dealer.PLAYER_1)
+        {
+            playerDealerImg.setVisibility(View.VISIBLE);
+            opponentDealerImg.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            playerDealerImg.setVisibility(View.INVISIBLE);
+            opponentDealerImg.setVisibility(View.VISIBLE);
+        }
+
+        //---- init bet's and bet's label
+
+        // reset bet's and pot values
+        bet[Dealer.PLAYER_1] = (float) 0;
+        bet[Dealer.PLAYER_2] = (float) 0;
+        pot = (float) 0;
+
+        // init summary new game
+        gameNumber++;
+        summaryText += String.format(getString(R.string.game_number), gameNumber);
+        summaryTextView.setText(summaryText);
+
+        // init current round
+        CURRENT_ROUND = PRE_FLOP;
+
+        // check or bet is still possible
+        CHECK_BET = true;
+
+        // calculate pre flop bets
+        preFlop();
+    }
+
+    /**
+     * restart game
+     */
+    private void restartGame()
+    {
+        // reset pot
+        pot = (float) 0;
+
+        // reset bets
+        bet[Dealer.PLAYER_1] = (float) 0;
+        bet[Dealer.PLAYER_2] = (float) 0;
+
+        // update bet labels
+        updateBetLabels();
+
+        // update money and pot labels
+        updateMoneyAndPotLabels();
+
+        // update action
+        gameActionTexView.setText(R.string.new_game);
+
+        // reset opponent cards image
+        opponentCardsImg.get(0).setImageResource(R.drawable.card_back);
+        opponentCardsImg.get(1).setImageResource(R.drawable.card_back);
+
+        // hide table cards image
+        for (ImageView tableCard : tableCardsImg)
+            tableCard.setVisibility(View.INVISIBLE);
+
+        // reset player, opponent and table cards
+        playerCards.clear();
+        opponentCards.clear();
+        playerHand.clear();
+        opponentHand.clear();
+        tableCards.clear();
+
+        // both player have money to play
+        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
+            newGame();
+    }
+
+    /**
      * calculate pre flop odds
      */
     @SuppressLint("StringFormatMatches")
-    private void preFlopBets()
+    private void preFlop()
     {
         // Blind doesn't have enough money to pay big blind
         if (money[BLIND] <= BIG_BLIND_VALUE)
@@ -334,7 +477,7 @@ public class GameActivity extends AppCompatActivity {
                 // update money and pot labels
                 updateMoneyAndPotLabels();
 
-                // TODO Blind makes all-in
+                allIn();
             }
         }
         // Dealer doesn't have enough money to pay small blind
@@ -434,149 +577,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * init preFlop cards, odds and bets
-     */
-    @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    private void preFlop()
-    {
-
-        //--- init player, opponent and table cards
-
-        //init cards
-        Dealer dealer = new Dealer();
-        dealer.setPlayersCards(new Deck(), playerCards, opponentCards);
-
-        // init player cards images
-        playerCardsImg = new ArrayList<>();
-        playerCardsImg.add(findViewById(R.id.player_card_1));
-        playerCardsImg.add(findViewById(R.id.player_card_2));
-        playerCardsImg.get(0).setImageResource(getResources().getIdentifier(playerCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
-        playerCardsImg.get(1).setImageResource(getResources().getIdentifier(playerCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
-
-        // init opponent cards images
-        opponentCardsImg = new ArrayList<>();
-        opponentCardsImg.add(findViewById(R.id.opponent_card_1));
-        opponentCardsImg.add(findViewById(R.id.opponent_card_2));
-        // TODO remove to avoid show opponent cards
-        opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
-        opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
-
-//        // init table cards images
-//        tableCardsImg = new ArrayList<>();
-//        tableCardsImg.add(findViewById(R.id.table_flop_1_card));
-//        tableCardsImg.add(findViewById(R.id.table_flop_2_card));
-//        tableCardsImg.add(findViewById(R.id.table_flop_3_card));
-//        tableCardsImg.add(findViewById(R.id.table_turn_card));
-//        tableCardsImg.add(findViewById(R.id.table_river_card));
-//        tableCardsImg.get(0).setImageResource(getResources().getIdentifier(tableCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
-//        tableCardsImg.get(1).setImageResource(getResources().getIdentifier(tableCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
-//        tableCardsImg.get(2).setImageResource(getResources().getIdentifier(tableCards.get(2).getCardDrawableName(), "drawable", getPackageName()));
-//        tableCardsImg.get(3).setImageResource(getResources().getIdentifier(tableCards.get(3).getCardDrawableName(), "drawable", getPackageName()));
-//        tableCardsImg.get(4).setImageResource(getResources().getIdentifier(tableCards.get(4).getCardDrawableName(), "drawable", getPackageName()));
-
-        //--- init odds
-        oddsCalculator = new OddsCalculator(playerCards, opponentCards, combinationsCalculator);
-
-
-        // init player and opponent pre flop odds
-        playerOddsPreFlop = (float) oddsCalculator.preFlopOdds(playerCards);
-        playerOddsTextView = findViewById(R.id.player_odds);
-        playerOddsTextView.setText(playerOddsPreFlop.toString() + " %");
-        playerOddsTextView.setVisibility(View.VISIBLE); // TODO remove
-        opponentOddsPreFlop = (float) oddsCalculator.preFlopOdds(opponentCards);
-        opponentOddsTextView = findViewById(R.id.opponent_odds);
-        opponentOddsTextView.setText(opponentOddsPreFlop.toString() + " %");
-        opponentOddsTextView.setVisibility(View.VISIBLE); // TODO remove
-
-        //--- calculate and init dealer
-
-        // random select dealer or switch dealer
-        if (DEALER == -1)
-            DEALER = (int) ( Math.random() * 1 + 0);
-        else
-            DEALER = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
-
-        DEALER = 0;
-
-        // init big blind
-        BLIND = DEALER == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
-
-        // init dealer label
-        if (DEALER == Dealer.PLAYER_1)
-        {
-            playerDealerImg.setVisibility(View.VISIBLE);
-            opponentDealerImg.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            playerDealerImg.setVisibility(View.INVISIBLE);
-            opponentDealerImg.setVisibility(View.VISIBLE);
-        }
-
-        //---- init bet's and bet's label
-
-        // reset bet's and pot values
-        bet[Dealer.PLAYER_1] = (float) 0;
-        bet[Dealer.PLAYER_2] = (float) 0;
-        pot = (float) 0;
-
-        // init summary new game
-        gameNumber++;
-        summaryText += String.format(getString(R.string.game_number), gameNumber);
-        summaryTextView.setText(summaryText);
-
-        // init current round
-        CURRENT_ROUND = PRE_FLOP;
-
-        // check or bet is still possible
-        CHECK_BET = true;
-
-        // calculate pre flop bets
-        preFlopBets();
-    }
-
-    /**
-     * restart game
-     */
-    private void restartGame()
-    {
-        // reset pot
-        pot = (float) 0;
-
-        // reset bets
-        bet[Dealer.PLAYER_1] = (float) 0;
-        bet[Dealer.PLAYER_2] = (float) 0;
-
-        // update bet labels
-        updateBetLabels();
-
-        // update money and pot labels
-        updateMoneyAndPotLabels();
-
-        // update action
-        gameActionTexView.setText(R.string.new_game);
-
-        // reset opponent cards image
-        opponentCardsImg.get(0).setImageResource(R.drawable.card_back);
-        opponentCardsImg.get(1).setImageResource(R.drawable.card_back);
-
-        // hide table cards image
-        for (ImageView tableCard : tableCardsImg)
-            tableCard.setVisibility(View.INVISIBLE);
-
-        // reset player, opponent and table cards
-        playerCards.clear();
-        opponentCards.clear();
-        playerHand.clear();
-        opponentHand.clear();
-        tableCards.clear();
-
-        // both player have money to play
-        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
-            preFlop();
-    }
-
-    /**
      * Fold
      */
     @SuppressLint("StringFormatMatches")
@@ -621,18 +621,16 @@ public class GameActivity extends AppCompatActivity {
         // all-in if player don't have enough money to make a call
         if (money[player] <= callAmount)
         {
-            // set new call amount
-            callAmount = callAmount - money[player];
 
-            // allin
-            bet[player] += callAmount;
+            float allInBet = money[player];
 
-            // update money
-            money[player] -= callAmount;
-            money[opponent] += callAmount;
+            // player makes allin
+            bet[player] += allInBet;
+            money[player] -= allInBet;
 
-            // opponent equals player bet
-            bet[opponent] =  bet[player];
+            // opponent equals the bet
+            money[opponent] = bet[opponent] - bet[player];
+            bet[opponent] = bet[player];
 
             // calculate pot
             pot = bet[player] + bet[opponent];
@@ -778,7 +776,7 @@ public class GameActivity extends AppCompatActivity {
         // all-in if player don't have enough money to pay opponent bet
         if (bet[opponent] >= money[player] + bet[player])
         {
-           // TODO implement all-in
+           allIn();
         }
         else
         {
@@ -788,7 +786,7 @@ public class GameActivity extends AppCompatActivity {
             // player bet is all-in
             if (currentBet >= money[player])
             {
-                // TODO implement all-in
+                allIn();
             }
             else
             {
@@ -837,7 +835,7 @@ public class GameActivity extends AppCompatActivity {
                     // opponent can still raise the bet
                     if (money[opponent] + bet[opponent] > bet[player])
                     {
-                        bet();
+                        call();
                     }
                     else
                     {
@@ -864,6 +862,71 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void allIn()
+    {
+        // init player and opponent
+        final int player = PLAYER_TURN;
+        final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
+
+        // it's not possible to check anymore
+        CHECK_BET = false;
+
+        // bet all money
+        bet[player] += money[player];
+        money[player] = (float) 0;
+
+        //update pot
+        pot = bet[player] + bet[opponent];
+
+        if (player == Dealer.PLAYER_1)
+        {
+            gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]));
+            summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]);
+
+        }
+        else
+        {
+            gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]));
+            summaryText += String.format(getString(R.string.player_makes_allin)  + "\n", opponentName, bet[Dealer.PLAYER_2]);
+        }
+
+        // set summary text
+        summaryTextView.setText(summaryText);
+
+        // update bet labels
+        updateBetLabels();
+
+        // update money and pot labels
+        updateMoneyAndPotLabels();
+
+        // change player turn
+        PLAYER_TURN = opponent;
+
+        // opponent still needs to play
+        if (money[opponent] > 0)
+        {
+            if (PLAYER_TURN == Dealer.PLAYER_2)
+            {
+                call();
+                // TODO implement fold_call method
+            }
+            else
+            {
+                // show buttons and seek bar
+                foldButton.setVisibility(View.VISIBLE);
+                CHECK_BUTTON = false;
+                callButton.setText(R.string.call_button);
+                callButton.setVisibility(View.VISIBLE);
+            }
+        }
+        else
+        {
+            //TODO showdown
+        }
+
+
     }
 
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -302,12 +303,21 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void newGame()
     {
-
         //--- init dealer
         dealer = new Dealer();
 
         //--- init deck
         deck = new Deck();
+
+        // reset player, opponent and table cards
+        playerCards.clear();
+        opponentCards.clear();
+        playerHand.clear();
+        opponentHand.clear();
+        tableCards.clear();
+
+        // reset seekbar
+        betSeekBar.setProgress(BIG_BLIND_VALUE);
 
         //--- init player, opponent and table cards
 
@@ -319,9 +329,23 @@ public class GameActivity extends AppCompatActivity {
         playerCardsImg.get(1).setImageResource(getResources().getIdentifier(playerCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
 
         // init opponent cards images
-        // TODO remove to avoid show opponent cards
-        opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
-        opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
+        opponentCardsImg.get(0).setImageResource(R.drawable.card_back);
+        opponentCardsImg.get(1).setImageResource(R.drawable.card_back);
+
+        // hide table cards
+        tableCardsImg.get(0).setAlpha(0.0f);
+        tableCardsImg.get(1).setAlpha(0.0f);
+        tableCardsImg.get(2).setAlpha(0.0f);
+        tableCardsImg.get(3).setAlpha(0.0f);
+        tableCardsImg.get(4).setAlpha(0.0f);
+
+        // reset player and opponent hand raking text
+        playerHandRankingTextView.setText("");
+        opponentHandRankingTextView.setText("");
+
+        // hide odds
+        playerOddsTextView.setVisibility(View.INVISIBLE);
+        opponentOddsTextView.setVisibility(View.INVISIBLE);
 
         //--- init odds
         oddsCalculator = new OddsCalculator(playerCards, opponentCards, combinationsCalculator);
@@ -329,11 +353,9 @@ public class GameActivity extends AppCompatActivity {
         // init player and opponent pre flop odds
         playerOddsPreFlop = (float) oddsCalculator.preFlopOdds(playerCards);
         playerOddsTextView.setText(playerOddsPreFlop.toString() + " %");
-        playerOddsTextView.setVisibility(View.VISIBLE); // TODO remove
 
         opponentOddsPreFlop = (float) oddsCalculator.preFlopOdds(opponentCards);
         opponentOddsTextView.setText(opponentOddsPreFlop.toString() + " %");
-        opponentOddsTextView.setVisibility(View.VISIBLE); // TODO remove
 
         //--- calculate and init dealer
 
@@ -364,34 +386,12 @@ public class GameActivity extends AppCompatActivity {
         bet[Dealer.PLAYER_1] = (float) 0;
         bet[Dealer.PLAYER_2] = (float) 0;
         pot = (float) 0;
+        savedPot = (float) 0;
 
         // init summary new game
         gameNumber++;
         summaryText += String.format(getString(R.string.game_number), gameNumber);
         summaryTextView.setText(summaryText);
-
-        // init current round
-        CURRENT_ROUND = PRE_FLOP;
-
-        // check or bet is still possible
-        CHECK_BET = true;
-
-        // calculate pre flop bets
-        preFlop();
-    }
-
-    /**
-     * restart game
-     */
-    private void restartGame()
-    {
-
-        // reset pot
-        pot = (float) 0;
-
-        // reset bets
-        bet[Dealer.PLAYER_1] = (float) 0;
-        bet[Dealer.PLAYER_2] = (float) 0;
 
         // update bet labels
         updateBetLabels();
@@ -402,20 +402,13 @@ public class GameActivity extends AppCompatActivity {
         // update action
         gameActionTexView.setText(R.string.new_game);
 
-        // reset opponent cards image
-        opponentCardsImg.get(0).setImageResource(R.drawable.card_back);
-        opponentCardsImg.get(1).setImageResource(R.drawable.card_back);
+        // init current round
+        CURRENT_ROUND = PRE_FLOP;
 
-        // reset player, opponent and table cards
-        playerCards.clear();
-        opponentCards.clear();
-        playerHand.clear();
-        opponentHand.clear();
-        tableCards.clear();
+        // check or bet is still possible
+        CHECK_BET = true;
 
-        // both player have money to play
-        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
-            newGame();
+        preFlop();
     }
 
     /**
@@ -464,7 +457,7 @@ public class GameActivity extends AppCompatActivity {
                 // update money and pot labels
                 updateMoneyAndPotLabels();
 
-                //TODO five cards showdown
+                flop();
             }
             else
             {
@@ -536,7 +529,7 @@ public class GameActivity extends AppCompatActivity {
             // update money and pot labels
             updateMoneyAndPotLabels();
 
-            //TODO five cards showdown
+            flop();
         }
         // Bind and Dealer have enough money
         else
@@ -610,18 +603,35 @@ public class GameActivity extends AppCompatActivity {
         bet[Dealer.PLAYER_1] = (float) 0;
         bet[Dealer.PLAYER_2] = (float) 0;
 
+        // reset seekbar
+        betSeekBar.setProgress(BIG_BLIND_VALUE);
+
         // save pot state
         savedPot = pot;
 
         // init flop cards
         dealer.setFlop(deck, tableCards);
 
-        // calculate odds
-        flopOdds = oddsCalculator.flopOdds(tableCards, 1000);
+        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
+        {
+            // calculate odds
+            flopOdds = oddsCalculator.flopOdds(tableCards, 1000);
+        }
+        else
+        {
+            // show opponent cards
+            opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+            opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
 
-        // set odds text view
-        playerOddsTextView.setText(flopOdds.get(Dealer.PLAYER_1).toString() + " %");
-        opponentOddsTextView.setText(flopOdds.get(Dealer.PLAYER_2).toString() + " %");
+            // calculate odds
+            flopOdds = oddsCalculator.playerVsPlayerFlopOdds(tableCards);
+
+            // set odds text view
+            playerOddsTextView.setText(flopOdds.get(Dealer.PLAYER_1).toString() + " %");
+            playerOddsTextView.setVisibility(View.VISIBLE);
+            opponentOddsTextView.setText(flopOdds.get(Dealer.PLAYER_2).toString() + " %");
+            opponentOddsTextView.setVisibility(View.VISIBLE);
+        }
 
         // set summary text
         summaryText += getString(R.string.flop_header);
@@ -648,19 +658,28 @@ public class GameActivity extends AppCompatActivity {
         tableCardsImg.get(0).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
             tableCardsImg.get(1).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
                 tableCardsImg.get(2).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
-                    if (PLAYER_TURN == Dealer.PLAYER_2)
+
+                    if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
                     {
-                        check();
+                        if (PLAYER_TURN == Dealer.PLAYER_2)
+                        {
+                            check();
+                        }
+                        else
+                        {
+                            CHECK_BUTTON = true;
+                            callButton.setText(R.string.check_button);
+                            callButton.setVisibility(View.VISIBLE);
+                            betButton.setVisibility(View.VISIBLE);
+                            betSeekBar.setVisibility(View.VISIBLE);
+                            inputBetTextView.setVisibility(View.VISIBLE);
+                        }
                     }
                     else
                     {
-                        CHECK_BUTTON = true;
-                        callButton.setText(R.string.check_button);
-                        callButton.setVisibility(View.VISIBLE);
-                        betButton.setVisibility(View.VISIBLE);
-                        betSeekBar.setVisibility(View.VISIBLE);
-                        inputBetTextView.setVisibility(View.VISIBLE);
+                        turn();
                     }
+
                 });
             });
         });
@@ -681,18 +700,35 @@ public class GameActivity extends AppCompatActivity {
         bet[Dealer.PLAYER_1] = (float) 0;
         bet[Dealer.PLAYER_2] = (float) 0;
 
+        // reset seekbar
+        betSeekBar.setProgress(BIG_BLIND_VALUE);
+
         // save pot state
         savedPot = pot;
 
         // init turn card
         dealer.setOneCard(deck, tableCards);
 
-        // calculate odds
-        turnOdds = oddsCalculator.turnOdds(tableCards, 1000);
+        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
+        {
+            // calculate odds
+            turnOdds = oddsCalculator.turnOdds(tableCards, 1000);
+        }
+        else
+        {
+            // show opponent cards
+            opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+            opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
 
-        // set odds text view
-        playerOddsTextView.setText(turnOdds.get(Dealer.PLAYER_1).toString() + " %");
-        opponentOddsTextView.setText(turnOdds.get(Dealer.PLAYER_2).toString() + " %");
+            // calculate odds
+            turnOdds = oddsCalculator.playerVsPlayerTurnOdds(tableCards, deck.getDeck());
+
+            // set odds text view
+            playerOddsTextView.setText(turnOdds.get(Dealer.PLAYER_1).toString() + " %");
+            playerOddsTextView.setVisibility(View.VISIBLE);
+            opponentOddsTextView.setText(turnOdds.get(Dealer.PLAYER_2).toString() + " %");
+            opponentOddsTextView.setVisibility(View.VISIBLE);
+        }
 
         // set summary text
         summaryText += getString(R.string.turn_header);
@@ -715,18 +751,25 @@ public class GameActivity extends AppCompatActivity {
 
         // display flop animation
         tableCardsImg.get(3).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
-            if (PLAYER_TURN == Dealer.PLAYER_2)
+            if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
             {
-                check();
+                if (PLAYER_TURN == Dealer.PLAYER_2)
+                {
+                    check();
+                }
+                else
+                {
+                    CHECK_BUTTON = true;
+                    callButton.setText(R.string.check_button);
+                    callButton.setVisibility(View.VISIBLE);
+                    betButton.setVisibility(View.VISIBLE);
+                    betSeekBar.setVisibility(View.VISIBLE);
+                    inputBetTextView.setVisibility(View.VISIBLE);
+                }
             }
             else
             {
-                CHECK_BUTTON = true;
-                callButton.setText(R.string.check_button);
-                callButton.setVisibility(View.VISIBLE);
-                betButton.setVisibility(View.VISIBLE);
-                betSeekBar.setVisibility(View.VISIBLE);
-                inputBetTextView.setVisibility(View.VISIBLE);
+                river();
             }
         });
     }
@@ -746,6 +789,9 @@ public class GameActivity extends AppCompatActivity {
         bet[Dealer.PLAYER_1] = (float) 0;
         bet[Dealer.PLAYER_2] = (float) 0;
 
+        // reset seekbar
+        betSeekBar.setProgress(BIG_BLIND_VALUE);
+
         // save pot state
         savedPot = pot;
 
@@ -753,11 +799,21 @@ public class GameActivity extends AppCompatActivity {
         dealer.setOneCard(deck, tableCards);
 
         // calculate odds
-        riverOdds = oddsCalculator.riverOdds(tableCards, 1000);
+        if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
+        {
+            // calculate odds
+            turnOdds = oddsCalculator.riverOdds(tableCards, 1000);
+        }
+        else
+        {
+            // show opponent cards
+            opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+            opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
 
-        // set odds text view
-        playerOddsTextView.setText(riverOdds.get(Dealer.PLAYER_1).toString() + " %");
-        opponentOddsTextView.setText(riverOdds.get(Dealer.PLAYER_2).toString() + " %");
+            // display odds
+            playerOddsTextView.setVisibility(View.VISIBLE);
+            opponentOddsTextView.setVisibility(View.VISIBLE);
+        }
 
         // set summary text
         summaryText += getString(R.string.river_header);
@@ -780,18 +836,25 @@ public class GameActivity extends AppCompatActivity {
 
         // display flop animation
         tableCardsImg.get(4).animate().alpha(1.0f).setDuration(ANIMATION_TIME).withEndAction(() -> {
-            if (PLAYER_TURN == Dealer.PLAYER_2)
+            if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
             {
-                check();
+                if (PLAYER_TURN == Dealer.PLAYER_2)
+                {
+                    check();
+                }
+                else
+                {
+                    CHECK_BUTTON = true;
+                    callButton.setText(R.string.check_button);
+                    callButton.setVisibility(View.VISIBLE);
+                    betButton.setVisibility(View.VISIBLE);
+                    betSeekBar.setVisibility(View.VISIBLE);
+                    inputBetTextView.setVisibility(View.VISIBLE);
+                }
             }
             else
             {
-                CHECK_BUTTON = true;
-                callButton.setText(R.string.check_button);
-                callButton.setVisibility(View.VISIBLE);
-                betButton.setVisibility(View.VISIBLE);
-                betSeekBar.setVisibility(View.VISIBLE);
-                inputBetTextView.setVisibility(View.VISIBLE);
+                showDown();
             }
         });
     }
@@ -822,7 +885,7 @@ public class GameActivity extends AppCompatActivity {
         // set summary text
         summaryTextView.setText(summaryText);
 
-        restartGame();
+        newGame();
     }
 
     /**
@@ -876,7 +939,14 @@ public class GameActivity extends AppCompatActivity {
             // update money and pot labels
             updateMoneyAndPotLabels();
 
-            // TODO show down
+            if (CURRENT_ROUND.equals(PRE_FLOP))
+                flop();
+            else if (CURRENT_ROUND.equals(FLOP))
+                turn();
+            else if (CURRENT_ROUND.equals(TURN))
+                river();
+            else if (CURRENT_ROUND.equals(RIVER))
+                showDown();
         }
         else
         {
@@ -930,17 +1000,14 @@ public class GameActivity extends AppCompatActivity {
             }
             else
             {
-                if (money[player] > 0 && money[opponent] > 0)
-                {
-                    if (CURRENT_ROUND.equals(PRE_FLOP))
-                        flop();
-                    else if (CURRENT_ROUND.equals(FLOP))
-                        turn();
-                    else if (CURRENT_ROUND.equals(TURN))
-                        river();
-                    else if (CURRENT_ROUND.equals(RIVER))
-                        showDown();
-                }
+                if (CURRENT_ROUND.equals(PRE_FLOP))
+                    flop();
+                else if (CURRENT_ROUND.equals(FLOP))
+                    turn();
+                else if (CURRENT_ROUND.equals(TURN))
+                    river();
+                else if (CURRENT_ROUND.equals(RIVER))
+                    showDown();
             }
         }
     }
@@ -1164,7 +1231,14 @@ public class GameActivity extends AppCompatActivity {
         }
         else
         {
-            //TODO showdown
+            if (CURRENT_ROUND.equals(PRE_FLOP))
+                flop();
+            else if (CURRENT_ROUND.equals(FLOP))
+                turn();
+            else if (CURRENT_ROUND.equals(TURN))
+                river();
+            else if (CURRENT_ROUND.equals(RIVER))
+                showDown();
         }
     }
 
@@ -1174,7 +1248,7 @@ public class GameActivity extends AppCompatActivity {
      * show opponent cards, hand and ranking
      * show player hand and ranking
      */
-    @SuppressLint("StringFormatMatches")
+    @SuppressLint({"StringFormatMatches", "SetTextI18n"})
     private void showDown()
     {
         // update pot
@@ -1185,24 +1259,30 @@ public class GameActivity extends AppCompatActivity {
         playerHandRanking = handEvaluator.evaluate(playerCards, tableCards);
         String playerHandRankingText = handEvaluator.getHandEvaluationTextByRanking(playerHandRanking);
         playerHand = handEvaluator.getHand();
+        String playerHandText = handEvaluator.getHandString();
 
         // calculate opponent hand and hand ranking
         handEvaluator = new HandEvaluator();
         opponentHandRanking = handEvaluator.evaluate(opponentCards, tableCards);
         String opponentHandRankingText = handEvaluator.getHandEvaluationTextByRanking(opponentHandRanking);
         opponentHand = handEvaluator.getHand();
+        String opponentHandText = handEvaluator.getHandString();
+
+        // show opponent cards
+        opponentCardsImg.get(0).setImageResource(getResources().getIdentifier(opponentCards.get(0).getCardDrawableName(), "drawable", getPackageName()));
+        opponentCardsImg.get(1).setImageResource(getResources().getIdentifier(opponentCards.get(1).getCardDrawableName(), "drawable", getPackageName()));
 
         // set hand ranking text view as visible
         playerHandRankingTextView.setVisibility(View.VISIBLE);
         opponentHandRankingTextView.setVisibility(View.VISIBLE);
 
         // set player and opponent hand ranking label
-        playerHandRankingTextView.setText(playerHandRankingText);
-        opponentHandRankingTextView.setText(opponentHandRankingText);
+        playerHandRankingTextView.setText(playerHandRankingText + " - " + playerHandText);
+        opponentHandRankingTextView.setText(opponentHandRankingText + " - " + opponentHandText);
 
         // set player and opponent hand on summary
-        summaryText += String.format(getString(R.string.player_hand), playerName, playerHand, playerHandRankingText) + "\n";
-        summaryText += String.format(getString(R.string.opponent_hand), opponentName, opponentHand, opponentHandRankingText) + "\n";
+        summaryText += String.format(getString(R.string.player_hand), playerName, playerHandText, playerHandRankingText) + "\n";
+        summaryText += String.format(getString(R.string.opponent_hand), opponentName, opponentHandText, opponentHandRankingText) + "\n";
         summaryTextView.setText(summaryText);
 
         //TODO show opponent cards
@@ -1213,10 +1293,12 @@ public class GameActivity extends AppCompatActivity {
         calculateWinner();
 
         if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
-            restartGame();
+        {
+            new Handler().postDelayed(this::newGame, 5000);
+        }
     }
 
-    @SuppressLint("StringFormatMatches")
+    @SuppressLint({"StringFormatMatches", "SetTextI18n"})
     private void calculateWinner()
     {
         HandWinnerCalculator handWinnerCalculator = new HandWinnerCalculator(playerHand, opponentHand);
@@ -1230,6 +1312,10 @@ public class GameActivity extends AppCompatActivity {
             summaryText += String.format(getString(R.string.player_wins_pot), playerName, pot) + "\n";
             summaryTextView.setText(summaryText);
 
+            // set odds labels
+            playerOddsTextView.setText("100 %");
+            opponentOddsTextView.setText("0 %");
+
             // update money
             money[Dealer.PLAYER_1] += pot;
         }
@@ -1239,6 +1325,10 @@ public class GameActivity extends AppCompatActivity {
             gameActionTexView.setText(String.format(getString(R.string.player_wins_pot), opponentName, pot));
             summaryText += String.format(getString(R.string.player_wins_pot), opponentName, pot) + "\n";
             summaryTextView.setText(summaryText);
+
+            // set odds labels
+            playerOddsTextView.setText("0 %");
+            opponentOddsTextView.setText("100 %");
 
             // update money
             money[Dealer.PLAYER_2] += pot;

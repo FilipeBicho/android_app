@@ -672,6 +672,15 @@ class HandEvaluator {
 
     /**
      *
+     * @return hand string
+     */
+    String getHandString()
+    {
+        return hand.get(0) + " " + hand.get(1) + " "  + hand.get(2) + " " + hand.get(3) + " " + hand.get(4);
+    }
+
+    /**
+     *
      * @param ranking int containing the ranking
      * @return text from given ranking
      */

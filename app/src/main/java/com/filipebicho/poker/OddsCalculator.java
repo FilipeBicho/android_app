@@ -1074,7 +1074,7 @@ class OddsCalculator {
         Arrays.fill(winningHandResults, 0);
 
         ArrayList<Card> usedCards = new ArrayList<>();
-        usedCards.addAll(player1Cards);
+        usedCards.addAll(player2Cards);
         usedCards.addAll(tableCards);
 
         ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getFourCardsCombinations(combinationsLimit);
@@ -1141,7 +1141,7 @@ class OddsCalculator {
         Arrays.fill(winningHandResults, 0);
 
         ArrayList<Card> usedCards = new ArrayList<>();
-        usedCards.addAll(player1Cards);
+        usedCards.addAll(player2Cards);
         usedCards.addAll(tableCards);
 
         ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getThreeCardsCombinations(combinationsLimit);
@@ -1204,7 +1204,7 @@ class OddsCalculator {
         Arrays.fill(winningHandResults, 0);
 
         ArrayList<Card> usedCards = new ArrayList<>();
-        usedCards.addAll(player1Cards);
+        usedCards.addAll(player2Cards);
         usedCards.addAll(tableCards);
 
         ArrayList<ArrayList<Card>> combinations = combinationsCalculator.getTwoCardsCombinations(combinationsLimit);

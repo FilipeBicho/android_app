@@ -41,6 +41,11 @@ public class GameActivity extends AppCompatActivity {
     // display check button instead call button on true
     private Boolean CHECK_BUTTON = false;
 
+    //----- New game flag
+
+    // true to start a new game
+    private Boolean NEW_GAME_BUTTON = false;
+
     //----- Dealer, Blind and player turn
 
     private int DEALER = -1;
@@ -176,16 +181,6 @@ public class GameActivity extends AppCompatActivity {
         setFullScreen();
         setContentView(R.layout.activity_game);
 
-        // init player and opponent money
-        money[Dealer.PLAYER_1] = (float) START_MONEY;
-        money[Dealer.PLAYER_2] = (float) START_MONEY;
-
-        // init labels
-        initLabels();
-
-        // init buttons click listeners
-        initButtonsAndSeekBarListeners();
-
         // init combination calculator
         try {
             combinationsCalculator = new CombinationsCalculator(getResources());
@@ -194,10 +189,31 @@ public class GameActivity extends AppCompatActivity {
         }
 
         // start a new game
-        newGame();
+        startGame();
     }
 
     //----- private instance methods
+
+    /**
+     * Start a new game
+     */
+    private void startGame()
+    {
+        // init player and opponent money
+        money[Dealer.PLAYER_1] = (float) START_MONEY;
+        money[Dealer.PLAYER_2] = (float) START_MONEY;
+
+        NEW_GAME_BUTTON = false;
+
+        // init labels
+        initLabels();
+
+        // init buttons click listeners
+        initButtonsAndSeekBarListeners();
+
+        // start a new game
+        newGame();
+    }
 
     /**
      * hide buttons and seek bar
@@ -280,6 +296,9 @@ public class GameActivity extends AppCompatActivity {
         // init player and opponent hand ranking
         playerHandRankingTextView = findViewById(R.id.player_ranking);
         opponentHandRankingTextView = findViewById(R.id.opponent_ranking);
+
+        // make sure bet button has the bet text
+        betButton.setText(getString(R.string.bet_button));
     }
 
     /**
@@ -1256,12 +1275,20 @@ public class GameActivity extends AppCompatActivity {
         // calculate hand winner
         calculateWinner();
 
-        // update labels
-        updateLabels();
-
         if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
         {
             new Handler().postDelayed(this::newGame, 5000);
+        }
+        else
+        {
+            NEW_GAME_BUTTON = true;
+            betButton.setText(getString(R.string.new_game));
+            betButton.setVisibility(View.VISIBLE);
+
+            if (money[Dealer.PLAYER_1] == 0)
+                gameActionTexView.setText(String.format(getString(R.string.player_wins_game), opponentName));
+            else
+                gameActionTexView.setText(String.format(getString(R.string.player_wins_game), playerName));
         }
     }
 
@@ -1341,7 +1368,11 @@ public class GameActivity extends AppCompatActivity {
 
         betButton.setOnClickListener(v -> {
             hideButtonsAndSeekBar();
-            bet();
+
+            if (!NEW_GAME_BUTTON)
+                bet();
+            else
+                startGame();
         });
 
         // set min value

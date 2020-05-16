@@ -29,6 +29,7 @@
     <string name="call_button">Call</string>
     <string name="bet_button">Bet</string>
     <string name="check_button">Check</string>
+    <string name="new_game_button">New Game</string>
     <string name="pot">Pot</string>
     <string name="pot_value">0 €</string>
     <string name="flop_1">flop1</string>
@@ -49,6 +50,7 @@
     <string name="player_folds">%s folds</string>
     <string name="player_bets">%s bets %s €</string>
     <string name="player_wins_pot">%s wins hand (%s €)</string>
+    <string name="player_wins_game">%s wins the game</string>
     <string name="player_pays_small_blind">%s pays small blind (%s €)</string>
     <string name="player_pays_big_blind">%s pays big blind (%s €)</string>
     <string name="player_makes_allin">%s makes All in (%s €)</string>

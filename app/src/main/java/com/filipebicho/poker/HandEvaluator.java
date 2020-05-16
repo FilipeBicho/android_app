@@ -13,7 +13,7 @@ class HandEvaluator {
 
     //----- static const variables
 
-    static final int IS_HIGH_CARD= 1;
+    static final int IS_HIGH_CARD = 1;
     static final int IS_PAIR = 2;
     static final int IS_TWO_PAIR = 3;
     static final int IS_THREE_OF_A_KIND = 4;
@@ -403,13 +403,19 @@ class HandEvaluator {
         int straightCount = 0;
         int straight = 0;
         int straightStartIndex = 0;
-        for(int i = 0; i < allCards.size() - 1; i++)
-        {
-            // If next card is the same as the actual card goes to the next iteration
-            if(Integer.valueOf(allCards.get(i).getRank()).equals(allCards.get(i+1).getRank()))
-                continue;
 
-            if(Integer.valueOf(allCards.get(i).getRank()).equals(allCards.get(i+1).getRank()-1))
+        ArrayList<Card> allCardsWithoutRepetition = new ArrayList<>(allCards);
+
+        // remove cards rank repetitions
+        for(int i = 0; i < allCardsWithoutRepetition.size() - 1; i++)
+        {
+            if(Integer.valueOf(allCardsWithoutRepetition.get(i).getRank()).equals(allCardsWithoutRepetition.get(i+1).getRank()))
+                allCardsWithoutRepetition.remove(allCardsWithoutRepetition.get(i+1));
+        }
+
+        for(int i = 0; i < allCardsWithoutRepetition.size() - 1; i++)
+        {
+            if(Integer.valueOf(allCardsWithoutRepetition.get(i).getRank()).equals(allCardsWithoutRepetition.get(i+1).getRank()-1))
             {
                 straightCount++;
                 if(straight < straightCount)
@@ -425,22 +431,22 @@ class HandEvaluator {
         }
 
         if (straight >= 3 &&
-                Integer.valueOf(allCards.get(straightStartIndex).getRank()).equals(Card.KING) &&
-                Integer.valueOf(allCards.get(0).getRank()).equals(Card.ACE))
+                Integer.valueOf(allCardsWithoutRepetition.get(straightStartIndex).getRank()).equals(Card.KING) &&
+                Integer.valueOf(allCardsWithoutRepetition.get(0).getRank()).equals(Card.ACE))
         {
-            hand.add(allCards.get(straightStartIndex-3));
-            hand.add(allCards.get(straightStartIndex-2));
-            hand.add(allCards.get(straightStartIndex-1));
-            hand.add(allCards.get(straightStartIndex));
-            hand.add(allCards.get(0));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-3));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-2));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-1));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex));
+            hand.add(allCardsWithoutRepetition.get(0));
         }
         else if (straight >= 4)
         {
-            hand.add(allCards.get(straightStartIndex-4));
-            hand.add(allCards.get(straightStartIndex-3));
-            hand.add(allCards.get(straightStartIndex-2));
-            hand.add(allCards.get(straightStartIndex-1));
-            hand.add(allCards.get(straightStartIndex));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-4));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-3));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-2));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex-1));
+            hand.add(allCardsWithoutRepetition.get(straightStartIndex));
         }
         else
         {

@@ -1014,9 +1014,9 @@ public class GameActivity extends AppCompatActivity {
             // it's not possible to check again
             CHECK_BET = false;
 
-            if (PLAYER_TURN == Dealer.PLAYER_2)
+            if (PLAYER_TURN == Dealer.PLAYER_1)
             {
-                bet(); //TODO implement check_bet
+                check(); //TODO implement check_bet
             }
             else
             {
@@ -1213,6 +1213,10 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint({"StringFormatMatches", "SetTextI18n"})
     private void showDown()
     {
+        // set showdown header
+        summaryText += getString(R.string.showdown_header);
+        summaryText += "Table - " + tableCards.toString() + "\n";
+
         // calculate pot
         pot = savedPot + bet[Dealer.PLAYER_1] + bet[Dealer.PLAYER_2];
 
@@ -1275,7 +1279,7 @@ public class GameActivity extends AppCompatActivity {
         {
             // set summary and game action labels
             gameActionTexView.setText(String.format(getString(R.string.player_wins_pot), playerName, pot));
-            summaryText += String.format(getString(R.string.player_wins_pot), playerName, pot) + "\n";
+            summaryText += String.format(getString(R.string.player_wins_pot), playerName, pot) + "\n\n";
             summaryTextView.setText(summaryText);
 
             // set odds labels
@@ -1289,7 +1293,7 @@ public class GameActivity extends AppCompatActivity {
         {
             // set summary and game action labels
             gameActionTexView.setText(String.format(getString(R.string.player_wins_pot), opponentName, pot));
-            summaryText += String.format(getString(R.string.player_wins_pot), opponentName, pot) + "\n";
+            summaryText += String.format(getString(R.string.player_wins_pot), opponentName, pot) + "\n\n";
             summaryTextView.setText(summaryText);
 
             // set odds labels
@@ -1306,7 +1310,7 @@ public class GameActivity extends AppCompatActivity {
 
             // set summary and game action labels
             gameActionTexView.setText(String.format(getString(R.string.draw), pot));
-            summaryText += String.format(getString(R.string.draw), pot) + "\n";
+            summaryText += String.format(getString(R.string.draw), pot) + "\n\n";
             summaryTextView.setText(summaryText);
 
             // update money

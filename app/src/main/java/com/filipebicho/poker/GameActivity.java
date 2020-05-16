@@ -110,6 +110,10 @@ public class GameActivity extends AppCompatActivity {
     private Float pot = (float) 0;
     private Float savedPot = (float) 0;
 
+    //----- Hand number
+
+    int handNumber = 0;
+
     //----- Game number
 
     int gameNumber = 0;
@@ -205,14 +209,21 @@ public class GameActivity extends AppCompatActivity {
 
         NEW_GAME_BUTTON = false;
 
+        // set summary new game text
+        gameNumber++;
+        summaryText += String.format(getString(R.string.game_number), gameNumber);
+
+        // reset hand number
+        handNumber = 0;
+
         // init labels
         initLabels();
 
         // init buttons click listeners
         initButtonsAndSeekBarListeners();
 
-        // start a new game
-        newGame();
+        // start a new hand
+        newHand();
     }
 
     /**
@@ -325,7 +336,7 @@ public class GameActivity extends AppCompatActivity {
      * init new game
      */
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    private void newGame()
+    private void newHand()
     {
         //--- init dealer
         dealer = new Dealer();
@@ -413,9 +424,9 @@ public class GameActivity extends AppCompatActivity {
         pot = (float) 0;
         savedPot = (float) 0;
 
-        // set summary new game text
-        gameNumber++;
-        summaryText += String.format(getString(R.string.game_number), gameNumber);
+        // set summary new hand text
+        handNumber++;
+        summaryText += String.format(getString(R.string.hand_number), handNumber);
 
         // update labels
         updateLabels();
@@ -887,7 +898,7 @@ public class GameActivity extends AppCompatActivity {
         // set summary text
         summaryTextView.setText(summaryText);
 
-        newGame();
+        newHand();
     }
 
     /**
@@ -1277,7 +1288,7 @@ public class GameActivity extends AppCompatActivity {
 
         if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
         {
-            new Handler().postDelayed(this::newGame, 5000);
+            new Handler().postDelayed(this::newHand, 5000);
         }
         else
         {

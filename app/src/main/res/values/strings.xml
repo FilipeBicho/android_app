@@ -42,7 +42,8 @@
 
     <!-- Game activity -->
     <string name="new_game">New Game</string>
-    <string name="game_number">------ Game %d-----\n\n</string>
+    <string name="game_number">------ Game %d -----\n\n</string>
+    <string name="hand_number">----- Hand %d ----\n\n</string>
     <string name="flop_header">--- Flop ---\n</string>
     <string name="turn_header">--- Turn ---\n</string>
     <string name="river_header">--- River ---\n</string>

@@ -417,7 +417,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * pre flop functionality
+     * pre flop
      */
     @SuppressLint("StringFormatMatches")
     private void preFlop()
@@ -439,7 +439,7 @@ public class GameActivity extends AppCompatActivity {
                 // calculate pot
                 pot = savedPot + bet[BLIND] + bet[DEALER];
 
-                // set game action labels
+                // set summary text and game action label
                 if (BLIND == Dealer.PLAYER_1)
                 {
                     gameActionTexView.setText(String.format(getString(R.string.player_makes_allin), playerName, bet[Dealer.PLAYER_1]));
@@ -468,7 +468,7 @@ public class GameActivity extends AppCompatActivity {
                 // calculate pot
                 pot = savedPot + bet[BLIND] + bet[DEALER];
 
-                // set game action and summary text labels
+                // set summary text and game action label
                 if (DEALER == Dealer.PLAYER_1)
                 {
                     gameActionTexView.setText(String.format(getString(R.string.player_pays_small_blind), playerName, SMALL_BLIND_VALUE));
@@ -501,6 +501,7 @@ public class GameActivity extends AppCompatActivity {
             // calculate pot
             pot = savedPot + bet[BLIND] + bet[DEALER];
 
+            // set summary text and game action label
             if (DEALER == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_makes_allin)  + "\n", playerName, bet[Dealer.PLAYER_1]));
@@ -535,6 +536,7 @@ public class GameActivity extends AppCompatActivity {
             // calculate pot
             pot = savedPot + bet[BLIND] + bet[DEALER];
 
+            // set summary text and game action label
             if (BLIND == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_pays_big_blind), playerName, bet[Dealer.PLAYER_1]));
@@ -564,10 +566,11 @@ public class GameActivity extends AppCompatActivity {
             }
             else
             {
-                // show buttons and seek bar
+                // show fold and check button
                 foldButton.setVisibility(View.VISIBLE);
                 callButton.setVisibility(View.VISIBLE);
 
+                // show bet button and seek bar if Dealer have enough money to bet
                 if (money[DEALER] + bet[DEALER] > BIG_BLIND_VALUE)
                 {
                     betButton.setVisibility(View.VISIBLE);
@@ -584,6 +587,7 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void flop()
     {
+        // set current round
         CURRENT_ROUND = FLOP;
 
         // check is possible
@@ -599,7 +603,7 @@ public class GameActivity extends AppCompatActivity {
         // save pot state
         savedPot = pot;
 
-        // init flop cards
+        // set flop cards
         dealer.setFlop(deck, tableCards);
 
         if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
@@ -649,7 +653,7 @@ public class GameActivity extends AppCompatActivity {
                     {
                         if (PLAYER_TURN == Dealer.PLAYER_2)
                         {
-                            check();
+                            bet(); //TODO check_bet
                         }
                         else
                         {
@@ -665,7 +669,6 @@ public class GameActivity extends AppCompatActivity {
                     {
                         turn();
                     }
-
                 });
             });
         });
@@ -677,6 +680,7 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void turn()
     {
+        // set current round
         CURRENT_ROUND = TURN;
 
         // check is possible
@@ -686,13 +690,13 @@ public class GameActivity extends AppCompatActivity {
         bet[Dealer.PLAYER_1] = (float) 0;
         bet[Dealer.PLAYER_2] = (float) 0;
 
-        // reset seekbar
+        // reset seek bar progress
         betSeekBar.setProgress(BIG_BLIND_VALUE);
 
         // save pot state
         savedPot = pot;
 
-        // init turn card
+        // set turn card
         dealer.setOneCard(deck, tableCards);
 
         if (money[Dealer.PLAYER_1] > 0 && money[Dealer.PLAYER_2] > 0)
@@ -737,7 +741,7 @@ public class GameActivity extends AppCompatActivity {
             {
                 if (PLAYER_TURN == Dealer.PLAYER_2)
                 {
-                    check();
+                    bet(); //TODO check_bet
                 }
                 else
                 {
@@ -762,6 +766,7 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void river()
     {
+        // set current round
         CURRENT_ROUND = RIVER;
 
         // check is possible
@@ -771,13 +776,13 @@ public class GameActivity extends AppCompatActivity {
         bet[Dealer.PLAYER_1] = (float) 0;
         bet[Dealer.PLAYER_2] = (float) 0;
 
-        // reset seekbar
+        // reset seek bar
         betSeekBar.setProgress(BIG_BLIND_VALUE);
 
         // save pot state
         savedPot = pot;
 
-        // init river card
+        // set river card
         dealer.setOneCard(deck, tableCards);
 
         // calculate odds
@@ -818,7 +823,7 @@ public class GameActivity extends AppCompatActivity {
             {
                 if (PLAYER_TURN == Dealer.PLAYER_2)
                 {
-                    check();
+                    bet(); //TODO check_bet
                 }
                 else
                 {
@@ -847,7 +852,7 @@ public class GameActivity extends AppCompatActivity {
         final int player = PLAYER_TURN;
         final int opponent = player == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
 
-        // set action
+        // set action label
         if (player == Dealer.PLAYER_1)
             gameActionTexView.setText(String.format(getString(R.string.player_folds), playerName));
         else
@@ -899,7 +904,7 @@ public class GameActivity extends AppCompatActivity {
             // calculate pot
             pot = savedPot + bet[player] + bet[opponent];
 
-            // set action
+            // set summary text and game action label
             if (player == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_makes_allin), playerName, bet[Dealer.PLAYER_1]));
@@ -934,6 +939,7 @@ public class GameActivity extends AppCompatActivity {
             // calculate pot
             pot = savedPot + bet[player] + bet[opponent];
 
+            // set summary text and game action label
             if (player == Dealer.PLAYER_1)
             {
                 gameActionTexView.setText(String.format(getString(R.string.player_calls), playerName, callAmount));
@@ -948,14 +954,15 @@ public class GameActivity extends AppCompatActivity {
             // update labels
             updateLabels();
 
+            // change player turn
             PLAYER_TURN = opponent;
 
-            // if is pre flop call then other player still has to play
+            // if is pre flop call then other player still has the possibility to check
             if (CHECK_BET && CURRENT_ROUND.equals(PRE_FLOP))
             {
                 if (PLAYER_TURN == Dealer.PLAYER_2)
                 {
-                    check();
+                    bet(); //TODO implement check_bet
                 }
                 else
                 {
@@ -1007,12 +1014,9 @@ public class GameActivity extends AppCompatActivity {
             // it's not possible to check again
             CHECK_BET = false;
 
-            // change player turn
-            PLAYER_TURN = PLAYER_TURN == Dealer.PLAYER_1 ? Dealer.PLAYER_2 : Dealer.PLAYER_1;
-
             if (PLAYER_TURN == Dealer.PLAYER_2)
             {
-                check();
+                bet(); //TODO implement check_bet
             }
             else
             {
@@ -1106,11 +1110,11 @@ public class GameActivity extends AppCompatActivity {
                     // opponent can still raise the bet
                     if (money[opponent] + bet[opponent] > bet[player])
                     {
-                        call();
+                        bet(); // TODO fold_call_bet
                     }
                     else
                     {
-                        // TODO implement fold_allin method
+                        allIn();// TODO fold_allin
                     }
                 }
                 else
@@ -1135,6 +1139,9 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * All In
+     */
     private void allIn()
     {
         // init player and opponent
@@ -1175,8 +1182,7 @@ public class GameActivity extends AppCompatActivity {
         {
             if (PLAYER_TURN == Dealer.PLAYER_2)
             {
-                call();
-                // TODO implement fold_call method
+                call(); // TODO fold_call method
             }
             else
             {
@@ -1200,8 +1206,6 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-
-
     /**
      * show opponent cards, hand and ranking
      * show player hand and ranking
@@ -1209,7 +1213,7 @@ public class GameActivity extends AppCompatActivity {
     @SuppressLint({"StringFormatMatches", "SetTextI18n"})
     private void showDown()
     {
-        // update pot
+        // calculate pot
         pot = savedPot + bet[Dealer.PLAYER_1] + bet[Dealer.PLAYER_2];
 
         // calculate player hand and hand ranking
@@ -1243,8 +1247,6 @@ public class GameActivity extends AppCompatActivity {
         summaryText += String.format(getString(R.string.opponent_hand), opponentName, opponentHandText, opponentHandRankingText) + "\n";
         summaryTextView.setText(summaryText);
 
-        //TODO show opponent cards
-
         hideButtonsAndSeekBar();
 
         // calculate hand winner
@@ -1259,6 +1261,9 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * calculate winner
+     */
     @SuppressLint({"StringFormatMatches", "SetTextI18n"})
     private void calculateWinner()
     {
